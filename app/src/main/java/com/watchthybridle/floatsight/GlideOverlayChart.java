@@ -23,9 +23,7 @@
 package com.watchthybridle.floatsight;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.MotionEvent;
-
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
@@ -96,8 +94,6 @@ public class GlideOverlayChart extends LineChart {
         glideChart.getDescription().setText("");
     }
 
-
-
     @Override
     public void invalidate() {
         super.invalidate();
@@ -111,12 +107,12 @@ public class GlideOverlayChart extends LineChart {
     }
 
     @Override
+    @SuppressWarnings("ClickableViewAccessibility")
     public boolean onTouchEvent(MotionEvent event) {
         boolean success = super.onTouchEvent(event);
         success &= glideChart.onTouchEvent(event);
         return success;
     }
-
 
     public class CustomYAxisValueFormatter implements IAxisValueFormatter {
         private DecimalFormat mFormat;

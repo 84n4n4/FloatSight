@@ -20,12 +20,14 @@
  *
  */
 
-package com.watchthybridle.floatsight;
+package com.watchthybridle.floatsight.viewmodel;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
+import android.content.ContentResolver;
 import android.net.Uri;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
+import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataRepository;
 
 public class FlySightTrackDataViewModel extends ViewModel {
     private FlySightTrackDataRepository trackDataRepository;
@@ -40,7 +42,7 @@ public class FlySightTrackDataViewModel extends ViewModel {
         return flySightTrackDataLiveData;
     }
 
-    public void loadFromFile(Uri uri) {
-        flySightTrackDataLiveData = trackDataRepository.getFlySightTrackData(uri);
+    public void loadFromFile(Uri uri, ContentResolver contentResolver) {
+        flySightTrackDataLiveData = trackDataRepository.getFlySightTrackData(uri, contentResolver);
     }
 }

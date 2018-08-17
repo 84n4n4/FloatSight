@@ -20,25 +20,22 @@
  *
  */
 
-package com.watchthybridle.floatsight;
+package com.watchthybridle.floatsight.viewmodel;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.ContentResolver;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.util.Log;
 import com.watchthybridle.floatsight.csvparser.FlySightCsvParser;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
 
 import java.io.InputStream;
 
 public class FlySightTrackDataRepository {
-    private ContentResolver contentResolver;
     private MutableLiveData<FlySightTrackData> data;
 
-    public FlySightTrackDataRepository(ContentResolver contentResolver) {
-        this.contentResolver = contentResolver;
+    public FlySightTrackDataRepository() {
         data = new MutableLiveData<>();
     }
 
@@ -47,13 +44,20 @@ public class FlySightTrackDataRepository {
         return data;
     }
 
-    public LiveData<FlySightTrackData> getFlySightTrackData(Uri uri) {
-        new ParseFileTask().execute(uri);
+    public LiveData<FlySightTrackData> getFlySightTrackData(Uri uri, ContentResolver contentResolver) {
+        new ParseFileTask(contentResolver, data).execute(uri);
         return data;
     }
 
-    public class ParseFileTask extends AsyncTask<Uri, Integer, Long> {
+    public static class ParseFileTask extends AsyncTask<Uri, Integer, Long> {
         private FlySightTrackData flySightTrackData = new FlySightTrackData();
+        private ContentResolver contentResolver;
+        private MutableLiveData<FlySightTrackData> data;
+
+        ParseFileTask(ContentResolver contentResolver, MutableLiveData<FlySightTrackData> data) {
+            this.contentResolver = contentResolver;
+            this.data = data;
+        }
 
         protected Long doInBackground(Uri... uris) {
             if(uris.length > 0) {

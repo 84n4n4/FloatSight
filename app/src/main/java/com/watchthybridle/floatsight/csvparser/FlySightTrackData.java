@@ -24,7 +24,6 @@ package com.watchthybridle.floatsight.csvparser;
 
 import android.support.annotation.LongDef;
 import android.util.Log;
-
 import com.github.mikephil.charting.data.Entry;
 
 import java.lang.annotation.Retention;
@@ -111,6 +110,7 @@ public class FlySightTrackData {
             this.altitude.add(new Entry(entryPosition, altitude));
             this.glide.add(new Entry(entryPosition, glide));
         } catch (NumberFormatException e) {
+            //TODO: to not mess up the time axis, maybe add 0000 instead at this point
             parsingErrorCount++;
             if(parsingErrorCount > 2) {
                 parsingStatus = PARSING_ERRORS;

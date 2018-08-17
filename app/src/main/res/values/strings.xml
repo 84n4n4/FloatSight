@@ -30,6 +30,6 @@
     <string name="some_errors_parsing_file">Had some problems parsing CSV file, data may be incomplete or incorrect.</string>
     <string name="fail_parsing_file">Could not parse CSV file, probably wrong filetype?</string>
     <string name="permissions_rationale">Storage access is required to read and save FlySight track data.</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
 </resources>
