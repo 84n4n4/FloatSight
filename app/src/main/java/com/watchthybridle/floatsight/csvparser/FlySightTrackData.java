@@ -22,14 +22,28 @@
 
 package com.watchthybridle.floatsight.csvparser;
 
+import android.support.annotation.LongDef;
 import android.util.Log;
 
 import com.github.mikephil.charting.data.Entry;
 
+import java.lang.annotation.Retention;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.annotation.RetentionPolicy.SOURCE;
+
 public class FlySightTrackData {
+    @Retention(SOURCE)
+    @LongDef({PARSING_SUCCESS, PARSING_FAIL, PARSING_ERRORS})
+    public @interface ParsingResult {}
+    public static final long PARSING_SUCCESS = 0;
+    public static final long PARSING_FAIL = -1;
+    public static final long PARSING_ERRORS = 1;
+
+    private long parsingStatus = PARSING_SUCCESS;
+    private int parsingErrorCount = 0;
+
     private List<String> time;
     private List<Entry> horVelocity;
     private List<Entry> vertVelocity;
@@ -45,6 +59,15 @@ public class FlySightTrackData {
         glide = new ArrayList<>();
         distance = new ArrayList<>();
     }
+
+    public long getParsingStatus() {
+        return parsingStatus;
+    }
+
+    public void setParsingStatus(@ParsingResult long parsingStatus) {
+        this.parsingStatus = parsingStatus;
+    }
+
 
     public List<Entry> getHorVelocity() {
         return horVelocity;
@@ -67,12 +90,11 @@ public class FlySightTrackData {
     protected void addCsvLine(String csvLine) {
         String[] row = csvLine.split(",");
 
-        if (row.length != 14 &&
-                !row[0].matches("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{2}Z")) {
-            return;
-        }
-
         try {
+            if (row.length != 14 &&
+                    !row[0].matches("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{2}Z")) {
+                    throw new NumberFormatException();
+            }
             String time = row[0];
             Float vertVelocity = Float.parseFloat(row[6]) * 3.6f;
             Float altitude = Float.parseFloat(row[3]);
@@ -89,6 +111,10 @@ public class FlySightTrackData {
             this.altitude.add(new Entry(entryPosition, altitude));
             this.glide.add(new Entry(entryPosition, glide));
         } catch (NumberFormatException e) {
+            parsingErrorCount++;
+            if(parsingErrorCount > 2) {
+                parsingStatus = PARSING_ERRORS;
+            }
             Log.d(FlySightTrackData.class.getSimpleName(),
                     "cant read line from csv somewhere around time:" + row[0]
                             + ", around line number:" + time.size() + 1 + ", therefore skipped.");
@@ -110,5 +136,9 @@ public class FlySightTrackData {
 
         Float capGlideAt = 5f;
         return glide > capGlideAt ? capGlideAt : glide;
+    }
+
+    public boolean isAnyMetricEmpty() {
+        return time.isEmpty() || vertVelocity.isEmpty() || horVelocity.isEmpty() || altitude.isEmpty() || glide.isEmpty();
     }
 }

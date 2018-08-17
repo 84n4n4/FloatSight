@@ -22,11 +22,15 @@
 
 package com.watchthybridle.floatsight;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,12 +48,16 @@ public class AllMetricsTimeGraphFragment extends Fragment {
 
     private GlideOverlayChart chart;
 
+
     public AllMetricsTimeGraphFragment() {
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        FlySightTrackDataViewModel trackDataViewModel = ((MainActivity) getActivity()).getFlySightTrackDataViewModel();
+        trackDataViewModel.getFlySightTrackDataLiveData()
+                .observe(this, flySightTrackData -> showData(flySightTrackData));
     }
 
     @Override
@@ -71,7 +79,30 @@ public class AllMetricsTimeGraphFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_all_metrics_time_graph, container, false);
     }
 
+    private void showParsingErrorMessage(@StringRes int stringResId) {
+        Context context = getContext();
+        if(context != null) {
+            new AlertDialog.Builder(context)
+                    .setMessage(stringResId)
+                    .setPositiveButton(R.string.ok, null)
+                    .create()
+                    .show();
+        }
+    }
+
     public void showData(FlySightTrackData flySightTrackData) {
+        if (flySightTrackData.isAnyMetricEmpty()) {
+            return;
+        }
+
+        if (flySightTrackData.getParsingStatus() == FlySightTrackData.PARSING_FAIL) {
+            showParsingErrorMessage(R.string.fail_parsing_file);
+        }
+
+        if (flySightTrackData.getParsingStatus() == FlySightTrackData.PARSING_ERRORS) {
+            showParsingErrorMessage(R.string.some_errors_parsing_file);
+        }
+
         List<ILineDataSet> dataSets = new ArrayList<>();
 
         dataSets.add(TrackLineDataSetWrapper.getLineDataSet(getContext(),

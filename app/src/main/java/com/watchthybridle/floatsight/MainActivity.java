@@ -22,6 +22,7 @@
 
 package com.watchthybridle.floatsight;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -53,10 +54,10 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG_GRAPH_BY_TIME_FRAGMENT = "friends_fragment";
+    private static final String TAG_GRAPH_BY_TIME_FRAGMENT = "TAG_GRAPH_BY_TIME_FRAGMENT";
     public static final int REQUEST_FILE = 666;
     private static final int PERMISSION_REQUEST_CODE = 200;
-    private FlySightTrackData flySightTrackData  = new FlySightTrackData();
+    private FlySightTrackDataViewModel flySightTrackDataViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,15 +67,20 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         showGraphByTimeFragment();
+        flySightTrackDataViewModel = new FlySightTrackDataViewModel(new FlySightTrackDataRepository(getContentResolver()));
     }
 
     private void showGraphByTimeFragment() {
-        Fragment graphByTimeFragment = new AllMetricsTimeGraphFragment();
+        AllMetricsTimeGraphFragment allMetricsTimeGraphFragment = new AllMetricsTimeGraphFragment();
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, graphByTimeFragment,
+        transaction.replace(R.id.fragment_container, allMetricsTimeGraphFragment,
                 TAG_GRAPH_BY_TIME_FRAGMENT);
         transaction.commit();
+    }
+
+    public FlySightTrackDataViewModel getFlySightTrackDataViewModel() {
+        return flySightTrackDataViewModel;
     }
 
     @Override
@@ -106,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQUEST_FILE && resultCode == RESULT_OK) {
-            new ParseFileTask(this.getContentResolver()).execute(data.getData());
+            flySightTrackDataViewModel.loadFromFile(data.getData());
         }
     }
 
@@ -129,18 +135,15 @@ public class MainActivity extends AppCompatActivity {
             case PERMISSION_REQUEST_CODE:
                 if (grantResults.length > 0) {
 
-                    boolean locationAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                    boolean cameraAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+                    boolean readAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    boolean writeAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
 
-                    if (locationAccepted && cameraAccepted) {
-                        Log.d("BULLSHIT", "permissions already accepted");
+                    if (readAccepted && writeAccepted) {
                     }
                     else {
-                        Log.d("BULLSHIT", "permissions denied");
-
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            if (shouldShowRequestPermissionRationale(READ_EXTERNAL_STORAGE)) {
-                                showMessageOKCancel("You need to allow access to both the permissions",
+                            if (shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE)) {
+                                showMessageOKCancel(getResources().getString(R.string.permissions_rationale),
                                         new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
@@ -163,51 +166,9 @@ public class MainActivity extends AppCompatActivity {
     private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
         new AlertDialog.Builder(MainActivity.this)
                 .setMessage(message)
-                .setPositiveButton("OK", okListener)
-                .setNegativeButton("Cancel", null)
+                .setPositiveButton(R.string.ok, okListener)
+                .setNegativeButton(R.string.cancel, null)
                 .create()
                 .show();
-    }
-
-    public class ParseFileTask extends AsyncTask<Uri, Integer, Long> {
-        private ContentResolver contentResolver;
-
-        ParseFileTask(ContentResolver contentResolver) {
-            this.contentResolver = contentResolver;
-        }
-
-        protected Long doInBackground(Uri... uris) {
-            if(uris.length > 0) {
-                try {
-                    InputStream inputStream = contentResolver.openInputStream(uris[0]);
-                    FlySightCsvParser flySightCsvParser = new FlySightCsvParser(inputStream);
-                    flySightTrackData = flySightCsvParser.read();
-                } catch (Exception e) {
-                    return -1L;
-                }
-                return 1L;
-            }
-            return -1L;
-        }
-
-        protected void onPostExecute(Long result) {
-            if (result == 1) {
-                notifyDataLoaded();
-            } else {
-                new AlertDialog.Builder(MainActivity.this)
-                        .setMessage("Error during parsing CSV file")
-                        .setPositiveButton("OK", null)
-                        .create()
-                        .show();
-            }
-        }
-    }
-
-    private void notifyDataLoaded() {
-        AllMetricsTimeGraphFragment allMetricsTimeGraphFragment = (AllMetricsTimeGraphFragment) getSupportFragmentManager()
-                .findFragmentByTag(TAG_GRAPH_BY_TIME_FRAGMENT);
-        if (allMetricsTimeGraphFragment != null) {
-            allMetricsTimeGraphFragment.showData(flySightTrackData);
-        }
     }
 }
