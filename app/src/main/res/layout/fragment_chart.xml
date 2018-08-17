@@ -25,14 +25,14 @@
                                              xmlns:tools="http://schemas.android.com/tools"
                                              android:layout_width="match_parent"
                                              android:layout_height="match_parent"
-                                             tools:context=".AllMetricsTimeGraphFragment"
+                                             tools:context=".AllMetricsTimeChartFragment"
                                              tools:showIn="@layout/activity_main">
 
     <FrameLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:id="@+id/root_graph_view">
+        android:id="@+id/root_chart_view">
     </FrameLayout>
 
 </android.support.constraint.ConstraintLayout>

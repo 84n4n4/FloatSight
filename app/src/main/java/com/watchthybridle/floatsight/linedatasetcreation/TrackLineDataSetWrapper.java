@@ -43,13 +43,14 @@ public class TrackLineDataSetWrapper extends LineDataSet {
 
     @Retention(SOURCE)
     @IntDef({HOR_VELOCITY_VS_TIME, VERT_VELOCITY_VS_TIME, ALTITUDE_VS_TIME, GLIDE_VS_TIME,
-            DISTANCE_VS_TIME})
+            DISTANCE_VS_TIME, DISTANCE_VS_ALTITUDE})
     public @interface Metric {}
     public static final int HOR_VELOCITY_VS_TIME = 0;
     public static final int VERT_VELOCITY_VS_TIME = 1;
     public static final int ALTITUDE_VS_TIME = 2;
     public static final int GLIDE_VS_TIME = 3;
     public static final int DISTANCE_VS_TIME = 4;
+    public static final int DISTANCE_VS_ALTITUDE = 5;
 
     private TrackLineDataSetWrapper(List<Entry> yVals, String label) {
         super(yVals, label);
@@ -73,6 +74,8 @@ public class TrackLineDataSetWrapper extends LineDataSet {
             case DISTANCE_VS_TIME:
                 return getLineDataSet(context, trackData.getDistance(), R.string.distance_label,
                         R.color.distance, YAxis.AxisDependency.RIGHT);
+            case DISTANCE_VS_ALTITUDE:
+                return getDistanceVsAltitudeDataSet(context, trackData.getDistanceVsAltitude());
         }
         return new TrackLineDataSetWrapper(new ArrayList<Entry>(), "empty");
     }
@@ -83,6 +86,16 @@ public class TrackLineDataSetWrapper extends LineDataSet {
         lineDataSet.setColor(ContextCompat.getColor(context, color));
         lineDataSet.setValueTextColor(ContextCompat.getColor(context, color));
         lineDataSet.setAxisDependency(axisDependency);
+        lineDataSet.setDrawValues(false);
+        lineDataSet.setDrawCircles(false);
+        return lineDataSet;
+    }
+
+    private static TrackLineDataSetWrapper getDistanceVsAltitudeDataSet(Context context, List<Entry> data) {
+        TrackLineDataSetWrapper lineDataSet = new TrackLineDataSetWrapper(data, context.getString(R.string.distance_altitude_label));
+        lineDataSet.setColor(ContextCompat.getColor(context, R.color.distanceAltitude));
+        lineDataSet.setValueTextColor(ContextCompat.getColor(context, R.color.distanceAltitude));
+        lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
         lineDataSet.setDrawValues(false);
         lineDataSet.setDrawCircles(false);
         return lineDataSet;

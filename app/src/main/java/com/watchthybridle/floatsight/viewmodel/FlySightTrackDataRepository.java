@@ -22,7 +22,6 @@
 
 package com.watchthybridle.floatsight.viewmodel;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.ContentResolver;
 import android.net.Uri;
@@ -33,30 +32,24 @@ import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
 import java.io.InputStream;
 
 public class FlySightTrackDataRepository {
-    private MutableLiveData<FlySightTrackData> data;
-
-    public FlySightTrackDataRepository() {
-        data = new MutableLiveData<>();
+    public MutableLiveData<FlySightTrackData> init() {
+        MutableLiveData<FlySightTrackData> liveData = new MutableLiveData<>();
+        liveData.setValue(new FlySightTrackData());
+        return liveData;
     }
 
-    public LiveData<FlySightTrackData> init() {
-        data.setValue(new FlySightTrackData());
-        return data;
-    }
-
-    public LiveData<FlySightTrackData> getFlySightTrackData(Uri uri, ContentResolver contentResolver) {
-        new ParseFileTask(contentResolver, data).execute(uri);
-        return data;
+    public void loadFlySightTrackData(Uri uri, ContentResolver contentResolver, MutableLiveData<FlySightTrackData> liveData) {
+        new ParseFileTask(contentResolver, liveData).execute(uri);
     }
 
     public static class ParseFileTask extends AsyncTask<Uri, Integer, Long> {
         private FlySightTrackData flySightTrackData = new FlySightTrackData();
         private ContentResolver contentResolver;
-        private MutableLiveData<FlySightTrackData> data;
+        private MutableLiveData<FlySightTrackData> liveData;
 
-        ParseFileTask(ContentResolver contentResolver, MutableLiveData<FlySightTrackData> data) {
+        ParseFileTask(ContentResolver contentResolver, MutableLiveData<FlySightTrackData> liveData) {
             this.contentResolver = contentResolver;
-            this.data = data;
+            this.liveData = liveData;
         }
 
         protected Long doInBackground(Uri... uris) {
@@ -75,7 +68,7 @@ public class FlySightTrackDataRepository {
         }
 
         protected void onPostExecute(Long result) {
-            data.setValue(flySightTrackData);
+            liveData.setValue(flySightTrackData);
         }
     }
 

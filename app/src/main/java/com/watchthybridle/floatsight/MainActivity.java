@@ -45,7 +45,9 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG_GRAPH_BY_TIME_FRAGMENT = "TAG_GRAPH_BY_TIME_FRAGMENT";
+    private static final String TAG_ALL_METRICS_V_TIME_CHART_FRAGMENT = "TAG_ALL_METRICS_V_TIME_CHART_FRAGMENT";
+    private static final String TAG_DISTANCE_V_ALTITUDE_CHART_FRAGMENT = "TAG_DISTANCE_V_ALTITUDE_CHART_FRAGMENT";
+
     public static final int REQUEST_FILE = 666;
     private static final int PERMISSION_REQUEST_CODE = 200;
     private FlySightTrackDataViewModel flySightTrackDataViewModel;
@@ -57,18 +59,26 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        showGraphByTimeFragment();
+        showAllMetricsFragmentChart();
         flySightTrackDataViewModel = new FlySightTrackDataViewModel(new FlySightTrackDataRepository());
     }
 
-    private void showGraphByTimeFragment() {
-        AllMetricsTimeGraphFragment allMetricsTimeGraphFragment = new AllMetricsTimeGraphFragment();
-
+    private void showAllMetricsFragmentChart() {
+        AllMetricsTimeChartFragment allMetricsTimeChartFragment = new AllMetricsTimeChartFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, allMetricsTimeGraphFragment,
-                TAG_GRAPH_BY_TIME_FRAGMENT);
+        transaction.replace(R.id.fragment_container, allMetricsTimeChartFragment,
+                TAG_ALL_METRICS_V_TIME_CHART_FRAGMENT);
         transaction.commit();
     }
+
+    private void showDistanceAltitudeFragmentChart() {
+        DistanceAltitudeChartFragment distanceAltitudeChartFragment = new DistanceAltitudeChartFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, distanceAltitudeChartFragment,
+                TAG_DISTANCE_V_ALTITUDE_CHART_FRAGMENT);
+        transaction.commit();
+    }
+
 
     public FlySightTrackDataViewModel getFlySightTrackDataViewModel() {
         return flySightTrackDataViewModel;

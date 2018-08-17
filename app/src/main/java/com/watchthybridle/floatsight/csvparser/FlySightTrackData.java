@@ -52,6 +52,7 @@ public class FlySightTrackData {
     private List<Entry> altitude;
     private List<Entry> glide;
     private List<Entry> distance;
+    private List<Entry> distanceVsAltitude;
     private Point firstValidPoint = new Point(0,0, Point.INVALID);
 
     public FlySightTrackData() {
@@ -62,6 +63,7 @@ public class FlySightTrackData {
         altitude = new ArrayList<>();
         glide = new ArrayList<>();
         distance = new ArrayList<>();
+        distanceVsAltitude = new ArrayList<>();
     }
 
     public long getParsingStatus() {
@@ -91,6 +93,10 @@ public class FlySightTrackData {
 
     public List<Entry> getDistance() {
         return distance;
+    }
+
+    public List<Entry> getDistanceVsAltitude() {
+        return distanceVsAltitude;
     }
 
     //0   ,1  ,2  ,3   ,4   ,5   ,6   ,7   ,8   ,9   ,10     ,11  ,12    ,13
@@ -126,6 +132,7 @@ public class FlySightTrackData {
             this.altitude.add(new Entry(entryPosition, altitude));
             this.glide.add(new Entry(entryPosition, glide));
             this.distance.add(new Entry(entryPosition, distance));
+            this.distanceVsAltitude.add(new Entry(distance, altitude));
         } catch (Exception e) {
             handleLineParsingError();
         }
