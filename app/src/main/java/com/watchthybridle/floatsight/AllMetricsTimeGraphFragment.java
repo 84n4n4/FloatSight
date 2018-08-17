@@ -116,6 +116,10 @@ public class AllMetricsTimeGraphFragment extends Fragment {
                 TrackLineDataSetWrapper.HOR_VELOCITY_VS_TIME,
                 flySightTrackData));
 
+        dataSets.add(TrackLineDataSetWrapper.getLineDataSet(getContext(),
+                TrackLineDataSetWrapper.DISTANCE_VS_TIME,
+                flySightTrackData));
+
         chart.setData(new LineData(dataSets));
 
         chart.glideChart.setData(new LineData(TrackLineDataSetWrapper.getLineDataSet(getContext(),

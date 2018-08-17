@@ -71,7 +71,8 @@ public class TrackLineDataSetWrapper extends LineDataSet {
                 return getLineDataSet(context, trackData.getGlide(), R.string.glide_label,
                         R.color.glide, YAxis.AxisDependency.LEFT);
             case DISTANCE_VS_TIME:
-                break;
+                return getLineDataSet(context, trackData.getDistance(), R.string.distance_label,
+                        R.color.distance, YAxis.AxisDependency.RIGHT);
         }
         return new TrackLineDataSetWrapper(new ArrayList<Entry>(), "empty");
     }

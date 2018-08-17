@@ -30,5 +30,6 @@
     <color name="altitude">#0c7900</color>
     <color name="vertVelocity">#0003ba</color>
     <color name="horVelocity">#ff0011</color>
+    <color name="distance">#9e00a1</color>
 
 </resources>
