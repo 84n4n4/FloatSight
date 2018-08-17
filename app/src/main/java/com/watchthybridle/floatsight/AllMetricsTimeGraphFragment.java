@@ -40,11 +40,11 @@ import com.watchthybridle.floatsight.linedatasetcreation.TrackLineDataSetWrapper
 import java.util.ArrayList;
 import java.util.List;
 
-public class GraphByTimeFragment extends Fragment {
+public class AllMetricsTimeGraphFragment extends Fragment {
 
     private GlideOverlayChart chart;
 
-    public GraphByTimeFragment() {
+    public AllMetricsTimeGraphFragment() {
     }
 
     @Override
@@ -68,7 +68,7 @@ public class GraphByTimeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_graph_by_time, container, false);
+        return inflater.inflate(R.layout.fragment_all_metrics_time_graph, container, false);
     }
 
     public void showData(FlySightTrackData flySightTrackData) {

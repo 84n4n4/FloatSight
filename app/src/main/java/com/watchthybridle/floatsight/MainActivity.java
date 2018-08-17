@@ -23,7 +23,6 @@
 package com.watchthybridle.floatsight;
 
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -32,34 +31,29 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import com.watchthybridle.floatsight.csvparser.FlySightCsvParser;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG_GRAPH_BY_TIME_FRAGMENT = "friends_fragment";
     public static final int REQUEST_FILE = 666;
     private static final int PERMISSION_REQUEST_CODE = 200;
     private FlySightTrackData flySightTrackData  = new FlySightTrackData();
@@ -71,6 +65,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        showGraphByTimeFragment();
+    }
+
+    private void showGraphByTimeFragment() {
+        Fragment graphByTimeFragment = new AllMetricsTimeGraphFragment();
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, graphByTimeFragment,
+                TAG_GRAPH_BY_TIME_FRAGMENT);
+        transaction.commit();
     }
 
     @Override
@@ -200,9 +204,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void notifyDataLoaded() {
-        GraphByTimeFragment graphByTimeFragment = (GraphByTimeFragment) getSupportFragmentManager().findFragmentById(R.id.graph_fragment);
-        if (graphByTimeFragment != null) {
-            graphByTimeFragment.showData(flySightTrackData);
+        AllMetricsTimeGraphFragment allMetricsTimeGraphFragment = (AllMetricsTimeGraphFragment) getSupportFragmentManager()
+                .findFragmentByTag(TAG_GRAPH_BY_TIME_FRAGMENT);
+        if (allMetricsTimeGraphFragment != null) {
+            allMetricsTimeGraphFragment.showData(flySightTrackData);
         }
     }
 }
