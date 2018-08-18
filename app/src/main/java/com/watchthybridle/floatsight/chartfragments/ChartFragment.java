@@ -20,7 +20,7 @@
  *
  */
 
-package com.watchthybridle.floatsight;
+package com.watchthybridle.floatsight.chartfragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -31,6 +31,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.github.mikephil.charting.charts.LineChart;
+import com.watchthybridle.floatsight.MainActivity;
+import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
 
@@ -39,8 +41,6 @@ import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 public abstract class ChartFragment extends Fragment {
-
-    private LineChart chart;
 
     @Retention(SOURCE)
     @IntDef({DATA_VALID, DATA_INVALID})

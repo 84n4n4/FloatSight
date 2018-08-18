@@ -20,7 +20,7 @@
  *
  */
 
-package com.watchthybridle.floatsight;
+package com.watchthybridle.floatsight.chartfragments;
 
 import android.content.Context;
 import android.view.MotionEvent;
@@ -28,6 +28,7 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.watchthybridle.floatsight.R;
 
 import java.text.DecimalFormat;
 

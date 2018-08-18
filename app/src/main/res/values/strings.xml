@@ -22,7 +22,6 @@
 
 <resources>
     <string name="app_name">FloatSight</string>
-    <string name="action_import">Import</string>
     <string name="vert_velocity_label">V-vert</string>
     <string name="hor_velocity_label">V-hor</string>
     <string name="altitude_label">altitude</string>
@@ -34,4 +33,7 @@
     <string name="permissions_rationale">Storage access is required to read and save FlySight track liveData.</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="about_menu_item">About</string>
+    <string name="import_menu_item">Import</string>
+    <string name="about_dialog_message">Version %1$s\n\nSource and more info:\nhttps://github.com/84n4n4/FloatSight</string>
 </resources>

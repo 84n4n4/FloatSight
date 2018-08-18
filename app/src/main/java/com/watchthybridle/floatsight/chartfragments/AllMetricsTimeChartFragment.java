@@ -20,7 +20,7 @@
  *
  */
 
-package com.watchthybridle.floatsight;
+package com.watchthybridle.floatsight.chartfragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,6 +28,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
 import com.watchthybridle.floatsight.linedatasetcreation.TrackLineDataSetWrapper;
 
@@ -48,7 +49,7 @@ public class AllMetricsTimeChartFragment extends ChartFragment {
 
         chart = new GlideOverlayChart(getContext());
         chart.invalidate();
-        chart.setPinchZoom(true);
+        chart.setPinchZoom(false);
 
         frameLayout.addView(chart.glideChart);
         frameLayout.addView(chart);
@@ -84,6 +85,6 @@ public class AllMetricsTimeChartFragment extends ChartFragment {
                 flySightTrackData)));
 
         chart.invalidate();
-        chart.setPinchZoom(true);
+        chart.setPinchZoom(false);
     }
 }

@@ -37,6 +37,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
+import com.watchthybridle.floatsight.chartfragments.AllMetricsTimeChartFragment;
+import com.watchthybridle.floatsight.chartfragments.DistanceAltitudeChartFragment;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataRepository;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
 
@@ -103,6 +105,15 @@ public class MainActivity extends AppCompatActivity {
                     startActivityForResult(Intent.createChooser(intent, "Select a file"), REQUEST_FILE);
                 }
                 return true;
+            case R.id.action_about:
+                String message = getString(R.string.about_dialog_message, BuildConfig.VERSION_NAME);
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle(R.string.app_name)
+                        .setMessage(message)
+                        .setPositiveButton(R.string.ok, null)
+                        .create()
+                        .show();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
 
@@ -142,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
                     else {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             if (shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE)) {
-                                showMessageOKCancel(getResources().getString(R.string.permissions_rationale),
+                                showAlertOKCancel(getResources().getString(R.string.permissions_rationale),
                                         new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
@@ -162,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
+    private void showAlertOKCancel(String message, DialogInterface.OnClickListener okListener) {
         new AlertDialog.Builder(MainActivity.this)
                 .setMessage(message)
                 .setPositiveButton(R.string.ok, okListener)
