@@ -35,6 +35,9 @@ import java.util.List;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 public class FlySightTrackData {
+    public static final String FLYSIGHT_CSV_HEADER = "time,lat,lon,hMSL,velN,velE,velD,hAcc,vAcc,sAcc,heading,cAcc,gpsFix,numSV";
+    public static final String FLYSIGHT_CSV_HEADER_UNITS = ",(deg),(deg),(m),(m/s),(m/s),(m/s),(m),(m),(m/s),(deg),(deg),,";
+
     @Retention(SOURCE)
     @LongDef({PARSING_SUCCESS, PARSING_FAIL, PARSING_ERRORS})
     public @interface ParsingResult {}
@@ -43,7 +46,6 @@ public class FlySightTrackData {
     public static final long PARSING_ERRORS = 1;
 
     private long parsingStatus = PARSING_SUCCESS;
-    private int parsingErrorCount = 0;
 
     private List<String> time;
     private List<Point> position;
@@ -74,6 +76,9 @@ public class FlySightTrackData {
         this.parsingStatus = parsingStatus;
     }
 
+    public List<String> getTimeStamps() {
+        return time;
+    }
 
     public List<Entry> getHorVelocity() {
         return horVelocity;
@@ -101,8 +106,12 @@ public class FlySightTrackData {
 
     //0   ,1  ,2  ,3   ,4   ,5   ,6   ,7   ,8   ,9   ,10     ,11  ,12    ,13
     //time,lat,lon,hMSL,velN,velE,velD,hAcc,vAcc,sAcc,heading,cAcc,gpsFix,numSV
-    protected void addCsvLine(String csvLine) {
-        String[] row = csvLine.split(",");
+    void addCsvRow(String csvRow) {
+        if (csvRow.equals(FLYSIGHT_CSV_HEADER) || csvRow.equals(FLYSIGHT_CSV_HEADER_UNITS)) {
+            return;
+        }
+
+        String[] row = csvRow.split(",");
         try {
             if (row.length != 14 ||
                     !row[0].matches("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{2}Z")) {
@@ -139,17 +148,11 @@ public class FlySightTrackData {
     }
 
     private void handleLineParsingError() {
-        parsingErrorCount++;
-        if(parsingErrorCount > 2) { //because first two lines (header) of csv are not supposed to be readable anyways
-            parsingStatus = PARSING_ERRORS;
-        }
+        parsingStatus = PARSING_ERRORS;
         String timeStamp = "start";
         if(!time.isEmpty()){
             timeStamp = time.get(time.size() - 1);
         }
-        Log.d(FlySightTrackData.class.getSimpleName(),
-                "cant read line from csv somewhere around time:" + timeStamp
-                        + ", around line number:" + time.size() + 1 + ", therefore skipped.");
 
         int entryPosition = time.size();
         time.add("invalid");

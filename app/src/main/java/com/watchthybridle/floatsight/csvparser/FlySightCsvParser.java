@@ -41,7 +41,7 @@ public class FlySightCsvParser {
                 String csvLine;
 
                 while ((csvLine = reader.readLine()) != null) {
-                    flySightTrackData.addCsvLine(csvLine);
+                    flySightTrackData.addCsvRow(csvLine);
                 }
             }
             catch (IOException exception) {
