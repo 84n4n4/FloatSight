@@ -22,6 +22,7 @@
 
 package com.watchthybridle.floatsight;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -37,6 +38,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
+
 import com.watchthybridle.floatsight.chartfragments.AllMetricsTimeChartFragment;
 import com.watchthybridle.floatsight.chartfragments.DistanceAltitudeChartFragment;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataRepository;
@@ -61,8 +63,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        showAllMetricsFragmentChart();
-        flySightTrackDataViewModel = new FlySightTrackDataViewModel(new FlySightTrackDataRepository());
+
+        if (savedInstanceState == null) {
+			showAllMetricsFragmentChart();
+		}
+
+        flySightTrackDataViewModel = ViewModelProviders.of(this).get(FlySightTrackDataViewModel.class);
     }
 
     private void showAllMetricsFragmentChart() {
@@ -124,7 +130,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQUEST_FILE && resultCode == RESULT_OK) {
-            flySightTrackDataViewModel.loadFromFile(data.getData(), getContentResolver());
+            FlySightTrackDataRepository repository = new FlySightTrackDataRepository(getContentResolver());
+            repository.loadFlySightTrackData(data.getData(), flySightTrackDataViewModel);
         }
     }
 

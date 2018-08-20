@@ -22,16 +22,19 @@
 
 package com.watchthybridle.floatsight.chartfragments;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.*;
+import android.support.annotation.IntDef;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.github.mikephil.charting.charts.LineChart;
-import com.watchthybridle.floatsight.MainActivity;
+
 import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
@@ -51,13 +54,14 @@ public abstract class ChartFragment extends Fragment {
     public ChartFragment() {
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        FlySightTrackDataViewModel trackDataViewModel = ((MainActivity) getActivity()).getFlySightTrackDataViewModel();
-        trackDataViewModel.getFlySightTrackDataLiveData()
-                .observe(this, flySightTrackData -> showData(flySightTrackData));
-    }
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		FlySightTrackDataViewModel trackDataViewModel = ViewModelProviders.of(getActivity()).get(FlySightTrackDataViewModel.class);
+
+		trackDataViewModel.getFlySightTrackDataLiveData()
+				.observe(this, flySightTrackData -> showData(flySightTrackData));
+	}
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
