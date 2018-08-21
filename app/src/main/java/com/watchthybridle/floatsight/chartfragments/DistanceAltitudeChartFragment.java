@@ -27,7 +27,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.FrameLayout;
-
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.LineData;
 import com.watchthybridle.floatsight.R;
@@ -62,8 +61,8 @@ public class DistanceAltitudeChartFragment extends ChartFragment {
         chart.setPinchZoom(false);
     }
 
-    protected void showData(FlySightTrackData flySightTrackData) {
-        if (isValidDataAndShowAlerts(flySightTrackData) == DATA_INVALID) {
+    protected void actOnDataChanged(FlySightTrackData flySightTrackData) {
+        if (isInvalid(flySightTrackData)) {
             return;
         }
 

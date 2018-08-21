@@ -26,7 +26,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.FrameLayout;
-
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.watchthybridle.floatsight.R;
@@ -56,8 +55,8 @@ public class AllMetricsTimeChartFragment extends ChartFragment {
         frameLayout.addView(chart);
     }
 
-    public void showData(FlySightTrackData flySightTrackData) {
-        if (isValidDataAndShowAlerts(flySightTrackData) == DATA_INVALID) {
+    public void actOnDataChanged(FlySightTrackData flySightTrackData) {
+        if (isInvalid(flySightTrackData)) {
             return;
         }
 

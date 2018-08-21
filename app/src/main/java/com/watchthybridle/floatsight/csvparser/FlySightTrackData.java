@@ -22,10 +22,7 @@
 
 package com.watchthybridle.floatsight.csvparser;
 
-import android.support.annotation.IntDef;
 import android.support.annotation.LongDef;
-import android.support.annotation.NonNull;
-
 import com.github.mikephil.charting.data.Entry;
 
 import java.lang.annotation.Retention;

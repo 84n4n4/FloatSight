@@ -23,6 +23,7 @@
 package com.watchthybridle.floatsight;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -38,9 +39,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
-
-import com.watchthybridle.floatsight.chartfragments.AllMetricsTimeChartFragment;
-import com.watchthybridle.floatsight.chartfragments.DistanceAltitudeChartFragment;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataRepository;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
 
@@ -49,8 +47,9 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG_ALL_METRICS_V_TIME_CHART_FRAGMENT = "TAG_ALL_METRICS_V_TIME_CHART_FRAGMENT";
-    private static final String TAG_DISTANCE_V_ALTITUDE_CHART_FRAGMENT = "TAG_DISTANCE_V_ALTITUDE_CHART_FRAGMENT";
+    public static final String TAG_ALL_METRICS_V_TIME_CHART_FRAGMENT = "TAG_ALL_METRICS_V_TIME_CHART_FRAGMENT";
+    public static final String TAG_DISTANCE_V_ALTITUDE_CHART_FRAGMENT = "TAG_DISTANCE_V_ALTITUDE_CHART_FRAGMENT";
+    public static final String TAG_MAIN_MENU_FRAGMENT = "TAG_MAIN_MENU_FRAGMENT";
 
     public static final int REQUEST_FILE = 666;
     private static final int PERMISSION_REQUEST_CODE = 200;
@@ -64,32 +63,43 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         if (savedInstanceState == null) {
-			showAllMetricsFragmentChart();
+            showMainMenuFragment();
 		}
 
         flySightTrackDataViewModel = ViewModelProviders.of(this).get(FlySightTrackDataViewModel.class);
     }
 
-    private void showAllMetricsFragmentChart() {
-        AllMetricsTimeChartFragment allMetricsTimeChartFragment = new AllMetricsTimeChartFragment();
+    private void showMainMenuFragment() {
+        MainMenuFragment mainMenuFragment = new MainMenuFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, allMetricsTimeChartFragment,
-                TAG_ALL_METRICS_V_TIME_CHART_FRAGMENT);
+        transaction.replace(R.id.fragment_container, mainMenuFragment,
+                TAG_MAIN_MENU_FRAGMENT);
         transaction.commit();
     }
 
-    private void showDistanceAltitudeFragmentChart() {
-        DistanceAltitudeChartFragment distanceAltitudeChartFragment = new DistanceAltitudeChartFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, distanceAltitudeChartFragment,
-                TAG_DISTANCE_V_ALTITUDE_CHART_FRAGMENT);
-        transaction.commit();
+    public void startImportFile() {
+        if (!checkPermission()) {
+            requestPermission();
+        } else {
+            Intent intent = new Intent()
+                    .setType("*/*")
+                    .setAction(Intent.ACTION_OPEN_DOCUMENT);
+            startActivityForResult(Intent.createChooser(intent, "Select a file"), REQUEST_FILE);
+        }
     }
 
-
-    public FlySightTrackDataViewModel getFlySightTrackDataViewModel() {
-        return flySightTrackDataViewModel;
+    public void showAboutDialog(Context context) {
+        String message = getString(R.string.about_dialog_message, BuildConfig.VERSION_NAME);
+        new AlertDialog.Builder(context)
+                .setTitle(R.string.app_name)
+                .setMessage(message)
+                .setPositiveButton(R.string.ok, null)
+                .create()
+                .show();
     }
 
     @Override
@@ -101,24 +111,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_import:
-                if (!checkPermission()) {
-                    requestPermission();
-                } else {
-                    Intent intent = new Intent()
-                            .setType("*/*")
-                            .setAction(Intent.ACTION_OPEN_DOCUMENT);
-                    startActivityForResult(Intent.createChooser(intent, "Select a file"), REQUEST_FILE);
-                }
-                return true;
             case R.id.action_about:
-                String message = getString(R.string.about_dialog_message, BuildConfig.VERSION_NAME);
-                new AlertDialog.Builder(MainActivity.this)
-                        .setTitle(R.string.app_name)
-                        .setMessage(message)
-                        .setPositiveButton(R.string.ok, null)
-                        .create()
-                        .show();
+                showAboutDialog(MainActivity.this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -187,5 +181,11 @@ public class MainActivity extends AppCompatActivity {
                 .setNegativeButton(R.string.cancel, null)
                 .create()
                 .show();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

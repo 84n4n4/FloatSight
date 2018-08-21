@@ -26,7 +26,6 @@ import android.arch.lifecycle.MutableLiveData;
 import android.content.ContentResolver;
 import android.net.Uri;
 import android.os.AsyncTask;
-
 import com.watchthybridle.floatsight.csvparser.FlySightCsvParser;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
 

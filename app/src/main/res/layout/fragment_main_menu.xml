@@ -21,11 +21,17 @@
   ~
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/action_about"
-        android:orderInCategory="100"
-        android:title="@string/about_menu_item"
-        app:showAsAction="never" />
-</menu>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                 xmlns:tools="http://schemas.android.com/tools"
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="match_parent"
+                                                 tools:context=".chartfragments.AllMetricsTimeChartFragment"
+                                                 tools:showIn="@layout/activity_main"
+                                                 android:divider="@color/colorPrimary">
+    <ListView
+        android:id="@+id/main_menu_button_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </ListView>
+
+</LinearLayout>

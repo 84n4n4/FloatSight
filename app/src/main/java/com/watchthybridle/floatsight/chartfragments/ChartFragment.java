@@ -23,33 +23,18 @@
 package com.watchthybridle.floatsight.chartfragments;
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
 
-import java.lang.annotation.Retention;
-
-import static java.lang.annotation.RetentionPolicy.SOURCE;
-
 public abstract class ChartFragment extends Fragment {
-
-    @Retention(SOURCE)
-    @IntDef({DATA_VALID, DATA_INVALID})
-    public @interface DataValidForChart {}
-    public static final int DATA_VALID = 1;
-    public static final int DATA_INVALID = 0;
 
     public ChartFragment() {
     }
@@ -60,7 +45,7 @@ public abstract class ChartFragment extends Fragment {
 		FlySightTrackDataViewModel trackDataViewModel = ViewModelProviders.of(getActivity()).get(FlySightTrackDataViewModel.class);
 
 		trackDataViewModel.getFlySightTrackDataLiveData()
-				.observe(this, flySightTrackData -> showData(flySightTrackData));
+				.observe(this, flySightTrackData -> actOnDataChanged(flySightTrackData));
 	}
 
     @Override
@@ -69,28 +54,10 @@ public abstract class ChartFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_chart, container, false);
     }
 
-    private void showParsingErrorMessage(@StringRes int stringResId) {
-        Context context = getContext();
-        if(context != null) {
-            new AlertDialog.Builder(context)
-                    .setMessage(stringResId)
-                    .setPositiveButton(R.string.ok, null)
-                    .create()
-                    .show();
-        }
-    }
+    abstract protected void actOnDataChanged(FlySightTrackData flySightTrackData);
 
-    abstract protected void showData(FlySightTrackData flySightTrackData);
-
-    public @DataValidForChart int isValidDataAndShowAlerts(FlySightTrackData flySightTrackData) {
-        if (flySightTrackData.isAnyMetricEmpty()) {
-            return DATA_INVALID;
-        } else if (flySightTrackData.getParsingStatus() == FlySightTrackData.PARSING_FAIL) {
-            showParsingErrorMessage(R.string.fail_parsing_file);
-            return DATA_INVALID;
-        } else if (flySightTrackData.getParsingStatus() == FlySightTrackData.PARSING_ERRORS) {
-            showParsingErrorMessage(R.string.some_errors_parsing_file);
-        }
-        return DATA_VALID;
+    public boolean isInvalid(FlySightTrackData flySightTrackData) {
+        return flySightTrackData.isAnyMetricEmpty()
+                || flySightTrackData.getParsingStatus() == FlySightTrackData.PARSING_FAIL;
     }
 }

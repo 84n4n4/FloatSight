@@ -25,7 +25,6 @@ package com.watchthybridle.floatsight.viewmodel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
-
 import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
 
 public class FlySightTrackDataViewModel extends ViewModel {
