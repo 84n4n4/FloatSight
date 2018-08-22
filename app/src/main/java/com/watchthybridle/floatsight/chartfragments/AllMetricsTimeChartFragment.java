@@ -48,8 +48,8 @@ public class AllMetricsTimeChartFragment extends ChartFragment {
         FrameLayout frameLayout = view.findViewById(R.id.root_chart_view);
 
         chart = new GlideOverlayChart(getContext());
-        chart.invalidate();
         chart.setPinchZoom(false);
+        chart.invalidate();
 
         frameLayout.addView(chart.glideChart);
         frameLayout.addView(chart);
@@ -63,7 +63,7 @@ public class AllMetricsTimeChartFragment extends ChartFragment {
         List<ILineDataSet> dataSets = new ArrayList<>();
 
         dataSets.add(TrackLineDataSetWrapper.getLineDataSet(getContext(),
-                TrackLineDataSetWrapper.ALTITUDE_VS_TIME,
+                TrackLineDataSetWrapper.HOR_VELOCITY_VS_TIME,
                 flySightTrackData));
 
         dataSets.add(TrackLineDataSetWrapper.getLineDataSet(getContext(),
@@ -71,9 +71,9 @@ public class AllMetricsTimeChartFragment extends ChartFragment {
                 flySightTrackData));
 
         dataSets.add(TrackLineDataSetWrapper.getLineDataSet(getContext(),
-                TrackLineDataSetWrapper.HOR_VELOCITY_VS_TIME,
+                TrackLineDataSetWrapper.ALTITUDE_VS_TIME,
                 flySightTrackData));
-
+        
         dataSets.add(TrackLineDataSetWrapper.getLineDataSet(getContext(),
                 TrackLineDataSetWrapper.DISTANCE_VS_TIME,
                 flySightTrackData));
@@ -85,6 +85,5 @@ public class AllMetricsTimeChartFragment extends ChartFragment {
                 flySightTrackData)));
 
         chart.invalidate();
-        chart.setPinchZoom(false);
     }
 }

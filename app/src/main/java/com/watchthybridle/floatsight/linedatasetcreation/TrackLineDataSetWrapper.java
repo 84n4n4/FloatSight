@@ -48,8 +48,8 @@ public class TrackLineDataSetWrapper extends LineDataSet {
     public static final int HOR_VELOCITY_VS_TIME = 0;
     public static final int VERT_VELOCITY_VS_TIME = 1;
     public static final int ALTITUDE_VS_TIME = 2;
-    public static final int GLIDE_VS_TIME = 3;
-    public static final int DISTANCE_VS_TIME = 4;
+    public static final int DISTANCE_VS_TIME = 3;
+    public static final int GLIDE_VS_TIME = 4;
     public static final int DISTANCE_VS_ALTITUDE = 5;
 
     private TrackLineDataSetWrapper(List<Entry> yVals, String label) {
@@ -68,12 +68,12 @@ public class TrackLineDataSetWrapper extends LineDataSet {
             case ALTITUDE_VS_TIME:
                 return getLineDataSet(context, trackData.getAltitude(), R.string.altitude_label,
                         R.color.altitude, YAxis.AxisDependency.RIGHT);
-            case GLIDE_VS_TIME:
-                return getLineDataSet(context, trackData.getGlide(), R.string.glide_label,
-                        R.color.glide, YAxis.AxisDependency.LEFT);
             case DISTANCE_VS_TIME:
                 return getLineDataSet(context, trackData.getDistance(), R.string.distance_label,
                         R.color.distance, YAxis.AxisDependency.RIGHT);
+            case GLIDE_VS_TIME:
+                return getLineDataSet(context, trackData.getGlide(), R.string.glide_label,
+                        R.color.glide, YAxis.AxisDependency.LEFT);
             case DISTANCE_VS_ALTITUDE:
                 return getDistanceVsAltitudeDataSet(context, trackData.getDistanceVsAltitude());
         }

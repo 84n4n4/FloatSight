@@ -57,8 +57,10 @@ public class DistanceAltitudeChartFragment extends ChartFragment {
         chart.getAxisLeft().setPosition(INSIDE_CHART);
         chart.getAxisRight().setPosition(INSIDE_CHART);
         chart.getDescription().setText("");
-        chart.invalidate();
         chart.setPinchZoom(false);
+        chart.getAxisRight().setSpaceTop(10);
+        chart.getAxisLeft().setSpaceTop(10);
+        chart.invalidate();
     }
 
     protected void actOnDataChanged(FlySightTrackData flySightTrackData) {
@@ -71,7 +73,6 @@ public class DistanceAltitudeChartFragment extends ChartFragment {
                 flySightTrackData)));
 
         chart.invalidate();
-        chart.setPinchZoom(true);
     }
 
     @Override

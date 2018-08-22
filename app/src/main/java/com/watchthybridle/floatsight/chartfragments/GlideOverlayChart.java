@@ -31,10 +31,17 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.watchthybridle.floatsight.R;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.github.mikephil.charting.components.YAxis.YAxisLabelPosition.INSIDE_CHART;
 
 public class GlideOverlayChart extends LineChart {
+
+    private final DecimalFormat velocityFormat = new DecimalFormat("#0");
+    private final DecimalFormat distanceFormat = new DecimalFormat("###0");
+    private final DecimalFormat glideFormat = new DecimalFormat("#0.00");
+
     public LineChart glideChart;
 
     public GlideOverlayChart(Context context) {
@@ -46,6 +53,24 @@ public class GlideOverlayChart extends LineChart {
         setAxisLabelValueFormats();
         setAxisLabelColors();
         setLegendPosition();
+        setMarkers(context);
+    }
+
+    private void setMarkers(Context context) {
+        List<DecimalFormat> decimalFormatsOutherGraph = new ArrayList<>();
+        decimalFormatsOutherGraph.add(velocityFormat);
+        decimalFormatsOutherGraph.add(velocityFormat);
+        decimalFormatsOutherGraph.add(distanceFormat);
+        decimalFormatsOutherGraph.add(distanceFormat);
+        CustomYValueMarker markerViewOutsideGraph = new CustomYValueMarker(context, R.layout.custom_marker, decimalFormatsOutherGraph);
+        markerViewOutsideGraph.setChartView(this);
+        this.setMarker(markerViewOutsideGraph);
+
+        List<DecimalFormat> decimalFormatsGlideGraph = new ArrayList<>();
+        decimalFormatsGlideGraph.add(glideFormat);
+        CustomYValueMarker markerViewGlideGraph = new CustomYValueMarker(context, R.layout.custom_marker, decimalFormatsGlideGraph);
+        markerViewGlideGraph.setChartView(glideChart);
+        glideChart.setMarker(markerViewGlideGraph);
     }
 
     private void setAxisLabelPosition() {
@@ -72,14 +97,14 @@ public class GlideOverlayChart extends LineChart {
 
     private void setAxisLabelValueFormats() {
         glideChart.getAxisLeft().setValueFormatter(
-                new CustomYAxisValueFormatter(new DecimalFormat("#0.00")));
+                new CustomYAxisValueFormatter(glideFormat));
         glideChart.getAxisRight().setValueFormatter(
-                new CustomYAxisValueFormatter(new DecimalFormat("#0.00")));
+                new CustomYAxisValueFormatter(glideFormat));
 
         this.getAxisLeft().setValueFormatter(
-                new CustomYAxisValueFormatter(new DecimalFormat("#0")));
+                new CustomYAxisValueFormatter(velocityFormat));
         this.getAxisRight().setValueFormatter(
-                new CustomYAxisValueFormatter(new DecimalFormat("###0")));
+                new CustomYAxisValueFormatter(distanceFormat));
     }
 
     private void setAxisLabelColors() {
@@ -115,10 +140,10 @@ public class GlideOverlayChart extends LineChart {
         return success;
     }
 
-    public class CustomYAxisValueFormatter implements IAxisValueFormatter {
+    class CustomYAxisValueFormatter implements IAxisValueFormatter {
         private DecimalFormat mFormat;
 
-        public CustomYAxisValueFormatter(DecimalFormat decimalFormat) {
+        CustomYAxisValueFormatter(DecimalFormat decimalFormat) {
             mFormat = decimalFormat;
         }
 
