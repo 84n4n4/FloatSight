@@ -54,4 +54,10 @@
     <!-- Toolbar -->
     <string name="about_menu_item">About</string>
     <string name="about_dialog_message">Version %1$s\n\nSource and more info:\nhttps://github.com/84n4n4/FloatSight</string>
+
+
+    <!-- Units -->
+    <string name="kmh">%1$s km/h</string>
+    <string name="m">%1$s m</string>
+    <string name="none">%1$s</string>
 </resources>

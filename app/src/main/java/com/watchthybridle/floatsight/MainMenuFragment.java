@@ -17,7 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import com.watchthybridle.floatsight.chartfragments.AllMetricsTimeChartFragment;
 import com.watchthybridle.floatsight.chartfragments.ChartFragment;
-import com.watchthybridle.floatsight.chartfragments.DistanceAltitudeChartFragment;
+import com.watchthybridle.floatsight.chartfragments.DistanceVsAltitudeChartFragment;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
 
 import java.lang.annotation.Retention;
@@ -137,9 +137,9 @@ public class MainMenuFragment extends ChartFragment implements AdapterView.OnIte
 	private void showDistanceAltitudeFragmentChart() {
 		FragmentActivity activity = getActivity();
 		if (activity != null) {
-			DistanceAltitudeChartFragment distanceAltitudeChartFragment = new DistanceAltitudeChartFragment();
+			DistanceVsAltitudeChartFragment distanceVsAltitudeChartFragment = new DistanceVsAltitudeChartFragment();
 			FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
-			transaction.replace(R.id.fragment_container, distanceAltitudeChartFragment,
+			transaction.replace(R.id.fragment_container, distanceVsAltitudeChartFragment,
 					TAG_DISTANCE_V_ALTITUDE_CHART_FRAGMENT)
 					.addToBackStack(TAG_MAIN_MENU_FRAGMENT)
 					.commit();

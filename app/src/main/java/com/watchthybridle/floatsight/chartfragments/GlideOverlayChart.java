@@ -24,19 +24,15 @@ package com.watchthybridle.floatsight.chartfragments;
 
 import android.content.Context;
 import android.view.MotionEvent;
-
-import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.watchthybridle.floatsight.R;
-import com.watchthybridle.floatsight.linedatasetcreation.ChartDataFactory;
-import com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetHolder;
+import com.watchthybridle.floatsight.linedatasetcreation.AllMetricsVsTimeChartDataSetHolder;
+import com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetProperties;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.github.mikephil.charting.components.YAxis.YAxisLabelPosition.INSIDE_CHART;
 
@@ -53,6 +49,8 @@ public class GlideOverlayChart extends LineChart {
         setAxisLabelValueFormats();
         setAxisLabelColors();
         setLegendPosition();
+        glideChart.setHighlightPerDragEnabled(false);
+        glideChart.setHighlightPerTapEnabled(false);
     }
 
     private void setAxisLabelPosition() {
@@ -79,14 +77,14 @@ public class GlideOverlayChart extends LineChart {
 
     private void setAxisLabelValueFormats() {
         glideChart.getAxisLeft().setValueFormatter(
-                new CustomYAxisValueFormatter(ChartDataFactory.GLIDE_FORMAT));
+                new CustomYAxisValueFormatter(ChartDataSetProperties.GLIDE_FORMAT));
         glideChart.getAxisRight().setValueFormatter(
-                new CustomYAxisValueFormatter(ChartDataFactory.GLIDE_FORMAT));
+                new CustomYAxisValueFormatter(ChartDataSetProperties.GLIDE_FORMAT));
 
         this.getAxisLeft().setValueFormatter(
-                new CustomYAxisValueFormatter(ChartDataFactory.VELOCITY_FORMAT));
+                new CustomYAxisValueFormatter(ChartDataSetProperties.VELOCITY_FORMAT));
         this.getAxisRight().setValueFormatter(
-                new CustomYAxisValueFormatter(ChartDataFactory.DISTANCE_FORMAT));
+                new CustomYAxisValueFormatter(ChartDataSetProperties.DISTANCE_FORMAT));
     }
 
     private void setAxisLabelColors() {
@@ -135,19 +133,14 @@ public class GlideOverlayChart extends LineChart {
         }
     }
 
-    public void setDataWithFormat(ChartDataSetHolder outerChartDataSetHolder, ChartDataSetHolder glideChartDataSetHolder) {
-        setDataWithFormat(outerChartDataSetHolder, this);
-        setDataWithFormat(glideChartDataSetHolder, glideChart);
-    }
+    public void setDataHolder(AllMetricsVsTimeChartDataSetHolder chartDataSetHolder) {
+        setData(chartDataSetHolder.getLineDataOuterGraph());
+        glideChart.setData(chartDataSetHolder.getLineDataGlideGraph());
 
-    private void setDataWithFormat(ChartDataSetHolder chartDataSetHolder, LineChart chart) {
-        chart.setData(chartDataSetHolder.getLineData());
-
-        CustomYValueMarker markerViewOutsideGraph =
-                new CustomYValueMarker(chart.getContext(), R.layout.custom_marker, chartDataSetHolder.getFormats());
-        markerViewOutsideGraph.setChartView(chart);
-        chart.setMarker(markerViewOutsideGraph);
-
+        AllMetricsTimeChartMarker markerViewOutsideGraph =
+                new AllMetricsTimeChartMarker(getContext(), chartDataSetHolder);
+        markerViewOutsideGraph.setChartView(this);
+        setMarker(markerViewOutsideGraph);
     }
 }
 

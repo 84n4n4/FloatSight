@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:background="@drawable/custom_marker" >
+                android:layout_height="wrap_content"
+                android:background="@drawable/custom_marker"
+                android:orientation="vertical">
 
     <TextView
-            android:id="@+id/marker_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="7dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:text=""
-            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            android:textColor="@android:color/white"
-            android:ellipsize="end"
-            android:singleLine="true"/>
+            android:id="@+id/altitude_marker_text_view"
+            style="@style/markerTextView"/>
+    <TextView
+            android:id="@+id/distance_marker_text_view"
+            style="@style/markerTextView"/>
+    <TextView
+            android:id="@+id/hor_velocity_marker_text_view"
+            style="@style/markerTextView"/>
+    <TextView
+            android:id="@+id/vert_velocity_marker_text_view"
+            style="@style/markerTextView"/>
+    <TextView
+            android:id="@+id/glide_marker_text_view"
+            style="@style/markerTextView"/>
 
-</RelativeLayout>
+</LinearLayout>

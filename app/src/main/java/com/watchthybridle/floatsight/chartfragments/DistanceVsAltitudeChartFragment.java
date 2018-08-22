@@ -31,16 +31,15 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.LineData;
 import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
-import com.watchthybridle.floatsight.linedatasetcreation.ChartDataFactory;
-import com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetHolder;
+import com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetProperties;
 
 import static com.github.mikephil.charting.components.YAxis.YAxisLabelPosition.INSIDE_CHART;
 
-public class DistanceAltitudeChartFragment extends ChartFragment {
+public class DistanceVsAltitudeChartFragment extends ChartFragment {
 
     private LineChart chart;
 
-    public DistanceAltitudeChartFragment() {
+    public DistanceVsAltitudeChartFragment() {
     }
 
     @Override
@@ -69,17 +68,10 @@ public class DistanceAltitudeChartFragment extends ChartFragment {
             return;
         }
 
-        ChartDataSetHolder chartDataSetHolder = new ChartDataSetHolder();
-        chartDataSetHolder.addDataSetWithFormat(ChartDataFactory.getLineDataSet(getContext(),
-                ChartDataFactory.DISTANCE_VS_ALTITUDE,
-                flySightTrackData));
+        ChartDataSetProperties chartDataSetHolder =
+                ChartDataSetProperties.getDistanceVsAltitudeProperties(getContext(), flySightTrackData);
 
-        chart.setData(chartDataSetHolder.getLineData());
-
-        CustomYValueMarker markerViewOutsideGraph =
-                new CustomYValueMarker(chart.getContext(), R.layout.custom_marker, chartDataSetHolder.getFormats());
-        markerViewOutsideGraph.setChartView(chart);
-        chart.setMarker(markerViewOutsideGraph);
+        chart.setData(new LineData(chartDataSetHolder.iLineDataSet));
 
         chart.invalidate();
     }
