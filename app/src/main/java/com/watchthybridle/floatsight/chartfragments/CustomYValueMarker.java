@@ -23,8 +23,6 @@ public class CustomYValueMarker extends MarkerView {
 
     @Override
     public void refreshContent(Entry entry, Highlight highlight) {
-        highlight.getDataSetIndex();
-        highlight.getDataIndex();
         DecimalFormat decimalFormat = decimalFormats.get(highlight.getDataSetIndex());
         textView.setText(decimalFormat.format(entry.getY()));
         super.refreshContent(entry, highlight);

@@ -24,11 +24,15 @@ package com.watchthybridle.floatsight.chartfragments;
 
 import android.content.Context;
 import android.view.MotionEvent;
+
+import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.watchthybridle.floatsight.R;
+import com.watchthybridle.floatsight.linedatasetcreation.ChartDataFactory;
+import com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetHolder;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -37,10 +41,6 @@ import java.util.List;
 import static com.github.mikephil.charting.components.YAxis.YAxisLabelPosition.INSIDE_CHART;
 
 public class GlideOverlayChart extends LineChart {
-
-    private final DecimalFormat velocityFormat = new DecimalFormat("#0");
-    private final DecimalFormat distanceFormat = new DecimalFormat("###0");
-    private final DecimalFormat glideFormat = new DecimalFormat("#0.00");
 
     public LineChart glideChart;
 
@@ -53,24 +53,6 @@ public class GlideOverlayChart extends LineChart {
         setAxisLabelValueFormats();
         setAxisLabelColors();
         setLegendPosition();
-        setMarkers(context);
-    }
-
-    private void setMarkers(Context context) {
-        List<DecimalFormat> decimalFormatsOutherGraph = new ArrayList<>();
-        decimalFormatsOutherGraph.add(velocityFormat);
-        decimalFormatsOutherGraph.add(velocityFormat);
-        decimalFormatsOutherGraph.add(distanceFormat);
-        decimalFormatsOutherGraph.add(distanceFormat);
-        CustomYValueMarker markerViewOutsideGraph = new CustomYValueMarker(context, R.layout.custom_marker, decimalFormatsOutherGraph);
-        markerViewOutsideGraph.setChartView(this);
-        this.setMarker(markerViewOutsideGraph);
-
-        List<DecimalFormat> decimalFormatsGlideGraph = new ArrayList<>();
-        decimalFormatsGlideGraph.add(glideFormat);
-        CustomYValueMarker markerViewGlideGraph = new CustomYValueMarker(context, R.layout.custom_marker, decimalFormatsGlideGraph);
-        markerViewGlideGraph.setChartView(glideChart);
-        glideChart.setMarker(markerViewGlideGraph);
     }
 
     private void setAxisLabelPosition() {
@@ -97,14 +79,14 @@ public class GlideOverlayChart extends LineChart {
 
     private void setAxisLabelValueFormats() {
         glideChart.getAxisLeft().setValueFormatter(
-                new CustomYAxisValueFormatter(glideFormat));
+                new CustomYAxisValueFormatter(ChartDataFactory.GLIDE_FORMAT));
         glideChart.getAxisRight().setValueFormatter(
-                new CustomYAxisValueFormatter(glideFormat));
+                new CustomYAxisValueFormatter(ChartDataFactory.GLIDE_FORMAT));
 
         this.getAxisLeft().setValueFormatter(
-                new CustomYAxisValueFormatter(velocityFormat));
+                new CustomYAxisValueFormatter(ChartDataFactory.VELOCITY_FORMAT));
         this.getAxisRight().setValueFormatter(
-                new CustomYAxisValueFormatter(distanceFormat));
+                new CustomYAxisValueFormatter(ChartDataFactory.DISTANCE_FORMAT));
     }
 
     private void setAxisLabelColors() {
@@ -151,6 +133,21 @@ public class GlideOverlayChart extends LineChart {
         public String getFormattedValue(float value, AxisBase axis) {
             return mFormat.format(value);
         }
+    }
+
+    public void setDataWithFormat(ChartDataSetHolder outerChartDataSetHolder, ChartDataSetHolder glideChartDataSetHolder) {
+        setDataWithFormat(outerChartDataSetHolder, this);
+        setDataWithFormat(glideChartDataSetHolder, glideChart);
+    }
+
+    private void setDataWithFormat(ChartDataSetHolder chartDataSetHolder, LineChart chart) {
+        chart.setData(chartDataSetHolder.getLineData());
+
+        CustomYValueMarker markerViewOutsideGraph =
+                new CustomYValueMarker(chart.getContext(), R.layout.custom_marker, chartDataSetHolder.getFormats());
+        markerViewOutsideGraph.setChartView(chart);
+        chart.setMarker(markerViewOutsideGraph);
+
     }
 }
 

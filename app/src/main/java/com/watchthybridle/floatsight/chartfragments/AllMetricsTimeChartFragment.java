@@ -26,11 +26,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.FrameLayout;
+
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
-import com.watchthybridle.floatsight.linedatasetcreation.TrackLineDataSetWrapper;
+import com.watchthybridle.floatsight.linedatasetcreation.ChartDataFactory;
+import com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,29 +63,34 @@ public class AllMetricsTimeChartFragment extends ChartFragment {
             return;
         }
 
-        List<ILineDataSet> dataSets = new ArrayList<>();
-
-        dataSets.add(TrackLineDataSetWrapper.getLineDataSet(getContext(),
-                TrackLineDataSetWrapper.HOR_VELOCITY_VS_TIME,
+        ChartDataSetHolder outerChartDataSetHolder = new ChartDataSetHolder();
+        outerChartDataSetHolder.addDataSetWithFormat(ChartDataFactory.getLineDataSet(getContext(),
+                ChartDataFactory.HOR_VELOCITY_VS_TIME,
                 flySightTrackData));
 
-        dataSets.add(TrackLineDataSetWrapper.getLineDataSet(getContext(),
-                TrackLineDataSetWrapper.VERT_VELOCITY_VS_TIME,
+        outerChartDataSetHolder.addDataSetWithFormat(ChartDataFactory.getLineDataSet(getContext(),
+                ChartDataFactory.HOR_VELOCITY_VS_TIME,
                 flySightTrackData));
 
-        dataSets.add(TrackLineDataSetWrapper.getLineDataSet(getContext(),
-                TrackLineDataSetWrapper.ALTITUDE_VS_TIME,
-                flySightTrackData));
-        
-        dataSets.add(TrackLineDataSetWrapper.getLineDataSet(getContext(),
-                TrackLineDataSetWrapper.DISTANCE_VS_TIME,
+        outerChartDataSetHolder.addDataSetWithFormat(ChartDataFactory.getLineDataSet(getContext(),
+                ChartDataFactory.VERT_VELOCITY_VS_TIME,
                 flySightTrackData));
 
-        chart.setData(new LineData(dataSets));
+        outerChartDataSetHolder.addDataSetWithFormat(ChartDataFactory.getLineDataSet(getContext(),
+                ChartDataFactory.ALTITUDE_VS_TIME,
+                flySightTrackData));
 
-        chart.glideChart.setData(new LineData(TrackLineDataSetWrapper.getLineDataSet(getContext(),
-                TrackLineDataSetWrapper.GLIDE_VS_TIME,
-                flySightTrackData)));
+        outerChartDataSetHolder.addDataSetWithFormat(ChartDataFactory.getLineDataSet(getContext(),
+                ChartDataFactory.DISTANCE_VS_TIME,
+                flySightTrackData));
+
+
+        ChartDataSetHolder glideChartDataSetHolder = new ChartDataSetHolder();
+        glideChartDataSetHolder.addDataSetWithFormat(ChartDataFactory.getLineDataSet(getContext(),
+                ChartDataFactory.GLIDE_VS_TIME,
+                flySightTrackData));
+
+        chart.setDataWithFormat(outerChartDataSetHolder, glideChartDataSetHolder);
 
         chart.invalidate();
     }

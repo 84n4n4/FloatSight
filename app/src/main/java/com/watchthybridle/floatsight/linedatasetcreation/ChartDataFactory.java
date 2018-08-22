@@ -34,12 +34,13 @@ import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
 
 import java.lang.annotation.Retention;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
-public class TrackLineDataSetWrapper extends LineDataSet {
+public class ChartDataFactory {
 
     @Retention(SOURCE)
     @IntDef({HOR_VELOCITY_VS_TIME, VERT_VELOCITY_VS_TIME, ALTITUDE_VS_TIME, GLIDE_VS_TIME,
@@ -52,37 +53,51 @@ public class TrackLineDataSetWrapper extends LineDataSet {
     public static final int GLIDE_VS_TIME = 4;
     public static final int DISTANCE_VS_ALTITUDE = 5;
 
-    private TrackLineDataSetWrapper(List<Entry> yVals, String label) {
-        super(yVals, label);
+    public static final DecimalFormat VELOCITY_FORMAT = new DecimalFormat("#0");
+    public static final DecimalFormat DISTANCE_FORMAT = new DecimalFormat("###0");
+    public static final DecimalFormat GLIDE_FORMAT = new DecimalFormat("#0.00");
+
+    private ChartDataFactory() {
     }
 
-    public static TrackLineDataSetWrapper getLineDataSet(Context context, @Metric int metric,
-                                                         FlySightTrackData trackData) {
+    public static DataSetWithFormat getLineDataSet(Context context, @Metric int metric,
+                                                  FlySightTrackData trackData) {
         switch (metric) {
             case HOR_VELOCITY_VS_TIME:
-                return getLineDataSet(context, trackData.getHorVelocity(), R.string.hor_velocity_label,
-                        R.color.horVelocity, YAxis.AxisDependency.LEFT);
+                return new DataSetWithFormat(getLineDataSet(context, trackData.getHorVelocity(), R.string.hor_velocity_label,
+                        R.color.horVelocity, YAxis.AxisDependency.LEFT),
+                        VELOCITY_FORMAT);
             case VERT_VELOCITY_VS_TIME:
-                return getLineDataSet(context, trackData.getVertVelocity(), R.string.vert_velocity_label,
-                        R.color.vertVelocity, YAxis.AxisDependency.LEFT);
+                return new DataSetWithFormat(
+                        getLineDataSet(context, trackData.getVertVelocity(), R.string.vert_velocity_label,
+                        R.color.vertVelocity, YAxis.AxisDependency.LEFT),
+                        VELOCITY_FORMAT);
             case ALTITUDE_VS_TIME:
-                return getLineDataSet(context, trackData.getAltitude(), R.string.altitude_label,
-                        R.color.altitude, YAxis.AxisDependency.RIGHT);
+                return new DataSetWithFormat(
+                        getLineDataSet(context, trackData.getAltitude(), R.string.altitude_label,
+                        R.color.altitude, YAxis.AxisDependency.RIGHT),
+                        DISTANCE_FORMAT);
             case DISTANCE_VS_TIME:
-                return getLineDataSet(context, trackData.getDistance(), R.string.distance_label,
-                        R.color.distance, YAxis.AxisDependency.RIGHT);
+                return new DataSetWithFormat(
+                        getLineDataSet(context, trackData.getDistance(), R.string.distance_label,
+                        R.color.distance, YAxis.AxisDependency.RIGHT),
+                        DISTANCE_FORMAT);
             case GLIDE_VS_TIME:
-                return getLineDataSet(context, trackData.getGlide(), R.string.glide_label,
-                        R.color.glide, YAxis.AxisDependency.LEFT);
+                return new DataSetWithFormat(
+                        getLineDataSet(context, trackData.getGlide(), R.string.glide_label,
+                        R.color.glide, YAxis.AxisDependency.LEFT),
+                        GLIDE_FORMAT);
             case DISTANCE_VS_ALTITUDE:
-                return getDistanceVsAltitudeDataSet(context, trackData.getDistanceVsAltitude());
+                return new DataSetWithFormat(
+                        getDistanceVsAltitudeDataSet(context, trackData.getDistanceVsAltitude()),
+                        DISTANCE_FORMAT);
         }
-        return new TrackLineDataSetWrapper(new ArrayList<Entry>(), "empty");
+        return new DataSetWithFormat(new LineDataSet(new ArrayList<Entry>(), "empty"), new DecimalFormat("#0"));
     }
 
-    private static TrackLineDataSetWrapper getLineDataSet(Context context, List<Entry> data, @StringRes int label,
-                                       @ColorRes int color, YAxis.AxisDependency axisDependency) {
-        TrackLineDataSetWrapper lineDataSet = new TrackLineDataSetWrapper(data, context.getString(label));
+    private static LineDataSet getLineDataSet(Context context, List<Entry> data, @StringRes int label,
+                                                   @ColorRes int color, YAxis.AxisDependency axisDependency) {
+        LineDataSet lineDataSet = new LineDataSet(data, context.getString(label));
         lineDataSet.setColor(ContextCompat.getColor(context, color));
         lineDataSet.setValueTextColor(ContextCompat.getColor(context, color));
         lineDataSet.setAxisDependency(axisDependency);
@@ -91,8 +106,8 @@ public class TrackLineDataSetWrapper extends LineDataSet {
         return lineDataSet;
     }
 
-    private static TrackLineDataSetWrapper getDistanceVsAltitudeDataSet(Context context, List<Entry> data) {
-        TrackLineDataSetWrapper lineDataSet = new TrackLineDataSetWrapper(data, context.getString(R.string.distance_altitude_label));
+    private static LineDataSet getDistanceVsAltitudeDataSet(Context context, List<Entry> data) {
+        LineDataSet lineDataSet = new LineDataSet(data, context.getString(R.string.distance_altitude_label));
         lineDataSet.setColor(ContextCompat.getColor(context, R.color.distanceAltitude));
         lineDataSet.setValueTextColor(ContextCompat.getColor(context, R.color.distanceAltitude));
         lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
