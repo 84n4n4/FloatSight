@@ -20,26 +20,33 @@
  *
  */
 
-package com.watchthybridle.floatsight.chartfragments;
+package com.watchthybridle.floatsight.customcharts;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
+import android.util.Pair;
 import android.view.MotionEvent;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.*;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.watchthybridle.floatsight.R;
+import com.watchthybridle.floatsight.chartfragments.AllMetricsTimeChartMarker;
 import com.watchthybridle.floatsight.linedatasetcreation.AllMetricsVsTimeChartDataSetHolder;
 import com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetProperties;
 
+import java.awt.font.NumericShaper;
 import java.text.DecimalFormat;
+import java.util.List;
 
 import static com.github.mikephil.charting.components.YAxis.YAxisLabelPosition.INSIDE_CHART;
 
-public class GlideOverlayChart extends LineChart implements OnChartValueSelectedListener {
+public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueSelectedListener {
 
     public LineChart glideChart;
 

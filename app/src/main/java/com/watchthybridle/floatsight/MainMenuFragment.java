@@ -108,9 +108,15 @@ public class MainMenuFragment extends ChartFragment implements AdapterView.OnIte
 	}
 
 	private void showAboutDialog() {
-		MainActivity mainActivity = (MainActivity) getActivity();
-		if (mainActivity != null) {
-			mainActivity.showAboutDialog(getActivity());
+		Context context = getContext();
+		if (context != null) {
+			String message = getString(R.string.about_dialog_message, BuildConfig.VERSION_NAME);
+			new AlertDialog.Builder(getContext())
+					.setTitle(R.string.app_name)
+					.setMessage(message)
+					.setPositiveButton(R.string.ok, null)
+					.create()
+					.show();
 		}
 	}
 

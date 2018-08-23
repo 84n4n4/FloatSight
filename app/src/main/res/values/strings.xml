@@ -37,9 +37,10 @@
     <string name="file_import_success">Track imported</string>
     <string name="permissions_rationale">Storage access is required to read and save FlySight track liveData.</string>
 
-    <!-- General stuff -->
+    <!-- Dialog stuff -->
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="about_dialog_message">Version %1$s\n\nSource and more info:\nhttps://github.com/84n4n4/FloatSight</string>
 
     <!-- Main menu -->
     <string name="button_import_title">Import file</string>
@@ -52,9 +53,9 @@
     <string name="button_about_description">About this app</string>
 
     <!-- Toolbar -->
-    <string name="about_menu_item">About</string>
-    <string name="about_dialog_message">Version %1$s\n\nSource and more info:\nhttps://github.com/84n4n4/FloatSight</string>
-
+    <string name="menu_item_start_point">Set range marker</string>
+    <string name="menu_item_end_point">Clear range markers</string>
+    <string name="menu_item_range_data">Show range data</string>
 
     <!-- Units -->
     <string name="kmh">%1$s km/h</string>

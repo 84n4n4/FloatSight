@@ -21,21 +21,21 @@
   ~
   -->
 
-<resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-
-    <color name="glide">#000000</color>
-    <color name="altitude">#0c7900</color>
-    <color name="vertVelocity">#0003ba</color>
-    <color name="horVelocity">#ff0011</color>
-    <color name="distance">#9e00a1</color>
-    <color name="distanceAltitude">#000000</color>
-
-    <color name="highlightColor">#8bffd900</color>
-    <color name="rangeColor">#325165ff</color>
-    <color name="limitLineColor">#aa5165ff</color>
-
-
-</resources>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_item_set_range_marker"
+        android:orderInCategory="100"
+        android:title="@string/menu_item_start_point"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_item_clear_range_marker"
+        android:orderInCategory="100"
+        android:title="@string/menu_item_end_point"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_item_show_range_data"
+        android:orderInCategory="100"
+        android:title="@string/menu_item_range_data"
+        app:showAsAction="never" />
+</menu>

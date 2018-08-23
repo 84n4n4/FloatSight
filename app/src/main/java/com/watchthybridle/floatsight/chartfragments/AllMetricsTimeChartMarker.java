@@ -7,6 +7,7 @@ import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.utils.MPPointF;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.linedatasetcreation.AllMetricsVsTimeChartDataSetHolder;
 import com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetProperties;
@@ -44,11 +45,12 @@ public class AllMetricsTimeChartMarker extends MarkerView {
     @Override
     public void draw(Canvas canvas, float posX, float posY)
     {
+        float chartTop = AllMetricsTimeChartMarker.this.getChartView().getViewPortHandler().contentTop();
         MPPointF offset = getOffsetForDrawingAtPoint(posX, posY);
 
         int saveId = canvas.save();
 
-        canvas.translate(posX + offset.x, 0);
+        canvas.translate(posX + offset.x, chartTop);
         draw(canvas);
         canvas.restoreToCount(saveId);
     }

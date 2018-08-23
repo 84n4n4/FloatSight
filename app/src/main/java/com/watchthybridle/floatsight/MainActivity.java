@@ -93,16 +93,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void showAboutDialog(Context context) {
-        String message = getString(R.string.about_dialog_message, BuildConfig.VERSION_NAME);
-        new AlertDialog.Builder(context)
-                .setTitle(R.string.app_name)
-                .setMessage(message)
-                .setPositiveButton(R.string.ok, null)
-                .create()
-                .show();
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -111,14 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_about:
-                showAboutDialog(MainActivity.this);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-
-        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
