@@ -27,7 +27,10 @@ import android.view.MotionEvent;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.linedatasetcreation.AllMetricsVsTimeChartDataSetHolder;
 import com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetProperties;
@@ -36,21 +39,33 @@ import java.text.DecimalFormat;
 
 import static com.github.mikephil.charting.components.YAxis.YAxisLabelPosition.INSIDE_CHART;
 
-public class GlideOverlayChart extends LineChart {
+public class GlideOverlayChart extends LineChart implements OnChartValueSelectedListener {
 
     public LineChart glideChart;
 
     public GlideOverlayChart(Context context) {
         super(context);
         glideChart = new LineChart(context);
+        glideChart.setOnChartValueSelectedListener(this);
+
+        glideChart.setHighlightPerDragEnabled(false);
+        glideChart.setHighlightPerTapEnabled(false);
+        setMaxHighlightDistance(5000);
 
         setAxisLabelPosition();
         setAxisLabelCount();
         setAxisLabelValueFormats();
         setAxisLabelColors();
         setLegendPosition();
-        glideChart.setHighlightPerDragEnabled(false);
-        glideChart.setHighlightPerTapEnabled(false);
+        setZoomHandling();
+    }
+
+    private void setZoomHandling() {
+        setPinchZoom(false);
+        setDoubleTapToZoomEnabled(false);
+
+        glideChart.setPinchZoom(false);
+        glideChart.setDoubleTapToZoomEnabled(false);
     }
 
     private void setAxisLabelPosition() {
@@ -107,12 +122,6 @@ public class GlideOverlayChart extends LineChart {
     }
 
     @Override
-    public void setPinchZoom(boolean enabled) {
-        super.setPinchZoom(enabled);
-        glideChart.setPinchZoom(enabled);
-    }
-
-    @Override
     @SuppressWarnings("ClickableViewAccessibility")
     public boolean onTouchEvent(MotionEvent event) {
         boolean success = super.onTouchEvent(event);
@@ -137,10 +146,18 @@ public class GlideOverlayChart extends LineChart {
         setData(chartDataSetHolder.getLineDataOuterGraph());
         glideChart.setData(chartDataSetHolder.getLineDataGlideGraph());
 
-        AllMetricsTimeChartMarker markerViewOutsideGraph =
-                new AllMetricsTimeChartMarker(getContext(), chartDataSetHolder);
+        AllMetricsTimeChartMarker markerViewOutsideGraph = new AllMetricsTimeChartMarker(getContext());
+        markerViewOutsideGraph.setChartDataSetHolder(chartDataSetHolder.getDataSetPropertiesList());
         markerViewOutsideGraph.setChartView(this);
         setMarker(markerViewOutsideGraph);
+    }
+
+    // To get highlights also when clicking on glideChart
+    public void onValueSelected(Entry entry, Highlight h) {
+        highlightValue(entry.getX(), 0);
+    }
+
+    public void onNothingSelected() {
     }
 }
 

@@ -10,5 +10,6 @@
             style="@style/markerTextView"/>
     <TextView
             android:id="@+id/distance_marker_text_view"
-            style="@style/markerTextView"/>
+            style="@style/markerTextView"
+            android:layout_marginBottom="25dp"/>
 </LinearLayout>

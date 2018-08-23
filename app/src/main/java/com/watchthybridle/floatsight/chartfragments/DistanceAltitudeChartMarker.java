@@ -1,6 +1,7 @@
 package com.watchthybridle.floatsight.chartfragments;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.widget.TextView;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.Entry;
@@ -34,6 +35,18 @@ public class DistanceAltitudeChartMarker extends MarkerView {
 
     @Override
     public MPPointF getOffset() {
-        return new MPPointF(-getWidth(), -getHeight());
+        return new MPPointF(-getWidth(), 0);
+    }
+
+    @Override
+    public void draw(Canvas canvas, float posX, float posY)
+    {
+        MPPointF offset = getOffsetForDrawingAtPoint(posX, posY);
+
+        int saveId = canvas.save();
+
+        canvas.translate(posX + offset.x, 0);
+        draw(canvas);
+        canvas.restoreToCount(saveId);
     }
 }

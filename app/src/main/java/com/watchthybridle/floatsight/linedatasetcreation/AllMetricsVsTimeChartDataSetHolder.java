@@ -27,7 +27,7 @@ public class AllMetricsVsTimeChartDataSetHolder {
 
     public LineData getLineDataOuterGraph() {
         List<ILineDataSet> lineDataSets = new ArrayList<>();
-        for (ChartDataSetProperties dataSetProperties : dataSetPropertiesList.subList(0, 3)) {
+        for (ChartDataSetProperties dataSetProperties : dataSetPropertiesList.subList(0, 4)) {
             lineDataSets.add(dataSetProperties.iLineDataSet);
         }
         return new LineData(lineDataSets);

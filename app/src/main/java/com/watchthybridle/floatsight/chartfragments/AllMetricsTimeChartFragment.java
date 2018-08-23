@@ -43,7 +43,6 @@ public class AllMetricsTimeChartFragment extends ChartFragment {
         FrameLayout frameLayout = view.findViewById(R.id.root_chart_view);
 
         chart = new GlideOverlayChart(getContext());
-        chart.setPinchZoom(false);
         chart.invalidate();
 
         frameLayout.addView(chart.glideChart);
