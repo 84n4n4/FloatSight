@@ -14,7 +14,7 @@ public class AllMetricsTimeChartMarker extends MarkerView {
     private AllMetricsVsTimeChartDataSetHolder chartDataSetHolder;
 
     public AllMetricsTimeChartMarker(Context context, AllMetricsVsTimeChartDataSetHolder chartDataSetHolder) {
-        super(context, R.layout.custom_marker);
+        super(context, R.layout.all_metrics_v_time_marker);
         this.chartDataSetHolder = chartDataSetHolder;
     }
 

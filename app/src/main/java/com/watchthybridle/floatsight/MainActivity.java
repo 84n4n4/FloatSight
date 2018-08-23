@@ -86,7 +86,8 @@ public class MainActivity extends AppCompatActivity {
             requestPermission();
         } else {
             Intent intent = new Intent()
-                    .setType("*/*")
+                    .setType("text/*")
+                    .addCategory(Intent.CATEGORY_OPENABLE)
                     .setAction(Intent.ACTION_OPEN_DOCUMENT);
             startActivityForResult(Intent.createChooser(intent, "Select a file"), REQUEST_FILE);
         }

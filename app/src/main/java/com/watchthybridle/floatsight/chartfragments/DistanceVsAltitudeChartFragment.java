@@ -73,6 +73,15 @@ public class DistanceVsAltitudeChartFragment extends ChartFragment {
 
         chart.setData(new LineData(chartDataSetHolder.iLineDataSet));
 
+        chart.getAxisLeft().setTextColor(R.color.altitude);
+        chart.getAxisRight().setTextColor(R.color.altitude);
+        chart.getXAxis().setTextColor(R.color.distance);
+
+        DistanceAltitudeChartMarker distanceAltitudeChartMarker =
+                new DistanceAltitudeChartMarker(getContext());
+        distanceAltitudeChartMarker.setChartView(chart);
+        chart.setMarker(distanceAltitudeChartMarker);
+
         chart.invalidate();
     }
 

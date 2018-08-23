@@ -51,6 +51,9 @@ public class ChartDataSetProperties {
         iLineDataSet.setAxisDependency(axisDependency);
         iLineDataSet.setDrawValues(false);
         iLineDataSet.setDrawCircles(false);
+        iLineDataSet.setDrawHorizontalHighlightIndicator(false);
+        iLineDataSet.setHighLightColor(ContextCompat.getColor(context, R.color.highlightColor));
+        iLineDataSet.setHighlightLineWidth(2);
     }
 
     public String getFormattedValueForPosition(Context context, float xPosition) {

@@ -33,4 +33,6 @@
     <color name="distance">#9e00a1</color>
     <color name="distanceAltitude">#000000</color>
 
+    <color name="highlightColor">#ff00ea</color>
+
 </resources>
