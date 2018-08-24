@@ -1,4 +1,4 @@
-package com.watchthybridle.floatsight.chartfragments;
+package com.watchthybridle.floatsight.customcharts.markerviews;
 
 import android.content.Context;
 import android.graphics.Canvas;

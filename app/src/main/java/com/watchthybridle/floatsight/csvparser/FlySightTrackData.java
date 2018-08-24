@@ -28,9 +28,10 @@ import com.github.mikephil.charting.data.Entry;
 import java.lang.annotation.Retention;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 

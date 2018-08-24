@@ -31,6 +31,7 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.LineData;
 import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
+import com.watchthybridle.floatsight.customcharts.markerviews.DistanceAltitudeChartMarkerView;
 import com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetProperties;
 
 import static com.github.mikephil.charting.components.YAxis.YAxisLabelPosition.INSIDE_CHART;
@@ -79,8 +80,8 @@ public class DistanceVsAltitudeChartFragment extends ChartFragment {
         chart.setDoubleTapToZoomEnabled(false);
         chart.setPinchZoom(false);
 
-        DistanceAltitudeChartMarker distanceAltitudeChartMarker =
-                new DistanceAltitudeChartMarker(getContext());
+        DistanceAltitudeChartMarkerView distanceAltitudeChartMarker =
+                new DistanceAltitudeChartMarkerView(getContext());
         distanceAltitudeChartMarker.setChartView(chart);
         chart.setMarker(distanceAltitudeChartMarker);
 

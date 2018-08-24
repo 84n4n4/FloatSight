@@ -23,7 +23,6 @@
 package com.watchthybridle.floatsight;
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;

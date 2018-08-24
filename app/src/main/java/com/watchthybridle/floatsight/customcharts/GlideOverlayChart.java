@@ -26,14 +26,16 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.view.MotionEvent;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.*;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.watchthybridle.floatsight.R;
-import com.watchthybridle.floatsight.chartfragments.AllMetricsTimeChartMarker;
-import com.watchthybridle.floatsight.chartfragments.RangeMarkerView;
+import com.watchthybridle.floatsight.customcharts.markerviews.AllMetricsTimeChartMarkerView;
+import com.watchthybridle.floatsight.customcharts.markerviews.RangeMarkerView;
+import com.watchthybridle.floatsight.customcharts.markerviews.TouchAbleMarker;
 import com.watchthybridle.floatsight.linedatasetcreation.AllMetricsVsTimeChartDataSetHolder;
 import com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetProperties;
 
@@ -130,9 +132,9 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
         if (mMarker != null
                 && isDrawMarkersEnabled()
                 && valuesToHighlight()
-                && getMarker() instanceof AllMetricsTimeChartMarker) {
+                && getMarker() instanceof TouchAbleMarker) {
 
-            AllMetricsTimeChartMarker marker = (AllMetricsTimeChartMarker) getMarker();
+            TouchAbleMarker marker = (TouchAbleMarker) getMarker();
             Rect markerViewDrawArea = marker.getMarkerViewDrawArea();
 
             if (markerViewDrawArea.contains((int) event.getX(),(int) event.getY())) {
@@ -164,7 +166,7 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
         setData(chartDataSetHolder.getLineDataOuterGraph());
         glideChart.setData(chartDataSetHolder.getLineDataGlideGraph());
 
-        AllMetricsTimeChartMarker markerViewOutsideGraph = new AllMetricsTimeChartMarker(getContext());
+        AllMetricsTimeChartMarkerView markerViewOutsideGraph = new AllMetricsTimeChartMarkerView(getContext());
         markerViewOutsideGraph.setChartView(this);
         setMarker(markerViewOutsideGraph);
 

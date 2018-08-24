@@ -1,4 +1,4 @@
-package com.watchthybridle.floatsight.chartfragments;
+package com.watchthybridle.floatsight.customcharts.markerviews;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -8,14 +8,13 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.utils.MPPointF;
 import com.watchthybridle.floatsight.R;
-import com.watchthybridle.floatsight.linedatasetcreation.AllMetricsVsTimeChartDataSetHolder;
 import com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetProperties;
 
 import java.text.DecimalFormat;
 
-public class DistanceAltitudeChartMarker extends MarkerView {
+public class DistanceAltitudeChartMarkerView extends MarkerView {
 
-    public DistanceAltitudeChartMarker(Context context) {
+    public DistanceAltitudeChartMarkerView(Context context) {
         super(context, R.layout.distance_altitude_marker);
     }
 
