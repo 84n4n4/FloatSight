@@ -25,10 +25,13 @@ package com.watchthybridle.floatsight.customcharts;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.util.Pair;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.View;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.*;
 import com.github.mikephil.charting.data.Entry;
@@ -49,6 +52,7 @@ import static com.github.mikephil.charting.components.YAxis.YAxisLabelPosition.I
 public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueSelectedListener {
 
     public LineChart glideChart;
+    private AllMetricsVsTimeChartDataSetHolder chartDataSetHolder;
 
     public GlideOverlayChart(Context context) {
         super(context);
@@ -131,6 +135,19 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
     @Override
     @SuppressWarnings("ClickableViewAccessibility")
     public boolean onTouchEvent(MotionEvent event) {
+        if (mMarker != null
+                && isDrawMarkersEnabled()
+                && valuesToHighlight()
+                && getMarker() instanceof AllMetricsTimeChartMarker) {
+
+            AllMetricsTimeChartMarker marker = (AllMetricsTimeChartMarker) getMarker();
+            Rect markerViewDrawArea = marker.getMarkerViewDrawArea();
+
+            if (markerViewDrawArea.contains((int) event.getX(),(int) event.getY())) {
+                return marker.dispatchTouchEvent(event);
+            }
+        }
+
         boolean success = super.onTouchEvent(event);
         success &= glideChart.onTouchEvent(event);
         return success;
@@ -149,14 +166,19 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
         }
     }
 
-    public void setDataHolder(AllMetricsVsTimeChartDataSetHolder chartDataSetHolder) {
+    public void setDataSetHolder(AllMetricsVsTimeChartDataSetHolder chartDataSetHolder) {
+        this.chartDataSetHolder = chartDataSetHolder;
+
         setData(chartDataSetHolder.getLineDataOuterGraph());
         glideChart.setData(chartDataSetHolder.getLineDataGlideGraph());
 
         AllMetricsTimeChartMarker markerViewOutsideGraph = new AllMetricsTimeChartMarker(getContext());
-        markerViewOutsideGraph.setChartDataSetHolder(chartDataSetHolder.getDataSetPropertiesList());
         markerViewOutsideGraph.setChartView(this);
         setMarker(markerViewOutsideGraph);
+    }
+
+    public AllMetricsVsTimeChartDataSetHolder getDataSetHolder() {
+        return chartDataSetHolder;
     }
 
     // To get highlights also when clicking on glideChart
@@ -166,5 +188,6 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
 
     public void onNothingSelected() {
     }
+
 }
 

@@ -22,17 +22,14 @@
 
 package com.watchthybridle.floatsight.chartfragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-import com.watchthybridle.floatsight.BuildConfig;
 import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
 import com.watchthybridle.floatsight.customcharts.GlideOverlayChart;
@@ -70,7 +67,7 @@ public class AllMetricsTimeChartFragment extends ChartFragment {
 
         AllMetricsVsTimeChartDataSetHolder chartDataSetHolder = new AllMetricsVsTimeChartDataSetHolder(getContext(), flySightTrackData);
 
-        chart.setDataHolder(chartDataSetHolder);
+        chart.setDataSetHolder(chartDataSetHolder);
         chart.invalidate();
     }
 
