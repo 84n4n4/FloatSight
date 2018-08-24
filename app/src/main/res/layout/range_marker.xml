@@ -7,7 +7,8 @@
 
     <TextView
             android:id="@+id/altitude_marker_text_view"
-            style="@style/markerTextView"/>
+            style="@style/markerTextView"
+            android:layout_marginTop="25dp"/>
     <TextView
             android:id="@+id/distance_marker_text_view"
             style="@style/markerTextView"/>
@@ -19,7 +20,6 @@
             style="@style/markerTextView"/>
     <TextView
             android:id="@+id/glide_marker_text_view"
-            style="@style/markerTextView"
-            android:layout_marginBottom="25dp"/>
+            style="@style/markerTextView"/>
 
 </LinearLayout>

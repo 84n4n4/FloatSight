@@ -31,6 +31,7 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LimitLine;
+import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
@@ -41,6 +42,8 @@ import com.watchthybridle.floatsight.linedatasetcreation.AllMetricsVsTimeChartDa
 import com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetProperties;
 
 import java.text.DecimalFormat;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.github.mikephil.charting.components.YAxis.YAxisLabelPosition.INSIDE_CHART;
@@ -49,6 +52,7 @@ public class RangeMarkerChart extends LineChart {
 
     private Paint rangePaint;
     private int limitLineColor;
+    private MarkerView rangeMarkerView = null;
 
     public RangeMarkerChart(Context context) {
         super(context);
@@ -58,16 +62,27 @@ public class RangeMarkerChart extends LineChart {
         limitLineColor = ContextCompat.getColor(context, R.color.limitLineColor);
     }
 
+    public void setRangeMarkerView(MarkerView markerView) {
+        rangeMarkerView = markerView;
+    }
+
     public void setRangeMarker() {
         List<LimitLine> limitLines = getXAxis().getLimitLines();
-        if (limitLines.size() > 1) {
-            limitLines.remove(0);
-        }
+
         Highlight[] highlights = getHighlighted();
         if (highlights != null && highlights.length > 0) {
             float xPos = highlights[0].getX();
             LimitLine limitLine = createLimitLine(xPos);
             limitLines.add(limitLine);
+        }
+        if (limitLines.size() > 2) {
+            Collections.sort(limitLines, new Comparator<LimitLine>() {
+                @Override
+                public int compare(LimitLine o1, LimitLine o2) {
+                    return (int) (o1.getLimit() - o2.getLimit());
+                }
+            });
+            limitLines.remove(1);
         }
         invalidate();
     }
@@ -101,6 +116,11 @@ public class RangeMarkerChart extends LineChart {
 
             mLeftAxisTransformer.pointValuesToPixel(pointValues);
             canvas.drawRect(pointValues[0], mViewPortHandler.contentBottom(), pointValues[2], mViewPortHandler.contentTop(), rangePaint);
+
+            if (rangeMarkerView != null) {
+                rangeMarkerView.refreshContent(new Entry(limitA, 0), new Highlight(limitA, 0f,0));
+                rangeMarkerView.draw(canvas, pointValues[0], mViewPortHandler.contentBottom());
+            }
         }
 
         super.onDraw(canvas);
