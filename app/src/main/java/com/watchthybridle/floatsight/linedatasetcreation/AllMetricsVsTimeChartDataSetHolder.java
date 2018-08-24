@@ -9,16 +9,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AllMetricsVsTimeChartDataSetHolder {
-
     private List<ChartDataSetProperties> dataSetPropertiesList;
+    private FlySightTrackData flySightTrackData;
 
     public AllMetricsVsTimeChartDataSetHolder(Context context, FlySightTrackData flySightTrackData) {
+        this.flySightTrackData = flySightTrackData;
         dataSetPropertiesList = new ArrayList<>();
         dataSetPropertiesList.add(ChartDataSetProperties.getVerticalVelocityProperties(context, flySightTrackData));
         dataSetPropertiesList.add(ChartDataSetProperties.getHorizontalVelocityProperties(context, flySightTrackData));
         dataSetPropertiesList.add(ChartDataSetProperties.getAltitudeVsTimeProperties(context, flySightTrackData));
         dataSetPropertiesList.add(ChartDataSetProperties.getDistanceVsTimeProperties(context, flySightTrackData));
         dataSetPropertiesList.add(ChartDataSetProperties.getGlideProperties(context, flySightTrackData));
+    }
+
+    public FlySightTrackData getFlySightTrackData() {
+        return flySightTrackData;
     }
 
     public List<ChartDataSetProperties> getDataSetPropertiesList() {

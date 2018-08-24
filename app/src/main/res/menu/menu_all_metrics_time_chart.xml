@@ -24,18 +24,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_item_set_range_marker"
-        android:orderInCategory="100"
-        android:title="@string/menu_item_start_point"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/menu_item_clear_range_marker"
         android:orderInCategory="100"
         android:title="@string/menu_item_end_point"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/menu_item_show_range_data"
-        android:orderInCategory="100"
-        android:title="@string/menu_item_range_data"
         app:showAsAction="never" />
 </menu>

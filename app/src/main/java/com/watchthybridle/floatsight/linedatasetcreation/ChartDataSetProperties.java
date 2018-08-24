@@ -3,6 +3,7 @@ package com.watchthybridle.floatsight.linedatasetcreation;
 import android.content.Context;
 import android.support.annotation.ColorRes;
 import android.support.annotation.IdRes;
+import android.support.annotation.IntDef;
 import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import com.github.mikephil.charting.components.YAxis;
@@ -11,13 +12,17 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
 
+import java.lang.annotation.Retention;
 import java.text.DecimalFormat;
 import java.util.List;
+
+import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 public class ChartDataSetProperties {
     public static final DecimalFormat VELOCITY_FORMAT = new DecimalFormat("#0");
     public static final DecimalFormat DISTANCE_FORMAT = new DecimalFormat("###0");
     public static final DecimalFormat GLIDE_FORMAT = new DecimalFormat("#0.00");
+    public static final DecimalFormat TIME_FORMAT = new DecimalFormat("00.00");
 
     public @IdRes int markerTextView;
     public @StringRes int labelStringResource;
@@ -26,6 +31,13 @@ public class ChartDataSetProperties {
     public DecimalFormat decimalFormat;
     public YAxis.AxisDependency axisDependency;
     public LineDataSet iLineDataSet;
+    public @RangeInfo int rangeInfo;
+
+    @Retention(SOURCE)
+    @IntDef({AVERAGE, DIFFERENCE})
+    @interface RangeInfo {}
+    public static final int AVERAGE = 0;
+    public static final int DIFFERENCE = 1;
 
     private ChartDataSetProperties(@StringRes int labelStringResource,
                                    @ColorRes int color,
@@ -34,6 +46,7 @@ public class ChartDataSetProperties {
                                    DecimalFormat decimalFormat,
                                    @IdRes int markerTextView,
                                    List<Entry> data,
+                                   @RangeInfo int rangeInfo,
                                    Context context) {
         this.markerTextView = markerTextView;
         this.labelStringResource = labelStringResource;
@@ -41,6 +54,7 @@ public class ChartDataSetProperties {
         this.decimalFormat = decimalFormat;
         this.axisDependency = axisDependency;
         this.unitStringResource = unitStringResource;
+        this.rangeInfo = rangeInfo;
         init(context, data);
     }
 
@@ -61,6 +75,37 @@ public class ChartDataSetProperties {
         return context.getString(unitStringResource, decimalFormat.format(entry.getY()));
     }
 
+    public String getFormattedValueForRange(Context context, int start, int end) {
+        float rangeValue;
+
+        switch(rangeInfo) {
+            case AVERAGE:
+                rangeValue = calculateArithmeticAverage(start, end);
+                break;
+            case DIFFERENCE:
+                rangeValue = calculateDiff(start, end);
+                break;
+            default:
+                rangeValue = 0;
+                break;
+        }
+        return context.getString(unitStringResource, decimalFormat.format(rangeValue));
+    }
+
+    private float calculateDiff(int start, int end) {
+        return iLineDataSet.getValues().get(end).getY() - iLineDataSet.getValues().get(start).getY();
+    }
+
+    private float calculateArithmeticAverage(int start, int end) {
+        List<Entry> entries = iLineDataSet.getValues().subList(start, end);
+        float sum = 0;
+        float count = entries.size();
+        for (Entry entry : entries) {
+            sum += entry.getY();
+        }
+        return sum / count;
+    }
+
     public static ChartDataSetProperties getHorizontalVelocityProperties(Context context, FlySightTrackData flySightTrackData) {
         return new ChartDataSetProperties(
                 R.string.hor_velocity_label,
@@ -70,6 +115,7 @@ public class ChartDataSetProperties {
                 VELOCITY_FORMAT,
                 R.id.hor_velocity_marker_text_view,
                 flySightTrackData.getHorVelocity(),
+                AVERAGE,
                 context);
     }
 
@@ -82,6 +128,7 @@ public class ChartDataSetProperties {
                  VELOCITY_FORMAT,
                  R.id.vert_velocity_marker_text_view,
                  flySightTrackData.getVertVelocity(),
+                 AVERAGE,
                  context);
     }
 
@@ -94,6 +141,7 @@ public class ChartDataSetProperties {
                 DISTANCE_FORMAT,
                 R.id.altitude_marker_text_view,
                 flySightTrackData.getAltitude(),
+                DIFFERENCE,
                 context);
     }
 
@@ -106,6 +154,7 @@ public class ChartDataSetProperties {
                 DISTANCE_FORMAT,
                 R.id.distance_marker_text_view,
                 flySightTrackData.getDistance(),
+                DIFFERENCE,
                 context);
     }
 
@@ -118,6 +167,7 @@ public class ChartDataSetProperties {
                 GLIDE_FORMAT,
                 R.id.glide_marker_text_view,
                 flySightTrackData.getGlide(),
+                AVERAGE,
                 context);
     }
 
@@ -130,6 +180,7 @@ public class ChartDataSetProperties {
                 DISTANCE_FORMAT,
                 R.id.distance_marker_text_view,
                 flySightTrackData.getDistanceVsAltitude(),
+                DIFFERENCE,
                 context);
     }
 }

@@ -106,13 +106,8 @@ public class RangeMarkerChart extends LineChart {
             float[] pointValues = new float[4];
             float limitA = limitLines.get(0).getLimit();
             float limitB = limitLines.get(1).getLimit();
-            if (limitA > limitB) {
-                pointValues[0] = limitB;
-                pointValues[2] = limitA;
-            } else {
-                pointValues[0] = limitA;
-                pointValues[2] = limitB;
-            }
+            pointValues[0] = limitA;
+            pointValues[2] = limitB;
 
             mLeftAxisTransformer.pointValuesToPixel(pointValues);
             canvas.drawRect(pointValues[0], mViewPortHandler.contentBottom(), pointValues[2], mViewPortHandler.contentTop(), rangePaint);

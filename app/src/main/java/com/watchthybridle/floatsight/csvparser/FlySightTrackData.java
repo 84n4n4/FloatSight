@@ -26,8 +26,11 @@ import android.support.annotation.LongDef;
 import com.github.mikephil.charting.data.Entry;
 
 import java.lang.annotation.Retention;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
@@ -61,6 +64,22 @@ public class FlySightTrackData {
         glide = new ArrayList<>();
         distance = new ArrayList<>();
         distanceVsAltitude = new ArrayList<>();
+    }
+
+    public float calculateTimeDiffSec(int start, int end) {
+        return calculateTimeDiffSec(time.get(start), time.get(end));
+    }
+
+    //2018-08-12T14:25:43.07Z
+    private float calculateTimeDiffSec(String startTimeStamp, String endTimeStamp) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        try {
+            Date start = dateFormat.parse(startTimeStamp.replace("Z","0Z"));
+            Date end = dateFormat.parse(endTimeStamp.replace("Z","0Z"));
+            return (end.getTime() - start.getTime()) / 1000f ;
+        } catch (ParseException exception) {
+            return 0;
+        }
     }
 
     public long getParsingStatus() {

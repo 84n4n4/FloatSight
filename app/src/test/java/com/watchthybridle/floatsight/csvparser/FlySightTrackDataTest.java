@@ -106,4 +106,33 @@ public class FlySightTrackDataTest {
         assertEquals(16059592.00f, flySightTrackData.getDistance().get(1).getY());
     }
 
+    @Test
+    public void testTimeDifferenceShort() {
+        String pointA = "2018-08-12T12:53:19.40Z,-33.865143,151.209900,3073.025,-20.78,-19.20,31.30,0.537,0.664,0.15,222.73278,0.24067,3,20";
+        String pointB = "2018-08-12T12:53:20.55Z,-33.865143,151.209900,3073.025,-20.78,-19.20,31.30,0.537,0.664,0.15,222.73278,0.24067,3,20";
+        FlySightCsvParser flySightCsvParser = new FlySightCsvParser(null);
+        FlySightTrackData flySightTrackData = new FlySightTrackData();
+
+        flySightCsvParser.addCsvRow(flySightTrackData, pointA);
+        flySightCsvParser.addCsvRow(flySightTrackData, pointB);
+
+        float timeDiff = flySightTrackData.calculateTimeDiffSec(0, 1);
+
+        assertEquals(1.15f, timeDiff);
+    }
+
+    @Test
+    public void testTimeDifferenceLong() {
+        String pointA = "2018-08-12T12:53:19.40Z,-33.865143,151.209900,3073.025,-20.78,-19.20,31.30,0.537,0.664,0.15,222.73278,0.24067,3,20";
+        String pointB = "2018-08-12T13:53:19.40Z,-33.865143,151.209900,3073.025,-20.78,-19.20,31.30,0.537,0.664,0.15,222.73278,0.24067,3,20";
+        FlySightCsvParser flySightCsvParser = new FlySightCsvParser(null);
+        FlySightTrackData flySightTrackData = new FlySightTrackData();
+
+        flySightCsvParser.addCsvRow(flySightTrackData, pointA);
+        flySightCsvParser.addCsvRow(flySightTrackData, pointB);
+
+        float timeDiff = flySightTrackData.calculateTimeDiffSec(0, 1);
+
+        assertEquals(3600.00f, timeDiff);
+    }
 }

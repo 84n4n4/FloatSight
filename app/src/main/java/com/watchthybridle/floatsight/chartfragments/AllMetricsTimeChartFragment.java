@@ -81,14 +81,8 @@ public class AllMetricsTimeChartFragment extends ChartFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_item_set_range_marker:
-                chart.setRangeMarker();
-                return true;
             case R.id.menu_item_clear_range_marker:
                 chart.clearRangeMarkers();
-                return true;
-            case R.id.menu_item_show_range_data:
-
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

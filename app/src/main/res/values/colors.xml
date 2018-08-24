@@ -27,6 +27,7 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="glide">#000000</color>
+    <color name="time">#000000</color>
     <color name="altitude">#0c7900</color>
     <color name="vertVelocity">#0003ba</color>
     <color name="horVelocity">#ff0011</color>
