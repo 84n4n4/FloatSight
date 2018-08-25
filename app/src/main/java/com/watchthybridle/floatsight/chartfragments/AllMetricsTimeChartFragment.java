@@ -25,6 +25,7 @@ package com.watchthybridle.floatsight.chartfragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -79,13 +80,7 @@ public class AllMetricsTimeChartFragment extends ChartFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_item_clear_range_marker:
-                chart.clearRangeMarkers();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -98,6 +93,11 @@ public class AllMetricsTimeChartFragment extends ChartFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         chart.restoreState(savedInstanceState);
+    }
+
+    @VisibleForTesting
+    public GlideOverlayChart getChart() {
+        return chart;
     }
 
 }
