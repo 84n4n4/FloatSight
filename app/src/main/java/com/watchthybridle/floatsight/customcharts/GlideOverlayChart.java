@@ -142,6 +142,15 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
             }
         }
 
+        if (isRangeVisible() && getRangeMarkerView() != null
+                && getMarker() instanceof TouchAbleMarkerView) {
+            Rect markerViewDrawArea = getRangeMarkerView().getMarkerViewDrawArea();
+
+            if (markerViewDrawArea.contains((int) event.getX(),(int) event.getY())) {
+                return getRangeMarkerView().dispatchTouchEvent(event);
+            }
+        }
+
         boolean success = super.onTouchEvent(event);
         success &= glideChart.onTouchEvent(event);
         return success;

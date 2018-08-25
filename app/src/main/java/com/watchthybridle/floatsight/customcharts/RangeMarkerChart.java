@@ -31,6 +31,7 @@ import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.watchthybridle.floatsight.R;
+import com.watchthybridle.floatsight.customcharts.markerviews.RangeMarkerView;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -40,7 +41,8 @@ public class RangeMarkerChart extends RestorableChart {
 
     private Paint rangePaint;
     private int limitLineColor;
-    private MarkerView rangeMarkerView = null;
+    private RangeMarkerView rangeMarkerView = null;
+    private boolean rangeVisible = false;
 
     public RangeMarkerChart(Context context) {
         super(context);
@@ -50,7 +52,7 @@ public class RangeMarkerChart extends RestorableChart {
         limitLineColor = ContextCompat.getColor(context, R.color.limitLineColor);
     }
 
-    public void setRangeMarkerView(MarkerView markerView) {
+    public void setRangeMarkerView(RangeMarkerView markerView) {
         rangeMarkerView = markerView;
     }
 
@@ -85,12 +87,14 @@ public class RangeMarkerChart extends RestorableChart {
     public void clearRangeMarkers() {
         getXAxis().removeAllLimitLines();
         invalidate();
+        rangeVisible = false;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         List<LimitLine> limitLines = mXAxis.getLimitLines();
         if (limitLines != null && limitLines.size() == 2) {
+            rangeVisible = true;
             float[] pointValues = new float[4];
             float limitA = limitLines.get(0).getLimit();
             float limitB = limitLines.get(1).getLimit();
@@ -106,6 +110,14 @@ public class RangeMarkerChart extends RestorableChart {
             }
         }
         super.onDraw(canvas);
+    }
+
+    public RangeMarkerView getRangeMarkerView() {
+        return rangeMarkerView;
+    }
+
+    public boolean isRangeVisible() {
+        return rangeVisible;
     }
 }
 

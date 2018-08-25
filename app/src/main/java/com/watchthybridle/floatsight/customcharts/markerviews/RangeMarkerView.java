@@ -11,11 +11,12 @@ import com.github.mikephil.charting.utils.MPPointF;
 import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
 import com.watchthybridle.floatsight.customcharts.GlideOverlayChart;
+import com.watchthybridle.floatsight.customcharts.RangeMarkerChart;
 import com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetProperties;
 
 import java.util.List;
 
-public class RangeMarkerView extends MarkerView {
+public class RangeMarkerView extends TouchAbleMarkerView {
 
     public RangeMarkerView(Context context) {
         super(context, R.layout.range_marker);
@@ -59,5 +60,16 @@ public class RangeMarkerView extends MarkerView {
         canvas.translate(posX, chartBottom - getHeight());
         draw(canvas);
         canvas.restoreToCount(saveId);
+
+        setTouchArea(posX, chartBottom - getHeight(), posX + getWidth(), chartBottom);
+    }
+
+    @Override
+    public void customOnClick() {
+        ((RangeMarkerChart) getChartView()).clearRangeMarkers();
+    }
+
+    @Override
+    public void customOnLongClick() {
     }
 }
