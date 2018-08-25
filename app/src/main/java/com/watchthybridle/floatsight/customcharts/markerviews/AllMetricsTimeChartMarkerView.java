@@ -12,9 +12,7 @@ import com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetProperties;
 
 import java.util.List;
 
-public class AllMetricsTimeChartMarkerView extends TouchAbleMarker {
-
-
+public class AllMetricsTimeChartMarkerView extends TouchAbleMarkerView {
     public AllMetricsTimeChartMarkerView(Context context) {
         super(context, R.layout.all_metrics_v_time_marker);
     }
@@ -53,7 +51,6 @@ public class AllMetricsTimeChartMarkerView extends TouchAbleMarker {
         MPPointF offset = getOffsetForDrawingAtPoint(posX, posY);
 
         int saveId = canvas.save();
-
 
         canvas.translate(posX + offset.x, chartTop);
         draw(canvas);

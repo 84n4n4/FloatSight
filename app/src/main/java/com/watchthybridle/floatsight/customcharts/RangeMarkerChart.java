@@ -26,7 +26,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.v4.content.ContextCompat;
-import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.Entry;
@@ -37,7 +36,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class RangeMarkerChart extends LineChart {
+public class RangeMarkerChart extends RestorableChart {
 
     private Paint rangePaint;
     private int limitLineColor;
@@ -106,7 +105,6 @@ public class RangeMarkerChart extends LineChart {
                 rangeMarkerView.draw(canvas, pointValues[0], mViewPortHandler.contentBottom());
             }
         }
-
         super.onDraw(canvas);
     }
 }

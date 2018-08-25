@@ -8,11 +8,11 @@ import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import com.github.mikephil.charting.components.MarkerView;
 
-public abstract class TouchAbleMarker extends MarkerView {
+public abstract class TouchAbleMarkerView extends MarkerView {
     private Rect markerViewDrawArea;
     private boolean isTouched = false;
 
-    protected TouchAbleMarker(Context context, @LayoutRes int layoutRes) {
+    protected TouchAbleMarkerView(Context context, @LayoutRes int layoutRes) {
         super(context, layoutRes);
         markerViewDrawArea = new Rect(0,0,0,0);
     }

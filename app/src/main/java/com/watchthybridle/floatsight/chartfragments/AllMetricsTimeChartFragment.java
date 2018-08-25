@@ -71,7 +71,6 @@ public class AllMetricsTimeChartFragment extends ChartFragment {
         chart.invalidate();
     }
 
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_all_metrics_time_chart, menu);
@@ -88,4 +87,17 @@ public class AllMetricsTimeChartFragment extends ChartFragment {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        chart.saveState(outState);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        chart.restoreState(savedInstanceState);
+    }
+
 }

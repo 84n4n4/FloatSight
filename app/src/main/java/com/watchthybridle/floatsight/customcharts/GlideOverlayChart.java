@@ -35,7 +35,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.customcharts.markerviews.AllMetricsTimeChartMarkerView;
 import com.watchthybridle.floatsight.customcharts.markerviews.RangeMarkerView;
-import com.watchthybridle.floatsight.customcharts.markerviews.TouchAbleMarker;
+import com.watchthybridle.floatsight.customcharts.markerviews.TouchAbleMarkerView;
 import com.watchthybridle.floatsight.linedatasetcreation.AllMetricsVsTimeChartDataSetHolder;
 import com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetProperties;
 
@@ -132,9 +132,9 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
         if (mMarker != null
                 && isDrawMarkersEnabled()
                 && valuesToHighlight()
-                && getMarker() instanceof TouchAbleMarker) {
+                && getMarker() instanceof TouchAbleMarkerView) {
 
-            TouchAbleMarker marker = (TouchAbleMarker) getMarker();
+            TouchAbleMarkerView marker = (TouchAbleMarkerView) getMarker();
             Rect markerViewDrawArea = marker.getMarkerViewDrawArea();
 
             if (markerViewDrawArea.contains((int) event.getX(),(int) event.getY())) {
@@ -186,6 +186,5 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
 
     public void onNothingSelected() {
     }
-
 }
 
