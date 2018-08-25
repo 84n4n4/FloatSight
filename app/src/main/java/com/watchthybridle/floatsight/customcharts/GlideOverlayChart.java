@@ -60,7 +60,7 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
         setAxisLabelPosition();
         setAxisLabelCount();
         setAxisLabelValueFormats();
-        setAxisLabelColors();
+        setAxisLabelColors(context);
         setLegendPosition();
         setZoomHandling();
     }
@@ -107,9 +107,9 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
                 new CustomYAxisValueFormatter(ChartDataSetProperties.DISTANCE_FORMAT));
     }
 
-    private void setAxisLabelColors() {
-        this.getAxisLeft().setTextColor(R.color.vertVelocity);
-        this.getAxisRight().setTextColor(R.color.altitude);
+    private void setAxisLabelColors(Context context) {
+        getAxisLeft().setTextColor(context.getResources().getColor(R.color.horVelocity));
+        getAxisRight().setTextColor(context.getResources().getColor(R.color.altitude));
     }
 
     private void setLegendPosition() {
