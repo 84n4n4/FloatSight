@@ -24,8 +24,11 @@ package com.watchthybridle.floatsight.customcharts;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.util.Pair;
 import android.view.MotionEvent;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.customcharts.markerviews.DistanceAltitudeChartMarkerView;
@@ -34,6 +37,7 @@ import com.watchthybridle.floatsight.customcharts.markerviews.TouchAbleMarkerVie
 import com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetProperties;
 
 import static com.github.mikephil.charting.components.YAxis.YAxisLabelPosition.INSIDE_CHART;
+import static com.watchthybridle.floatsight.linedatasetcreation.AllMetricsVsTimeChartDataSetHolder.ALTITUDE;
 
 public class DistanceVsAltitudeChart extends RangeMarkerChart {
 
@@ -125,8 +129,19 @@ public class DistanceVsAltitudeChart extends RangeMarkerChart {
         DistanceAltitudeRangeMarkerView rangeMarkerView = new DistanceAltitudeRangeMarkerView(getContext());
         rangeMarkerView.setChartView(this);
         setRangeMarkerView(rangeMarkerView);
-
+        zoomInOnMinMaxAltitude();
         invalidate();
+    }
+
+    private void zoomInOnMinMaxAltitude() {
+        Pair<Entry, Entry> minMaxAltitude = chartDataSetProperties.getMinMaxYEntries();
+        float minX = minMaxAltitude.second.getX();
+        float maxX = minMaxAltitude.first.getX();
+        float scaleY = 1;
+        float scaleX = getLineData().getXMax() / (maxX - minX);
+        float centerX = (maxX - minX) / 2 + minX;
+        float centerY = 1;
+        zoom(scaleX, scaleY, centerX, centerY, YAxis.AxisDependency.LEFT);
     }
 
     public ChartDataSetProperties getChartDataSetProperties() {

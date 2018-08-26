@@ -39,6 +39,7 @@ import com.watchthybridle.floatsight.linedatasetcreation.AllMetricsVsTimeChartDa
 import com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetProperties;
 
 import static com.github.mikephil.charting.components.YAxis.YAxisLabelPosition.INSIDE_CHART;
+import static com.watchthybridle.floatsight.linedatasetcreation.AllMetricsVsTimeChartDataSetHolder.ALTITUDE;
 
 public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueSelectedListener {
 
@@ -172,7 +173,7 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
     }
 
     private void zoomInOnMinMaxAltitude() {
-        Pair<Entry, Entry> minMaxAltitude = chartDataSetHolder.getFlySightTrackData().getAltitudeXEnvelop();
+        Pair<Entry, Entry> minMaxAltitude = chartDataSetHolder.getDataSetPropertiesList().get(ALTITUDE).getMinMaxYEntries();
         float minX = minMaxAltitude.second.getX();
         float maxX = minMaxAltitude.first.getX();
         float scaleY = 1;

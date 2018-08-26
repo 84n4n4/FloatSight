@@ -6,8 +6,10 @@ import android.support.annotation.IdRes;
 import android.support.annotation.IntDef;
 import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
+import android.util.Pair;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
@@ -104,6 +106,23 @@ public class ChartDataSetProperties {
             sum += entry.getY();
         }
         return sum / count;
+    }
+
+
+    public Pair<Entry, Entry> getMinMaxYEntries() {
+        Entry min = iLineDataSet.getEntryForIndex(0);
+        Entry max = iLineDataSet.getEntryForIndex(0);
+
+        for(int index = 0; index < iLineDataSet.getEntryCount(); index ++) {
+            Entry altitude = iLineDataSet.getEntryForIndex(index);
+            if (altitude.getY() > max.getY()) {
+                max = altitude;
+            }
+            if (altitude.getY() < min.getY()) {
+                min = altitude;
+            }
+        }
+        return new Pair<>(min, max);
     }
 
     public static ChartDataSetProperties getHorizontalVelocityProperties(Context context, FlySightTrackData flySightTrackData) {
