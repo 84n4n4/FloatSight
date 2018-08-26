@@ -94,10 +94,11 @@ public class FlySightCsvParser {
             Float glide = calculateGlide(horVelocity, vertVelocity);
             GPSCoordinate gpsCoordinate = new GPSCoordinate(Double.parseDouble(row[1]), Double.parseDouble(row[2]), GPSCoordinate.VALID);
             Float distance = 0f;
-            if (flySightTrackData.getFirstValidPoint().valid == GPSCoordinate.VALID){
-                distance = flySightTrackData.getFirstValidPoint().calculateHaversinDistanceMeters(gpsCoordinate);
-            } else {
-                flySightTrackData.setFirstValidPoint(gpsCoordinate);
+            if (flySightTrackData.getPositions().size() > 0 &&
+                gpsCoordinate.valid == GPSCoordinate.VALID){
+                GPSCoordinate previousPoint = flySightTrackData.getPositions().get(flySightTrackData.getPositions().size() - 1);
+                float previousDistance = flySightTrackData.getDistance().get(flySightTrackData.getDistance().size() - 1).getY();
+                distance = previousDistance + previousPoint.calculateHaversinDistanceMeters(gpsCoordinate);
             }
 
             int entryPosition = flySightTrackData.getTimeStamps().size();

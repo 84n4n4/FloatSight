@@ -54,7 +54,6 @@ public class FlySightTrackData {
     private List<Entry> glide;
     private List<Entry> distance;
     private List<Entry> distanceVsAltitude;
-    private GPSCoordinate firstValidGPSCoordinate = new GPSCoordinate(0,0, GPSCoordinate.INVALID);
 
     public FlySightTrackData() {
         time = new ArrayList<>();
@@ -121,14 +120,6 @@ public class FlySightTrackData {
 
     public List<GPSCoordinate> getPositions() {
         return position;
-    }
-
-    public GPSCoordinate getFirstValidPoint() {
-        return firstValidGPSCoordinate;
-    }
-
-    public void setFirstValidPoint(GPSCoordinate gpsCoordinate) {
-        firstValidGPSCoordinate = gpsCoordinate;
     }
 
     public boolean isAnyMetricEmpty() {
