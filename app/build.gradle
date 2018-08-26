@@ -25,6 +25,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 28
     defaultConfig {
+        vectorDrawables.useSupportLibrary = true
         applicationId "com.watchthybridle.floatsight"
         minSdkVersion 19
         targetSdkVersion 28

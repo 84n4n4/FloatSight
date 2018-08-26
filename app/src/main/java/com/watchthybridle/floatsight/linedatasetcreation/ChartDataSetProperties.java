@@ -162,7 +162,7 @@ public class ChartDataSetProperties {
         return new ChartDataSetProperties(
                 R.string.glide_label,
                 R.color.glide,
-                R.string.none,
+                R.string.glide,
                 YAxis.AxisDependency.LEFT,
                 GLIDE_FORMAT,
                 R.id.glide_marker_text_view,

@@ -63,6 +63,6 @@
     <!-- Units -->
     <string name="kmh">%1$s km/h</string>
     <string name="m">%1$s m</string>
-    <string name="none">%1$s</string>
+    <string name="glide">%1$s</string>
     <string name="seconds">%1$s sec</string>
 </resources>
