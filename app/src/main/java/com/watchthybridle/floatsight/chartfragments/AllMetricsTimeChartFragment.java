@@ -26,15 +26,16 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
+import android.support.v7.app.AlertDialog;
+import android.view.*;
+import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
 import com.watchthybridle.floatsight.customcharts.GlideOverlayChart;
 import com.watchthybridle.floatsight.linedatasetcreation.AllMetricsVsTimeChartDataSetHolder;
+
+import static com.watchthybridle.floatsight.linedatasetcreation.AllMetricsVsTimeChartDataSetHolder.*;
 
 public class AllMetricsTimeChartFragment extends ChartFragment {
 
@@ -80,19 +81,65 @@ public class AllMetricsTimeChartFragment extends ChartFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.menu_item_metrics_visibility:
+                showMetricsDialog();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
+
+    private void showMetricsDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
+                .setTitle(R.string.metrics_dialgo_title)
+                .setPositiveButton(R.string.ok, null);
+        final FrameLayout frameView = new FrameLayout(getContext());
+        builder.setView(frameView);
+
+        final AlertDialog dialog = builder.create();
+        LayoutInflater inflater = dialog.getLayoutInflater();
+        View dialoglayout = inflater.inflate(R.layout.metrics_dialog, frameView);
+        ((CheckBox) dialoglayout.findViewById(R.id.checkbox_altitude)).setChecked(chart.getDataSetHolder().getDataSetPropertiesList().get(ALTITUDE).iLineDataSet.isVisible());
+        ((CheckBox) dialoglayout.findViewById(R.id.checkbox_glide)).setChecked(chart.glideChart.getData().getDataSets().get(0).isVisible());
+        ((CheckBox) dialoglayout.findViewById(R.id.checkbox_hor_velocity)).setChecked(chart.getDataSetHolder().getDataSetPropertiesList().get(HOR_VELOCITY).iLineDataSet.isVisible());
+        ((CheckBox) dialoglayout.findViewById(R.id.checkbox_vert_velocity)).setChecked(chart.getDataSetHolder().getDataSetPropertiesList().get(VERT_VELOCITY).iLineDataSet.isVisible());
+        dialog.show();
+    }
+
+    public void onDialogCheckboxClicked(View view) {
+        boolean checked = ((CheckBox) view).isChecked();
+        switch(view.getId()) {
+            case R.id.checkbox_altitude:
+                chart.getDataSetHolder().getDataSetPropertiesList().get(ALTITUDE).iLineDataSet.setVisible(checked);
+                break;
+            case R.id.checkbox_glide:
+                chart.glideChart.getData().getDataSets().get(0).setVisible(checked);
+                break;
+            case R.id.checkbox_hor_velocity:
+                chart.getDataSetHolder().getDataSetPropertiesList().get(HOR_VELOCITY).iLineDataSet.setVisible(checked);
+                break;
+            case R.id.checkbox_vert_velocity:
+                chart.getDataSetHolder().getDataSetPropertiesList().get(VERT_VELOCITY).iLineDataSet.setVisible(checked);
+                break;
+        }
+        chart.invalidate();
+    }
+
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         chart.saveState(outState);
+        chart.glideChart.saveState(outState);
+
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         chart.restoreState(savedInstanceState);
+        chart.glideChart.restoreState(savedInstanceState);
     }
 
     @VisibleForTesting

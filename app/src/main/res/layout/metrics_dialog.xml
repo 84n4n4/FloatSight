@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:layout_marginLeft="20dp"
+              android:layout_marginTop="20dp">
+
+    <CheckBox android:id="@+id/checkbox_altitude"
+              style="@style/metricsCheckbox"
+              android:text="@string/altitude_label"
+              android:checked="true"
+              android:textColor="@color/altitude"
+              android:onClick="onDialogCheckboxClicked"/>
+    <CheckBox android:id="@+id/checkbox_glide"
+              style="@style/metricsCheckbox"
+              android:text="@string/glide_label"
+              android:checked="true"
+              android:textColor="@color/glide"
+              android:onClick="onDialogCheckboxClicked"/>
+    <CheckBox android:id="@+id/checkbox_vert_velocity"
+              style="@style/metricsCheckbox"
+              android:text="@string/vert_velocity_label"
+              android:checked="true"
+              android:textColor="@color/vertVelocity"
+              android:onClick="onDialogCheckboxClicked"/>
+    <CheckBox android:id="@+id/checkbox_hor_velocity"
+              style="@style/metricsCheckbox"
+              android:text="@string/hor_velocity_label"
+              android:checked="true"
+              android:textColor="@color/horVelocity"
+              android:onClick="onDialogCheckboxClicked"/>
+</LinearLayout>

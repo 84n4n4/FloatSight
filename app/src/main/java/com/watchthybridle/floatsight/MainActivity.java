@@ -38,7 +38,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
+import com.watchthybridle.floatsight.chartfragments.AllMetricsTimeChartFragment;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataRepository;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
 
@@ -171,6 +173,15 @@ public class MainActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    public void onDialogCheckboxClicked(View view) {
+        AllMetricsTimeChartFragment allMetricsTimeChartFragment =
+                (AllMetricsTimeChartFragment) getSupportFragmentManager()
+                        .findFragmentByTag(MainActivity.TAG_ALL_METRICS_V_TIME_CHART_FRAGMENT);
+        if (allMetricsTimeChartFragment != null) {
+            allMetricsTimeChartFragment.onDialogCheckboxClicked(view);
+        }
     }
 
     @VisibleForTesting

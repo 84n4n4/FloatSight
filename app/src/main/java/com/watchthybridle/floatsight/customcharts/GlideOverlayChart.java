@@ -47,12 +47,12 @@ import static com.github.mikephil.charting.components.YAxis.YAxisLabelPosition.I
 
 public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueSelectedListener {
 
-    public LineChart glideChart;
+    public GlideChart glideChart;
     private AllMetricsVsTimeChartDataSetHolder chartDataSetHolder;
 
     public GlideOverlayChart(Context context) {
         super(context);
-        glideChart = new LineChart(context);
+        glideChart = new GlideChart(context);
         glideChart.setOnChartValueSelectedListener(this);
 
         glideChart.setHighlightPerDragEnabled(false);
@@ -209,6 +209,13 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
     }
 
     public void onNothingSelected() {
+    }
+
+    public class GlideChart extends RestorableChart {
+        public GlideChart(Context context) {
+            super(context);
+            restorableCharIdentifier = "GLIDE_CHART";
+        }
     }
 }
 
