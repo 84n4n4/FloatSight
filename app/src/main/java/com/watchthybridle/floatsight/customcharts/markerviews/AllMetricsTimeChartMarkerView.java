@@ -18,8 +18,7 @@ public class AllMetricsTimeChartMarkerView extends TouchAbleMarkerView {
     }
 
     void customOnLongClick() {
-        GlideOverlayChart chart = (GlideOverlayChart) AllMetricsTimeChartMarkerView.this.getChartView();
-        chart.setRangeMarker();
+        ((GlideOverlayChart) AllMetricsTimeChartMarkerView.this.getChartView()).setRangeMarker();
     }
 
     void customOnClick() {
@@ -47,7 +46,7 @@ public class AllMetricsTimeChartMarkerView extends TouchAbleMarkerView {
     @Override
     public void draw(Canvas canvas, float posX, float posY)
     {
-        float chartTop = AllMetricsTimeChartMarkerView.this.getChartView().getViewPortHandler().contentTop();
+        float chartTop = getChartView().getViewPortHandler().contentTop();
         MPPointF offset = getOffsetForDrawingAtPoint(posX, posY);
 
         int saveId = canvas.save();

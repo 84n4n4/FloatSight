@@ -27,18 +27,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.FrameLayout;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.data.LineData;
 import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
-import com.watchthybridle.floatsight.customcharts.markerviews.DistanceAltitudeChartMarkerView;
+import com.watchthybridle.floatsight.customcharts.DistanceVsAltitudeChart;
 import com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetProperties;
-
-import static com.github.mikephil.charting.components.YAxis.YAxisLabelPosition.INSIDE_CHART;
 
 public class DistanceVsAltitudeChartFragment extends ChartFragment {
 
-    private LineChart chart;
+    private DistanceVsAltitudeChart chart;
 
     public DistanceVsAltitudeChartFragment() {
     }
@@ -54,14 +50,7 @@ public class DistanceVsAltitudeChartFragment extends ChartFragment {
     }
 
     private void setUpChart() {
-        chart = new LineChart(getContext());
-        chart.getAxisLeft().setPosition(INSIDE_CHART);
-        chart.getAxisRight().setPosition(INSIDE_CHART);
-        chart.getDescription().setText("");
-        chart.setPinchZoom(false);
-        chart.getAxisRight().setSpaceTop(10);
-        chart.getAxisLeft().setSpaceTop(10);
-        chart.invalidate();
+        chart = new DistanceVsAltitudeChart(getContext());
     }
 
     protected void actOnDataChanged(FlySightTrackData flySightTrackData) {
@@ -69,23 +58,11 @@ public class DistanceVsAltitudeChartFragment extends ChartFragment {
             return;
         }
 
-        ChartDataSetProperties chartDataSetHolder =
+        ChartDataSetProperties chartDataSetProperties =
                 ChartDataSetProperties.getDistanceVsAltitudeProperties(getContext(), flySightTrackData);
 
-        chart.setData(new LineData(chartDataSetHolder.iLineDataSet));
+        chart.setChartDataSetProperties(chartDataSetProperties);
 
-        chart.getAxisLeft().setTextColor(R.color.altitude);
-        chart.getAxisRight().setTextColor(R.color.altitude);
-        chart.getXAxis().setTextColor(R.color.distance);
-        chart.setDoubleTapToZoomEnabled(false);
-        chart.setPinchZoom(false);
-
-        DistanceAltitudeChartMarkerView distanceAltitudeChartMarker =
-                new DistanceAltitudeChartMarkerView(getContext());
-        distanceAltitudeChartMarker.setChartView(chart);
-        chart.setMarker(distanceAltitudeChartMarker);
-
-        chart.invalidate();
     }
 
     @Override

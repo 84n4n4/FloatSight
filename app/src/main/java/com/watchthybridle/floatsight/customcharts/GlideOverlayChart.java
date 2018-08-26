@@ -26,22 +26,17 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.util.Pair;
 import android.view.MotionEvent;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.watchthybridle.floatsight.R;
+import com.watchthybridle.floatsight.customcharts.markerviews.AllMetricsRangeMarkerView;
 import com.watchthybridle.floatsight.customcharts.markerviews.AllMetricsTimeChartMarkerView;
-import com.watchthybridle.floatsight.customcharts.markerviews.RangeMarkerView;
 import com.watchthybridle.floatsight.customcharts.markerviews.TouchAbleMarkerView;
 import com.watchthybridle.floatsight.linedatasetcreation.AllMetricsVsTimeChartDataSetHolder;
 import com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetProperties;
-
-import java.text.DecimalFormat;
 
 import static com.github.mikephil.charting.components.YAxis.YAxisLabelPosition.INSIDE_CHART;
 
@@ -52,6 +47,7 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
 
     public GlideOverlayChart(Context context) {
         super(context);
+        restorableCharIdentifier = "GLIDE_OVERLAY_CHART";
         glideChart = new GlideChart(context);
         glideChart.setOnChartValueSelectedListener(this);
 
@@ -65,6 +61,7 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
         setAxisLabelColors(context);
         setLegendPosition();
         setZoomHandling();
+        invalidate();
     }
 
     private void setZoomHandling() {
@@ -99,14 +96,14 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
 
     private void setAxisLabelValueFormats() {
         glideChart.getAxisLeft().setValueFormatter(
-                new CustomYAxisValueFormatter(ChartDataSetProperties.GLIDE_FORMAT));
+                new CustomAxisValueFormatter(ChartDataSetProperties.GLIDE_FORMAT));
         glideChart.getAxisRight().setValueFormatter(
-                new CustomYAxisValueFormatter(ChartDataSetProperties.GLIDE_FORMAT));
+                new CustomAxisValueFormatter(ChartDataSetProperties.GLIDE_FORMAT));
 
         this.getAxisLeft().setValueFormatter(
-                new CustomYAxisValueFormatter(ChartDataSetProperties.VELOCITY_FORMAT));
+                new CustomAxisValueFormatter(ChartDataSetProperties.VELOCITY_FORMAT));
         this.getAxisRight().setValueFormatter(
-                new CustomYAxisValueFormatter(ChartDataSetProperties.DISTANCE_FORMAT));
+                new CustomAxisValueFormatter(ChartDataSetProperties.DISTANCE_FORMAT));
     }
 
     private void setAxisLabelColors(Context context) {
@@ -158,19 +155,6 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
         return success;
     }
 
-    class CustomYAxisValueFormatter implements IAxisValueFormatter {
-        private DecimalFormat mFormat;
-
-        CustomYAxisValueFormatter(DecimalFormat decimalFormat) {
-            mFormat = decimalFormat;
-        }
-
-        @Override
-        public String getFormattedValue(float value, AxisBase axis) {
-            return mFormat.format(value);
-        }
-    }
-
     public void setDataSetHolder(AllMetricsVsTimeChartDataSetHolder chartDataSetHolder) {
         this.chartDataSetHolder = chartDataSetHolder;
 
@@ -181,7 +165,7 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
         markerViewOutsideGraph.setChartView(this);
         setMarker(markerViewOutsideGraph);
 
-        RangeMarkerView rangeMarkerView = new RangeMarkerView(getContext());
+        AllMetricsRangeMarkerView rangeMarkerView = new AllMetricsRangeMarkerView(getContext());
         rangeMarkerView.setChartView(this);
         setRangeMarkerView(rangeMarkerView);
         zoomInOnMinMaxAltitude();

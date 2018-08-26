@@ -27,7 +27,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.v4.content.ContextCompat;
 import com.github.mikephil.charting.components.LimitLine;
-import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.watchthybridle.floatsight.R;

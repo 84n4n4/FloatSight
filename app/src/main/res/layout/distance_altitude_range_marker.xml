@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/distance_v_altitude_range_marker"
+                android:orientation="vertical">
+
+    <TextView
+            android:id="@+id/altitude_marker_text_view"
+            style="@style/markerTextView"
+            android:layout_marginTop="25dp"/>
+    <TextView
+            android:id="@+id/distance_marker_text_view"
+            style="@style/markerTextView"/>
+</LinearLayout>

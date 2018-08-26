@@ -3,8 +3,6 @@ package com.watchthybridle.floatsight.customcharts.parcelables;
 import android.os.Parcel;
 import android.os.Parcelable;
 import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 public class ParcelableLineDataVisibility implements Parcelable {

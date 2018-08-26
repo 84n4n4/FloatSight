@@ -1,17 +1,13 @@
 package com.watchthybridle.floatsight.linedatasetcreation;
 
 import android.content.Context;
-import android.support.annotation.IntDef;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
 
-import java.lang.annotation.Retention;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 public class AllMetricsVsTimeChartDataSetHolder {
     public static final Integer VERT_VELOCITY = 0;
