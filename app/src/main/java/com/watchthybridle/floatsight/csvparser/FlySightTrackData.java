@@ -23,6 +23,7 @@
 package com.watchthybridle.floatsight.csvparser;
 
 import android.support.annotation.LongDef;
+import android.util.Pair;
 import com.github.mikephil.charting.data.Entry;
 
 import java.lang.annotation.Retention;
@@ -124,5 +125,19 @@ public class FlySightTrackData {
 
     public boolean isAnyMetricEmpty() {
         return time.isEmpty() || vertVelocity.isEmpty() || horVelocity.isEmpty() || altitude.isEmpty() || glide.isEmpty();
+    }
+
+    public Pair<Entry, Entry> getAltitudeXEnvelop() {
+        Entry min = altitude.get(0);
+        Entry max = altitude.get(0);
+        for(Entry altitude : altitude) {
+            if (altitude.getY() > max.getY()) {
+                max = altitude;
+            }
+            if (altitude.getY() < min.getY()) {
+                min = altitude;
+            }
+        }
+        return new Pair<>(min, max);
     }
 }

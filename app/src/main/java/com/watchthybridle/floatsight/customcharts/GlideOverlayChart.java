@@ -24,10 +24,12 @@ package com.watchthybridle.floatsight.customcharts;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.util.Pair;
 import android.view.MotionEvent;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
@@ -182,6 +184,19 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
         RangeMarkerView rangeMarkerView = new RangeMarkerView(getContext());
         rangeMarkerView.setChartView(this);
         setRangeMarkerView(rangeMarkerView);
+        zoomInOnMinMaxAltitude();
+    }
+
+    private void zoomInOnMinMaxAltitude() {
+        Pair<Entry, Entry> minMaxAltitude = chartDataSetHolder.getFlySightTrackData().getAltitudeXEnvelop();
+        float minX = minMaxAltitude.second.getX();
+        float maxX = minMaxAltitude.first.getX();
+        float scaleY = 1;
+        float scaleX = chartDataSetHolder.getFlySightTrackData().getAltitude().size() / (maxX - minX);
+        float centerX = (maxX - minX) / 2 + minX;
+        float centerY = 1;
+        zoom(scaleX, scaleY, centerX, centerY, YAxis.AxisDependency.RIGHT);
+        glideChart.zoom(scaleX, scaleY, centerX, centerY, YAxis.AxisDependency.RIGHT);
     }
 
     public AllMetricsVsTimeChartDataSetHolder getDataSetHolder() {
