@@ -25,6 +25,7 @@ package com.watchthybridle.floatsight.chartfragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.FrameLayout;
 import com.watchthybridle.floatsight.R;
@@ -68,5 +69,18 @@ public class DistanceVsAltitudeChartFragment extends ChartFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        chart.saveState(outState);
+
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        chart.restoreState(savedInstanceState);
     }
 }

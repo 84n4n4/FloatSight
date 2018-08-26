@@ -15,7 +15,7 @@ import java.util.List;
 public class DistanceAltitudeRangeMarkerView extends RangeMarkerView {
 
     public DistanceAltitudeRangeMarkerView(Context context) {
-        super(context, R.layout.all_metrics_range_marker);
+        super(context, R.layout.distance_altitude_range_marker);
     }
 
     @Override
