@@ -9,9 +9,11 @@ public class ParcelableLineDataVisibility implements Parcelable {
     private boolean[] visibility;
 
     public ParcelableLineDataVisibility(LineData lineData) {
-        visibility = new boolean[lineData.getDataSets().size()];
-        for(ILineDataSet lineDataSet : lineData.getDataSets()) {
-            visibility[lineData.getDataSets().indexOf(lineDataSet)] = lineDataSet.isVisible();
+        if (lineData != null) {
+            visibility = new boolean[lineData.getDataSets().size()];
+            for(ILineDataSet lineDataSet : lineData.getDataSets()) {
+                visibility[lineData.getDataSets().indexOf(lineDataSet)] = lineDataSet.isVisible();
+            }
         }
     }
 
