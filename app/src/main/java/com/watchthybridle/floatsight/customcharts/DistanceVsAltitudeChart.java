@@ -37,7 +37,6 @@ import com.watchthybridle.floatsight.customcharts.markerviews.TouchAbleMarkerVie
 import com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetProperties;
 
 import static com.github.mikephil.charting.components.YAxis.YAxisLabelPosition.INSIDE_CHART;
-import static com.watchthybridle.floatsight.linedatasetcreation.AllMetricsVsTimeChartDataSetHolder.ALTITUDE;
 
 public class DistanceVsAltitudeChart extends RangeMarkerChart {
 

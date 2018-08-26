@@ -41,6 +41,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import com.watchthybridle.floatsight.chartfragments.AllMetricsTimeChartFragment;
+import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataRepository;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
 
@@ -73,6 +74,12 @@ public class MainActivity extends AppCompatActivity {
 		}
 
         flySightTrackDataViewModel = ViewModelProviders.of(this).get(FlySightTrackDataViewModel.class);
+        flySightTrackDataViewModel.getFlySightTrackDataLiveData()
+                .observe(this, flySightTrackData -> setToolbarInfoText(flySightTrackData));
+    }
+
+    public void setToolbarInfoText(FlySightTrackData flySightTrackData) {
+        getSupportActionBar().setSubtitle(flySightTrackData.getSourceFileName());
     }
 
     private void showMainMenuFragment() {

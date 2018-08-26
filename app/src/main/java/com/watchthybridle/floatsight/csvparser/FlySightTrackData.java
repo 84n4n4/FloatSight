@@ -23,7 +23,6 @@
 package com.watchthybridle.floatsight.csvparser;
 
 import android.support.annotation.LongDef;
-import android.util.Pair;
 import com.github.mikephil.charting.data.Entry;
 
 import java.lang.annotation.Retention;
@@ -46,6 +45,8 @@ public class FlySightTrackData {
     public static final long PARSING_ERRORS = 1;
 
     private long parsingStatus = PARSING_SUCCESS;
+
+    private String sourceFileName = "";
 
     private List<String> time;
     private List<GPSCoordinate> position;
@@ -125,5 +126,13 @@ public class FlySightTrackData {
 
     public boolean isAnyMetricEmpty() {
         return time.isEmpty() || vertVelocity.isEmpty() || horVelocity.isEmpty() || altitude.isEmpty() || glide.isEmpty();
+    }
+
+    public String getSourceFileName() {
+        return sourceFileName;
+    }
+
+    public void setSourceFileName(String sourceFileName) {
+        this.sourceFileName = sourceFileName;
     }
 }

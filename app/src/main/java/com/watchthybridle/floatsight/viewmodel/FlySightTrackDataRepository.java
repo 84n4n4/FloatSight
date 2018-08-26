@@ -24,8 +24,10 @@ package com.watchthybridle.floatsight.viewmodel;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.content.ContentResolver;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.provider.OpenableColumns;
 import com.watchthybridle.floatsight.csvparser.FlySightCsvParser;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
 
@@ -60,6 +62,8 @@ public class FlySightTrackDataRepository {
                     flySightTrackData = flySightCsvParser.read();
                 } catch (Exception e) {
                     flySightTrackData.setParsingStatus(FlySightTrackData.PARSING_FAIL);
+                } finally {
+                    flySightTrackData.setSourceFileName(resolveFileName(uris[0]));
                 }
             } else {
                 flySightTrackData.setParsingStatus(FlySightTrackData.PARSING_FAIL);
@@ -70,6 +74,30 @@ public class FlySightTrackDataRepository {
         protected void onPostExecute(Long result) {
             liveData.setValue(flySightTrackData);
         }
+
+        public String resolveFileName(Uri uri) {
+            String result = null;
+            if (uri.getScheme().equals("content")) {
+                Cursor cursor = contentResolver.query(uri, null, null, null, null);
+                try {
+                    if (cursor != null && cursor.moveToFirst()) {
+                        result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                    }
+                } finally {
+                    cursor.close();
+                }
+            }
+            if (result == null) {
+                result = uri.getPath();
+                int cut = result.lastIndexOf('/');
+                if (cut != -1) {
+                    result = result.substring(cut + 1);
+                }
+            }
+            return result;
+        }
     }
+
+
 
 }
