@@ -1,0 +1,139 @@
+; Firmware version v20170405
+
+; For information on configuring FlySight, please go to
+;     http://flysight.ca/wiki
+
+; GPS settings
+
+Model:     6     ; Dynamic model
+                 ;   0 = Portable
+                 ;   2 = Stationary
+                 ;   3 = Pedestrian
+                 ;   4 = Automotive
+                 ;   5 = Sea
+                 ;   6 = Airborne with < 1 G acceleration
+                 ;   7 = Airborne with < 2 G acceleration
+                 ;   8 = Airborne with < 4 G acceleration
+Rate:      200   ; Measurement rate (ms)
+
+; Tone settings
+
+Mode:      2     ; Measurement mode
+                 ;   0 = Horizontal speed
+                 ;   1 = Vertical speed
+                 ;   2 = Glide ratio
+                 ;   3 = Inverse glide ratio
+                 ;   4 = Total speed
+Min:       100     ; Lowest pitch value
+                 ;   cm/s        in Mode 0, 1, or 4
+                 ;   ratio * 100 in Mode 2 or 3
+Max:       250   ; Highest pitch value
+                 ;   cm/s        in Mode 0, 1, or 4
+                 ;   ratio * 100 in Mode 2 or 3
+Limits:    1     ; Behaviour when outside bounds
+                 ;   0 = No tone
+                 ;   1 = Min/max tone
+                 ;   2 = Chirp up/down
+                 ;   3 = Chirp down/up
+Volume:    4     ; 0 (min) to 8 (max)
+
+; Rate settings
+
+Mode_2:    9     ; Determines tone rate
+                 ;   0 = Horizontal speed
+                 ;   1 = Vertical speed
+                 ;   2 = Glide ratio
+                 ;   3 = Inverse glide ratio
+                 ;   4 = Total speed
+                 ;   8 = Magnitude of Value 1
+                 ;   9 = Change in Value 1
+Min_Val_2: 300  ; Lowest rate value
+                 ;   cm/s          when Mode 2 = 0, 1, or 4
+                 ;   ratio * 100   when Mode 2 = 2 or 3
+                 ;   percent * 100 when Mode 2 = 9
+Max_Val_2: 1500  ; Highest rate value
+                 ;   cm/s          when Mode 2 = 0, 1, or 4
+                 ;   ratio * 100   when Mode 2 = 2 or 3
+                 ;   percent * 100 when Mode 2 = 9
+Min_Rate:  100   ; Minimum rate (Hz * 100)
+Max_Rate:  500   ; Maximum rate (Hz * 100)
+Flatline:  0     ; Flatline at minimum rate
+                 ;   0 = No
+                 ;   1 = Yes
+
+; Speech settings
+
+Sp_Mode:   2     ; Speech mode
+                 ;   0 = Horizontal speed
+                 ;   1 = Vertical speed
+                 ;   2 = Glide ratio
+                 ;   3 = Inverse glide ratio
+                 ;   4 = Total speed
+Sp_Units:  0     ; Speech units
+                 ;   0 = km/h
+                 ;   1 = mph
+Sp_Rate:   0     ; Speech rate (s)
+                 ;   0 = No speech
+Sp_Dec:    0     ; Decimal places for speech
+Sp_Volume: 4     ; 0 (min) to 8 (max)
+
+; Thresholds
+
+V_Thresh:  0  ; Minimum vertical speed for tone (cm/s)
+H_Thresh:  0     ; Minimum horizontal speed for tone (cm/s)
+
+; Miscellaneous
+
+Use_SAS:   1     ; Use skydiver's airspeed
+                 ;   0 = No
+                 ;   1 = Yes
+TZ_Offset: 7200     ; Timezone offset of output files in seconds
+                 ;   -14400 = UTC-4 (EDT)
+                 ;   -18000 = UTC-5 (EST, CDT)
+                 ;   -21600 = UTC-6 (CST, MDT)
+                 ;   -25200 = UTC-7 (MST, PDT)
+                 ;   -28800 = UTC-8 (PST)
+
+; Initialization
+
+Init_Mode: 1     ; When the FlySight is powered on
+                 ;   0 = Do nothing
+                 ;   1 = Test speech mode
+                 ;   2 = Play file
+Init_File: 0     ; File to be played
+
+; Alarm settings
+
+; WARNING: GPS measurements depend on very weak signals
+;          received from orbiting satellites. As such, they
+;          are prone to interference, and should NEVER be
+;          relied upon for life saving purposes.
+
+;          UNDER NO CIRCUMSTANCES SHOULD THESE ALARMS BE
+;          USED TO INDICATE DEPLOYMENT OR BREAKOFF ALTITUDE.
+
+; NOTE:    Alarm elevations are given in meters above ground
+;          elevation, which is specified in DZ_Elev.
+
+Win_Above:     0 ; Window above each alarm (m)
+Win_Below:     0 ; Window below each alarm (m)
+DZ_Elev:       0 ; Ground elevation (m above sea level)
+
+Alarm_Elev:    0 ; Alarm elevation (m above ground level)
+Alarm_Type:    0 ; Alarm type
+                 ;   0 = No alarm
+                 ;   1 = Beep
+                 ;   2 = Chirp up
+                 ;   3 = Chirp down
+                 ;   4 = Play file
+Alarm_File:    0 ; File to be played
+
+; Silence windows
+
+; NOTE:    Silence windows are given in meters above ground
+;          elevation, which is specified in DZ_Elev. Tones
+;          will be silenced during these windows and only
+;          alarms will be audible.
+
+Win_Top:       0 ; Silence window top (m)
+Win_Bottom:    0 ; Silence window bottom (m)
