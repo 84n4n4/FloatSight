@@ -23,8 +23,8 @@ public class AllMetricsRangeMarkerView extends RangeMarkerView {
         GlideOverlayChart chart = (GlideOverlayChart) AllMetricsRangeMarkerView.this.getChartView();
 
         List<LimitLine> limitLines = chart.getXAxis().getLimitLines();
-        int limitStart = (int) limitLines.get(0).getLimit();
-        int limitEnd = (int) limitLines.get(1).getLimit();
+        float limitStart = limitLines.get(0).getLimit();
+        float limitEnd = limitLines.get(1).getLimit();
 
         List<ChartDataSetProperties> dataSetPropertiesList = chart.getDataSetHolder().getDataSetPropertiesList();
         for (ChartDataSetProperties chartDataSetProperties : dataSetPropertiesList) {

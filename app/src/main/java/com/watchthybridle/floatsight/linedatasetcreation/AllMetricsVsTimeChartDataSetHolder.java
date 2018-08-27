@@ -25,11 +25,14 @@ public class AllMetricsVsTimeChartDataSetHolder {
     public AllMetricsVsTimeChartDataSetHolder(Context context, FlySightTrackData flySightTrackData) {
         this.flySightTrackData = flySightTrackData;
         dataSetPropertiesList = new ArrayList<>();
-        dataSetPropertiesList.add(ChartDataSetProperties.getVerticalVelocityProperties(context, flySightTrackData));
-        dataSetPropertiesList.add(ChartDataSetProperties.getHorizontalVelocityProperties(context, flySightTrackData));
-        dataSetPropertiesList.add(ChartDataSetProperties.getAltitudeVsTimeProperties(context, flySightTrackData));
-        dataSetPropertiesList.add(ChartDataSetProperties.getDistanceVsTimeProperties(context, flySightTrackData));
-        dataSetPropertiesList.add(ChartDataSetProperties.getGlideProperties(context, flySightTrackData));
+        dataSetPropertiesList.add(new ChartDataSetProperties.VerticalVelocityDataSetProperties());
+        dataSetPropertiesList.add(new ChartDataSetProperties.HorizontalVelocityDataSetProperties());
+        dataSetPropertiesList.add(new ChartDataSetProperties.AltitudeVsTimeDataSetProperties());
+        dataSetPropertiesList.add(new ChartDataSetProperties.DistanceVsTimeDataSetProperties());
+        dataSetPropertiesList.add(new ChartDataSetProperties.GlideVsTimeDataSetProperties());
+        for(ChartDataSetProperties dataSetProperties : dataSetPropertiesList) {
+            dataSetProperties.initLineData(context, flySightTrackData);
+        }
     }
 
     public FlySightTrackData getFlySightTrackData() {

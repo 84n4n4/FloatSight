@@ -24,6 +24,7 @@ package com.watchthybridle.floatsight.csvparser;
 
 import android.support.annotation.LongDef;
 import com.github.mikephil.charting.data.Entry;
+import com.watchthybridle.floatsight.linedatasetcreation.FlySightTrackPointValueProvider;
 
 import java.lang.annotation.Retention;
 import java.util.ArrayList;
@@ -62,50 +63,10 @@ public class FlySightTrackData {
         this.parsingStatus = parsingStatus;
     }
 
-    public List<Entry> getHorVelocityVTime() {
+    public List<Entry> getEntries(FlySightTrackPointValueProvider xValueProvider, FlySightTrackPointValueProvider yValueProvider) {
         List<Entry> entries = new ArrayList<>();
         for (FlySightTrackPoint trackPoint : flySightTrackPoints) {
-            entries.add(new Entry(trackPoint.trackTimeInSeconds, trackPoint.horVelocity));
-        }
-        return entries;
-    }
-
-    public List<Entry> getVertVelocityVTime() {
-        List<Entry> entries = new ArrayList<>();
-        for (FlySightTrackPoint trackPoint : flySightTrackPoints) {
-            entries.add(new Entry(trackPoint.trackTimeInSeconds, trackPoint.vertVelocity));
-        }
-        return entries;
-    }
-
-    public List<Entry> getAltitudeVTime() {
-        List<Entry> entries = new ArrayList<>();
-        for (FlySightTrackPoint trackPoint : flySightTrackPoints) {
-            entries.add(new Entry(trackPoint.trackTimeInSeconds, trackPoint.altitude));
-        }
-        return entries;
-    }
-
-    public List<Entry> getGlideVTime() {
-        List<Entry> entries = new ArrayList<>();
-        for (FlySightTrackPoint trackPoint : flySightTrackPoints) {
-            entries.add(new Entry(trackPoint.trackTimeInSeconds, trackPoint.glide));
-        }
-        return entries;
-    }
-
-    public List<Entry> getDistanceVTime() {
-        List<Entry> entries = new ArrayList<>();
-        for (FlySightTrackPoint trackPoint : flySightTrackPoints) {
-            entries.add(new Entry(trackPoint.trackTimeInSeconds, trackPoint.distance));
-        }
-        return entries;
-    }
-
-    public List<Entry> getDistanceVsAltitude() {
-        List<Entry> entries = new ArrayList<>();
-        for (FlySightTrackPoint trackPoint : flySightTrackPoints) {
-            entries.add(new Entry(trackPoint.distance, trackPoint.altitude));
+            entries.add(new Entry(xValueProvider.getValue(trackPoint), yValueProvider.getValue(trackPoint)));
         }
         return entries;
     }
@@ -116,5 +77,23 @@ public class FlySightTrackData {
 
     public void setSourceFileName(String sourceFileName) {
         this.sourceFileName = sourceFileName;
+    }
+
+    public FlySightTrackPoint getPointAtTime(float time) {
+        for (FlySightTrackPoint trackPoint : flySightTrackPoints) {
+            if (trackPoint.trackTimeInSeconds == time) {
+                return trackPoint;
+            }
+        }
+        return null;
+    }
+
+    public FlySightTrackPoint getPointAtDistance(float distance) {
+        for (FlySightTrackPoint trackPoint : flySightTrackPoints) {
+            if (trackPoint.distance == distance) {
+                return trackPoint;
+            }
+        }
+        return null;
     }
 }

@@ -60,7 +60,8 @@ public class DistanceVsAltitudeChartFragment extends ChartFragment {
         }
 
         ChartDataSetProperties chartDataSetProperties =
-                ChartDataSetProperties.getDistanceVsAltitudeProperties(getContext(), flySightTrackData);
+                new ChartDataSetProperties.DistanceVsAltitudeDataSetProperties();
+        chartDataSetProperties.initLineData(getContext(), flySightTrackData);
 
         chart.setChartDataSetProperties(chartDataSetProperties);
 
