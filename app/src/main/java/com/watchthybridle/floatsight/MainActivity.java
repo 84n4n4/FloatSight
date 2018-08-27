@@ -40,7 +40,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import com.watchthybridle.floatsight.chartfragments.AllMetricsTimeChartFragment;
+import com.watchthybridle.floatsight.chartfragments.AllMetricsChartFragment;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataRepository;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
@@ -183,11 +183,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onDialogCheckboxClicked(View view) {
-        AllMetricsTimeChartFragment allMetricsTimeChartFragment =
-                (AllMetricsTimeChartFragment) getSupportFragmentManager()
+        AllMetricsChartFragment allMetricsChartFragment =
+                (AllMetricsChartFragment) getSupportFragmentManager()
                         .findFragmentByTag(MainActivity.TAG_ALL_METRICS_V_TIME_CHART_FRAGMENT);
-        if (allMetricsTimeChartFragment != null) {
-            allMetricsTimeChartFragment.onDialogCheckboxClicked(view);
+        if (allMetricsChartFragment != null) {
+            allMetricsChartFragment.onDialogCheckboxClicked(view);
         }
     }
 

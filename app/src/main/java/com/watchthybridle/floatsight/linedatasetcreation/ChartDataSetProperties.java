@@ -3,11 +3,9 @@ package com.watchthybridle.floatsight.linedatasetcreation;
 import android.content.Context;
 import android.support.annotation.ColorRes;
 import android.support.annotation.IdRes;
-import android.support.annotation.IntDef;
 import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.util.Pair;
-import android.widget.TextView;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -15,14 +13,12 @@ import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackPoint;
 
-import java.lang.annotation.Retention;
 import java.text.DecimalFormat;
 import java.util.List;
 
 import static com.watchthybridle.floatsight.linedatasetcreation.RangeValueStrategy.RANGE_AVERAGE;
 import static com.watchthybridle.floatsight.linedatasetcreation.RangeValueStrategy.RANGE_DIFFERENTIAL;
 import static com.watchthybridle.floatsight.linedatasetcreation.TrackPointValueProvider.*;
-import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 public abstract class ChartDataSetProperties {
     public static final DecimalFormat VELOCITY_FORMAT = new DecimalFormat("#0");

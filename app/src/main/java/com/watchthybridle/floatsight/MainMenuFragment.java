@@ -17,7 +17,7 @@ import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.watchthybridle.floatsight.chartfragments.AllMetricsTimeChartFragment;
+import com.watchthybridle.floatsight.chartfragments.AllMetricsChartFragment;
 import com.watchthybridle.floatsight.chartfragments.ChartFragment;
 import com.watchthybridle.floatsight.chartfragments.DistanceVsAltitudeChartFragment;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
@@ -134,10 +134,10 @@ public class MainMenuFragment extends ChartFragment implements AdapterView.OnIte
 	private void showAllMetricsFragmentChart() {
 		FragmentActivity activity = getActivity();
 		if (activity != null) {
-			AllMetricsTimeChartFragment allMetricsTimeChartFragment = new AllMetricsTimeChartFragment();
+			AllMetricsChartFragment allMetricsChartFragment = new AllMetricsChartFragment();
 			FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
 			transaction
-					.replace(R.id.fragment_container, allMetricsTimeChartFragment,
+					.replace(R.id.fragment_container, allMetricsChartFragment,
 					TAG_ALL_METRICS_V_TIME_CHART_FRAGMENT)
 					.addToBackStack(TAG_MAIN_MENU_FRAGMENT)
 					.commit();

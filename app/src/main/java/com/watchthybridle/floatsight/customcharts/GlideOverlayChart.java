@@ -32,19 +32,19 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.watchthybridle.floatsight.R;
+import com.watchthybridle.floatsight.customcharts.markerviews.AllMetricsChartMarkerView;
 import com.watchthybridle.floatsight.customcharts.markerviews.AllMetricsRangeMarkerView;
-import com.watchthybridle.floatsight.customcharts.markerviews.AllMetricsTimeChartMarkerView;
 import com.watchthybridle.floatsight.customcharts.markerviews.TouchAbleMarkerView;
-import com.watchthybridle.floatsight.linedatasetcreation.AllMetricsVsTimeChartDataSetHolder;
+import com.watchthybridle.floatsight.linedatasetcreation.AllMetricsChartDataSetHolder;
 import com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetProperties;
 
 import static com.github.mikephil.charting.components.YAxis.YAxisLabelPosition.INSIDE_CHART;
-import static com.watchthybridle.floatsight.linedatasetcreation.AllMetricsVsTimeChartDataSetHolder.ALTITUDE;
+import static com.watchthybridle.floatsight.linedatasetcreation.AllMetricsChartDataSetHolder.ALTITUDE;
 
 public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueSelectedListener {
 
     public GlideChart glideChart;
-    private AllMetricsVsTimeChartDataSetHolder chartDataSetHolder;
+    private AllMetricsChartDataSetHolder chartDataSetHolder;
 
     public GlideOverlayChart(Context context) {
         super(context);
@@ -55,6 +55,10 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
         glideChart.setHighlightPerDragEnabled(false);
         glideChart.setHighlightPerTapEnabled(false);
         setMaxHighlightDistance(5000);
+
+        setDragDecelerationEnabled(false);
+        glideChart.setDragDecelerationEnabled(false);
+
 
         setAxisLabelPosition();
         setAxisLabelCount();
@@ -86,8 +90,8 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
     }
 
     private void setAxisLabelCount() {
-        this.getXAxis().setDrawLabels(false);
-        glideChart.getXAxis().setDrawLabels(false);
+        this.getXAxis().setDrawLabels(true);
+        glideChart.getXAxis().setDrawLabels(true);
 
         this.getAxisLeft().setLabelCount(6, true);
         this.getAxisRight().setLabelCount(6, true);
@@ -156,13 +160,13 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
         return success;
     }
 
-    public void setDataSetHolder(AllMetricsVsTimeChartDataSetHolder chartDataSetHolder) {
+    public void setDataSetHolder(AllMetricsChartDataSetHolder chartDataSetHolder) {
         this.chartDataSetHolder = chartDataSetHolder;
 
         setData(chartDataSetHolder.getLineDataOuterGraph());
         glideChart.setData(chartDataSetHolder.getLineDataGlideGraph());
 
-        AllMetricsTimeChartMarkerView markerViewOutsideGraph = new AllMetricsTimeChartMarkerView(getContext());
+        AllMetricsChartMarkerView markerViewOutsideGraph = new AllMetricsChartMarkerView(getContext());
         markerViewOutsideGraph.setChartView(this);
         setMarker(markerViewOutsideGraph);
 
@@ -184,7 +188,7 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
         glideChart.zoom(scaleX, scaleY, centerX, centerY, YAxis.AxisDependency.RIGHT);
     }
 
-    public AllMetricsVsTimeChartDataSetHolder getDataSetHolder() {
+    public AllMetricsChartDataSetHolder getDataSetHolder() {
         return chartDataSetHolder;
     }
 

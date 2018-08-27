@@ -33,15 +33,15 @@ import android.widget.FrameLayout;
 import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
 import com.watchthybridle.floatsight.customcharts.GlideOverlayChart;
-import com.watchthybridle.floatsight.linedatasetcreation.AllMetricsVsTimeChartDataSetHolder;
+import com.watchthybridle.floatsight.linedatasetcreation.AllMetricsChartDataSetHolder;
 
-import static com.watchthybridle.floatsight.linedatasetcreation.AllMetricsVsTimeChartDataSetHolder.*;
+import static com.watchthybridle.floatsight.linedatasetcreation.AllMetricsChartDataSetHolder.*;
 
-public class AllMetricsTimeChartFragment extends ChartFragment {
+public class AllMetricsChartFragment extends ChartFragment {
 
     private GlideOverlayChart chart;
 
-    public AllMetricsTimeChartFragment() {
+    public AllMetricsChartFragment() {
     }
 
     @Override
@@ -66,7 +66,7 @@ public class AllMetricsTimeChartFragment extends ChartFragment {
             return;
         }
 
-        AllMetricsVsTimeChartDataSetHolder chartDataSetHolder = new AllMetricsVsTimeChartDataSetHolder(getContext(), flySightTrackData);
+        AllMetricsChartDataSetHolder chartDataSetHolder = new AllMetricsChartDataSetHolder(getContext(), flySightTrackData);
 
         chart.setDataSetHolder(chartDataSetHolder);
         chart.invalidate();

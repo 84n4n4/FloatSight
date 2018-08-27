@@ -38,12 +38,21 @@
     <string name="file_import_success">Track imported</string>
     <string name="permissions_rationale">Storage access is required to read and save FlySight track liveData.</string>
 
-    <!-- Dialog stuff -->
+    <!-- General dialog stuff -->
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+
+    <!-- About dialog -->
     <string name="about_dialog_version">Version %1$s</string>
     <string name="about_dialog_link">https://github.com/84n4n4/FloatSight/blob/master/README.md</string>
+
+    <!-- Metrics dialog -->
     <string name="metrics_dialgo_title">Visible metrics</string>
+    <string name="metrics_dialog_x_values">Values for X-axis</string>
+    <string-array name="metrics_dialog_x_values_spinner">
+        <item>Time</item>
+        <item>Distance</item>
+    </string-array>
 
     <!-- Main menu -->
     <string name="button_import_title">Import file</string>

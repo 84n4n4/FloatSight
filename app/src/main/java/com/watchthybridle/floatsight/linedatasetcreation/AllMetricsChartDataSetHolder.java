@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class AllMetricsVsTimeChartDataSetHolder {
+public class AllMetricsChartDataSetHolder {
     public static final Integer VERT_VELOCITY = 0;
     public static final Integer HOR_VELOCITY = 1;
     public static final Integer ALTITUDE = 2;
@@ -23,7 +23,7 @@ public class AllMetricsVsTimeChartDataSetHolder {
     private List<ChartDataSetProperties> dataSetPropertiesList;
     private FlySightTrackData flySightTrackData;
 
-    public AllMetricsVsTimeChartDataSetHolder(Context context, FlySightTrackData flySightTrackData) {
+    public AllMetricsChartDataSetHolder(Context context, FlySightTrackData flySightTrackData) {
         this.flySightTrackData = flySightTrackData;
         dataSetPropertiesList = new ArrayList<>();
         dataSetPropertiesList.add(new ChartDataSetProperties.VerticalVelocityDataSetProperties(TrackPointValueProvider.TIME_VALUE_PROVIDER));

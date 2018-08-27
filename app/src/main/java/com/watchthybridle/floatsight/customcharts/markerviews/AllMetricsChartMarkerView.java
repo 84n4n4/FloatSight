@@ -13,13 +13,13 @@ import com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetProperties;
 
 import java.util.List;
 
-public class AllMetricsTimeChartMarkerView extends TouchAbleMarkerView {
-    public AllMetricsTimeChartMarkerView(Context context) {
-        super(context, R.layout.all_metrics_v_time_marker);
+public class AllMetricsChartMarkerView extends TouchAbleMarkerView {
+    public AllMetricsChartMarkerView(Context context) {
+        super(context, R.layout.all_metrics_marker);
     }
 
     void customOnLongClick() {
-        ((GlideOverlayChart) AllMetricsTimeChartMarkerView.this.getChartView()).setRangeMarker();
+        ((GlideOverlayChart) AllMetricsChartMarkerView.this.getChartView()).setRangeMarker();
     }
 
     void customOnClick() {

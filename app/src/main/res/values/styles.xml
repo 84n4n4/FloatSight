@@ -60,8 +60,9 @@
         <item name="android:layout_marginBottom">5dp</item>
         <item name="android:layout_marginLeft">5dp</item>
         <item name="android:layout_marginRight">5dp</item>
+        <item name="android:drawablePadding">5dp</item>
         <item name="android:text"> </item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Caption</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body2</item>
         <item name="android:ellipsize">end</item>
         <item name="android:singleLine">true</item>
     </style>

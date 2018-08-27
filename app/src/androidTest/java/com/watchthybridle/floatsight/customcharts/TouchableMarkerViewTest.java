@@ -10,7 +10,7 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.watchthybridle.floatsight.Actions;
 import com.watchthybridle.floatsight.MainActivity;
 import com.watchthybridle.floatsight.R;
-import com.watchthybridle.floatsight.chartfragments.AllMetricsTimeChartFragment;
+import com.watchthybridle.floatsight.chartfragments.AllMetricsChartFragment;
 import com.watchthybridle.floatsight.customcharts.markerviews.TouchAbleMarkerView;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataRepository;
 import org.junit.Before;
@@ -28,17 +28,17 @@ import static org.junit.Assert.assertEquals;
 @RunWith(AndroidJUnit4.class)
 public class TouchableMarkerViewTest {
 
-    private AllMetricsTimeChartFragment allMetricsTimeChartFragment;
+    private AllMetricsChartFragment allMetricsChartFragment;
 
     @Rule
     public ActivityTestRule<MainActivity> rule = new ActivityTestRule<>(MainActivity.class);
 
     @Before
     public void setUp() {
-        allMetricsTimeChartFragment = new AllMetricsTimeChartFragment();
+        allMetricsChartFragment = new AllMetricsChartFragment();
         FragmentTransaction transaction = rule.getActivity().getSupportFragmentManager().beginTransaction();
         transaction
-                .replace(R.id.fragment_container, allMetricsTimeChartFragment,
+                .replace(R.id.fragment_container, allMetricsChartFragment,
                         TAG_ALL_METRICS_V_TIME_CHART_FRAGMENT)
                 .addToBackStack(TAG_MAIN_MENU_FRAGMENT)
                 .commit();
@@ -121,9 +121,9 @@ public class TouchableMarkerViewTest {
     }
 
     private GlideOverlayChart getChart() {
-        AllMetricsTimeChartFragment allMetricsTimeChartFragment =
-                (AllMetricsTimeChartFragment) rule.getActivity().getSupportFragmentManager()
+        AllMetricsChartFragment allMetricsChartFragment =
+                (AllMetricsChartFragment) rule.getActivity().getSupportFragmentManager()
                         .findFragmentByTag(MainActivity.TAG_ALL_METRICS_V_TIME_CHART_FRAGMENT);
-        return allMetricsTimeChartFragment.getChart();
+        return allMetricsChartFragment.getChart();
     }
 }

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="wrap_content"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:fillViewport="true">
+
+<LinearLayout android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:orientation="vertical"
               android:layout_marginLeft="20dp"
@@ -34,4 +38,21 @@
               android:textColor="@color/horVelocity"
               android:drawableStart="@drawable/ic_hor_vel"
               android:onClick="onDialogCheckboxClicked"/>
+    <TextView android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="20dp"
+              android:layout_marginLeft="5dp"
+              android:singleLine="true"
+              android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+              style="@style/metricsCheckbox"
+              android:text="@string/metrics_dialog_x_values"/>
+    <Spinner android:id="@+id/metrics_x_axis_spinner"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="10dp"
+             android:layout_marginLeft="5dp"
+             android:layout_marginBottom="20dp"
+             android:entries="@array/metrics_dialog_x_values_spinner"/>
+
 </LinearLayout>
+        </ScrollView>
