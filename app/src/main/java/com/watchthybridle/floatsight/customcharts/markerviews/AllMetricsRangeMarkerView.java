@@ -21,16 +21,14 @@ public class AllMetricsRangeMarkerView extends RangeMarkerView {
     @Override
     public void refreshContent(Entry entry, Highlight highlight) {
         GlideOverlayChart chart = (GlideOverlayChart) AllMetricsRangeMarkerView.this.getChartView();
-
         List<LimitLine> limitLines = chart.getXAxis().getLimitLines();
         float limitStart = limitLines.get(0).getLimit();
         float limitEnd = limitLines.get(1).getLimit();
+        FlySightTrackData flySightTrackData = chart.getDataSetHolder().getFlySightTrackData();
 
         List<ChartDataSetProperties> dataSetPropertiesList = chart.getDataSetHolder().getDataSetPropertiesList();
         for (ChartDataSetProperties chartDataSetProperties : dataSetPropertiesList) {
-            TextView textView = findViewById(chartDataSetProperties.markerTextView);
-            textView.setTextColor(getResources().getColor(chartDataSetProperties.color));
-            textView.setText(chartDataSetProperties.getFormattedValueForRange(getContext(), limitStart, limitEnd));
+            setTextView(chartDataSetProperties, flySightTrackData);
         }
         TextView textView = findViewById(R.id.time_marker_text_view);
         textView.setTextColor(getResources().getColor(R.color.time));
@@ -38,5 +36,17 @@ public class AllMetricsRangeMarkerView extends RangeMarkerView {
 
         textView.setText(getContext().getString(R.string.seconds, ChartDataSetProperties.TIME_FORMAT.format(timeDiff)));
         super.refreshContent(entry, highlight);
+    }
+
+    private void setTextView(ChartDataSetProperties dataSetProperties, FlySightTrackData trackData) {
+        GlideOverlayChart chart = (GlideOverlayChart) AllMetricsRangeMarkerView.this.getChartView();
+        List<LimitLine> limitLines = chart.getXAxis().getLimitLines();
+        float limitStart = limitLines.get(0).getLimit();
+        float limitEnd = limitLines.get(1).getLimit();
+        String formattedValue = dataSetProperties.getFormattedValueForRange(getContext(), limitStart, limitEnd, trackData);
+
+        TextView textView = findViewById(dataSetProperties.markerTextView);
+        textView.setTextColor(getResources().getColor(dataSetProperties.color));
+        textView.setText(formattedValue);
     }
 }

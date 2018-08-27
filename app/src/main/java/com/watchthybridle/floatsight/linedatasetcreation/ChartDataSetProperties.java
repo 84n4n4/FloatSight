@@ -18,6 +18,9 @@ import java.lang.annotation.Retention;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import static com.watchthybridle.floatsight.linedatasetcreation.RangeValueStrategy.RANGE_AVERAGE;
+import static com.watchthybridle.floatsight.linedatasetcreation.RangeValueStrategy.RANGE_DIFFERENTIAL;
+import static com.watchthybridle.floatsight.linedatasetcreation.TrackPointValueProvider.*;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 public abstract class ChartDataSetProperties {
@@ -33,36 +36,30 @@ public abstract class ChartDataSetProperties {
     public DecimalFormat decimalFormat;
     public YAxis.AxisDependency axisDependency;
     public LineDataSet iLineDataSet;
-    public @RangeInfo int rangeInfo;
-    public FlySightTrackPointValueProvider xValueProvider;
-    public FlySightTrackPointValueProvider yValueProvider;
 
-    public static final FlySightTrackPointValueProvider TIME_VALUE_PROVIDER =
-            (FlySightTrackPoint trackPoint)-> trackPoint.trackTimeInSeconds;
+    public TrackPointValueProvider xValueProvider;
+    public TrackPointValueProvider yValueProvider;
 
-    public static final FlySightTrackPointValueProvider DISTANCE_VALUE_PROVIDER =
-            (FlySightTrackPoint trackPoint)-> trackPoint.distance;
-
-    @Retention(SOURCE)
-    @IntDef({RANGE_AVERAGE, RANGE_DIFFERENTIAL})
-    @interface RangeInfo {}
-    public static final int RANGE_AVERAGE = 0;
-    public static final int RANGE_DIFFERENTIAL = 1;
+    public RangeValueStrategy rangeValueStrategy;
 
     public ChartDataSetProperties(@StringRes int labelStringResource,
-                                   @ColorRes int color,
-                                   @StringRes int unitStringResource,
-                                   YAxis.AxisDependency axisDependency,
-                                   DecimalFormat decimalFormat,
-                                   @IdRes int markerTextView,
-                                   @RangeInfo int rangeInfo) {
+                                  @ColorRes int color,
+                                  @StringRes int unitStringResource,
+                                  YAxis.AxisDependency axisDependency,
+                                  DecimalFormat decimalFormat,
+                                  @IdRes int markerTextView,
+                                  RangeValueStrategy rangeValueStrategy,
+                                  TrackPointValueProvider xValueProvider,
+                                  TrackPointValueProvider yValueProvider) {
         this.markerTextView = markerTextView;
         this.labelStringResource = labelStringResource;
         this.color = color;
         this.decimalFormat = decimalFormat;
         this.axisDependency = axisDependency;
         this.unitStringResource = unitStringResource;
-        this.rangeInfo = rangeInfo;
+        this.rangeValueStrategy = rangeValueStrategy;
+        this.xValueProvider = xValueProvider;
+        this.yValueProvider = yValueProvider;
     }
 
     public void initLineData(Context context, FlySightTrackData flySightTrackData) {
@@ -83,126 +80,94 @@ public abstract class ChartDataSetProperties {
         return context.getString(unitStringResource, decimalFormat.format(entry.getY()));
     }
 
-    public String getFormattedValueForRange(Context context, float start, float end) {
-        float rangeValue;
-
-        switch(rangeInfo) {
-            case RANGE_AVERAGE:
-                rangeValue = calculateArithmeticAverage(start, end);
-                break;
-            case RANGE_DIFFERENTIAL:
-                rangeValue = calculateDiff(start, end);
-                break;
-            default:
-                rangeValue = 0;
-                break;
-        }
-        return context.getString(unitStringResource, decimalFormat.format(rangeValue));
+    public String getFormattedValueForRange(Context context, float start, float end, FlySightTrackData flySightTrackData) {
+        float value = rangeValueStrategy.getRangeValue(start, end, xValueProvider, yValueProvider, flySightTrackData);
+        return context.getString(unitStringResource, decimalFormat.format(value));
     }
-
-    private float calculateDiff(float start, float end) {
-        Entry startEntry = iLineDataSet.getEntryForXValue(start, 0f);
-        Entry endEntry = iLineDataSet.getEntryForXValue(end, 0f);
-        return endEntry.getY() - startEntry.getY();
-    }
-
-    private float calculateArithmeticAverage(float start, float end) {
-        Entry startEntry = iLineDataSet.getEntryForXValue(start, 0f);
-        Entry endEntry = iLineDataSet.getEntryForXValue(end, 0f);
-
-        List<Entry> entries = iLineDataSet.getValues().subList(iLineDataSet.getEntryIndex(startEntry), iLineDataSet.getEntryIndex(endEntry));
-        float sum = 0;
-        float count = entries.size();
-        for (Entry entry : entries) {
-            sum += entry.getY();
-        }
-        return sum / count;
-    }
-
 
     public Pair<Entry, Entry> getMinMaxYEntries() {
         Entry min = iLineDataSet.getEntryForIndex(0);
         Entry max = iLineDataSet.getEntryForIndex(0);
 
         for(int index = 0; index < iLineDataSet.getEntryCount(); index ++) {
-            Entry altitude = iLineDataSet.getEntryForIndex(index);
-            if (altitude.getY() > max.getY()) {
-                max = altitude;
+            Entry entry = iLineDataSet.getEntryForIndex(index);
+            if (entry.getY() > max.getY()) {
+                max = entry;
             }
-            if (altitude.getY() < min.getY()) {
-                min = altitude;
+            if (entry.getY() < min.getY()) {
+                min = entry;
             }
         }
         return new Pair<>(min, max);
     }
 
     public static class HorizontalVelocityDataSetProperties extends ChartDataSetProperties {
-        public HorizontalVelocityDataSetProperties() {
+        public HorizontalVelocityDataSetProperties(TrackPointValueProvider xValueProvider) {
             super(R.string.hor_velocity_label,
                     R.color.horVelocity,
                     R.string.kmh,
                     YAxis.AxisDependency.LEFT,
                     VELOCITY_FORMAT,
                     R.id.hor_velocity_marker_text_view,
-                    RANGE_AVERAGE);
-            yValueProvider = (FlySightTrackPoint trackPoint) -> trackPoint.horVelocity;
-            xValueProvider = TIME_VALUE_PROVIDER;
+                    RANGE_AVERAGE,
+                    xValueProvider,
+                    HOR_VELOCITY_VALUE_PROVIDER);
         }
     }
 
     public static class VerticalVelocityDataSetProperties extends ChartDataSetProperties {
-        public VerticalVelocityDataSetProperties() {
+        public VerticalVelocityDataSetProperties(TrackPointValueProvider xValueProvider) {
             super(R.string.vert_velocity_label,
                     R.color.vertVelocity,
                     R.string.kmh,
                     YAxis.AxisDependency.LEFT,
                     VELOCITY_FORMAT,
                     R.id.vert_velocity_marker_text_view,
-                    RANGE_AVERAGE);
-            yValueProvider = (FlySightTrackPoint trackPoint) -> trackPoint.vertVelocity;
-            xValueProvider = TIME_VALUE_PROVIDER;
+                    RANGE_AVERAGE,
+                    xValueProvider,
+                    VERT_VELOCITY_VALUE_PROVIDER);
         }
     }
 
     public static class AltitudeVsTimeDataSetProperties extends ChartDataSetProperties {
-        public AltitudeVsTimeDataSetProperties() {
+        public AltitudeVsTimeDataSetProperties(TrackPointValueProvider xValueProvider) {
             super(R.string.altitude_label,
                     R.color.altitude,
                     R.string.m,
                     YAxis.AxisDependency.RIGHT,
                     DISTANCE_FORMAT,
                     R.id.altitude_marker_text_view,
-                    RANGE_DIFFERENTIAL);
-            yValueProvider = (FlySightTrackPoint trackPoint) -> trackPoint.altitude;
-            xValueProvider = TIME_VALUE_PROVIDER;
+                    RANGE_DIFFERENTIAL,
+                    xValueProvider,
+                    ALTITUDE_VALUE_PROVIDER);
         }
     }
 
     public static class DistanceVsTimeDataSetProperties extends ChartDataSetProperties {
-        public DistanceVsTimeDataSetProperties() {
+        public DistanceVsTimeDataSetProperties(TrackPointValueProvider xValueProvider) {
             super(R.string.distance_label,
                     R.color.distance,
                     R.string.m,
                     YAxis.AxisDependency.RIGHT,
                     DISTANCE_FORMAT,
                     R.id.distance_marker_text_view,
-                    RANGE_DIFFERENTIAL);
-            yValueProvider = (FlySightTrackPoint trackPoint) -> trackPoint.distance;
-            xValueProvider = TIME_VALUE_PROVIDER;
+                    RANGE_DIFFERENTIAL,
+                    xValueProvider,
+                    DISTANCE_VALUE_PROVIDER);
         }
     }
 
     public static class GlideVsTimeDataSetProperties extends ChartDataSetProperties {
-        public GlideVsTimeDataSetProperties() {
+        public GlideVsTimeDataSetProperties(TrackPointValueProvider xValueProvider) {
             super(R.string.glide_label,
                     R.color.glide,
                     R.string.glide,
                     YAxis.AxisDependency.LEFT,
                     GLIDE_FORMAT,
                     R.id.glide_marker_text_view,
-                    RANGE_AVERAGE);
-            yValueProvider = (FlySightTrackPoint trackPoint) -> trackPoint.glide;
-            xValueProvider = TIME_VALUE_PROVIDER;
+                    RANGE_AVERAGE,
+                    xValueProvider,
+                    GLIDE_VALUE_PROVIDER);
         }
     }
 
@@ -214,9 +179,9 @@ public abstract class ChartDataSetProperties {
                     YAxis.AxisDependency.LEFT,
                     DISTANCE_FORMAT,
                     R.id.distance_marker_text_view,
-                    RANGE_DIFFERENTIAL);
-            yValueProvider = (FlySightTrackPoint trackPoint) -> trackPoint.altitude;
-            xValueProvider = DISTANCE_VALUE_PROVIDER;
+                    RANGE_DIFFERENTIAL,
+                    DISTANCE_VALUE_PROVIDER,
+                    ALTITUDE_VALUE_PROVIDER);
         }
     }
 }

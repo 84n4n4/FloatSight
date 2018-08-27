@@ -13,8 +13,8 @@ public class AllMetricsVsTimeChartDataSetHolder {
     public static final Integer VERT_VELOCITY = 0;
     public static final Integer HOR_VELOCITY = 1;
     public static final Integer ALTITUDE = 2;
-    public static final Integer DISTANCE = 3;
-    public static final Integer GLIDE = 4;
+    public static final Integer GLIDE = 3;
+    public static final Integer DISTANCE = 4;
 
     private static final List<Integer> OUTER_GRAPH_METRICS = Arrays.asList(ALTITUDE, VERT_VELOCITY, HOR_VELOCITY);
     private static final List<Integer> INNER_GRAPH_METRICS = Arrays.asList(GLIDE);
@@ -25,14 +25,17 @@ public class AllMetricsVsTimeChartDataSetHolder {
     public AllMetricsVsTimeChartDataSetHolder(Context context, FlySightTrackData flySightTrackData) {
         this.flySightTrackData = flySightTrackData;
         dataSetPropertiesList = new ArrayList<>();
-        dataSetPropertiesList.add(new ChartDataSetProperties.VerticalVelocityDataSetProperties());
-        dataSetPropertiesList.add(new ChartDataSetProperties.HorizontalVelocityDataSetProperties());
-        dataSetPropertiesList.add(new ChartDataSetProperties.AltitudeVsTimeDataSetProperties());
-        dataSetPropertiesList.add(new ChartDataSetProperties.DistanceVsTimeDataSetProperties());
-        dataSetPropertiesList.add(new ChartDataSetProperties.GlideVsTimeDataSetProperties());
+        dataSetPropertiesList.add(new ChartDataSetProperties.VerticalVelocityDataSetProperties(TrackPointValueProvider.TIME_VALUE_PROVIDER));
+        dataSetPropertiesList.add(new ChartDataSetProperties.HorizontalVelocityDataSetProperties(TrackPointValueProvider.TIME_VALUE_PROVIDER));
+        dataSetPropertiesList.add(new ChartDataSetProperties.AltitudeVsTimeDataSetProperties(TrackPointValueProvider.TIME_VALUE_PROVIDER));
+        dataSetPropertiesList.add(new ChartDataSetProperties.GlideVsTimeDataSetProperties(TrackPointValueProvider.TIME_VALUE_PROVIDER));
+        dataSetPropertiesList.add(new ChartDataSetProperties.DistanceVsTimeDataSetProperties(TrackPointValueProvider.TIME_VALUE_PROVIDER));
         for(ChartDataSetProperties dataSetProperties : dataSetPropertiesList) {
             dataSetProperties.initLineData(context, flySightTrackData);
         }
+        //dont initLineData
+        //dataSetPropertiesList.add(new ChartDataSetProperties.DistanceVsTimeDataSetProperties());
+
     }
 
     public FlySightTrackData getFlySightTrackData() {
@@ -48,15 +51,15 @@ public class AllMetricsVsTimeChartDataSetHolder {
         return getLineDataForGraph(OUTER_GRAPH_METRICS);
     }
 
-    public LineData getLineDataForGraph(List<Integer> metrics) {
+    public LineData getLineDataGlideGraph() {
+        return getLineDataForGraph(INNER_GRAPH_METRICS);
+    }
+
+    private LineData getLineDataForGraph(List<Integer> metrics) {
         List<ILineDataSet> lineDataSets = new ArrayList<>();
         for (int metric : metrics) {
             lineDataSets.add(dataSetPropertiesList.get(metric).iLineDataSet);
         }
         return new LineData(lineDataSets);
-    }
-
-    public LineData getLineDataGlideGraph() {
-        return getLineDataForGraph(INNER_GRAPH_METRICS);
     }
 }
