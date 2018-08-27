@@ -14,7 +14,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import com.watchthybridle.floatsight.chartfragments.AllMetricsTimeChartFragment;
 import com.watchthybridle.floatsight.chartfragments.ChartFragment;
 import com.watchthybridle.floatsight.chartfragments.DistanceVsAltitudeChartFragment;
@@ -107,18 +109,20 @@ public class MainMenuFragment extends ChartFragment implements AdapterView.OnIte
 		}
 	}
 
-	private void showAboutDialog() {
-		Context context = getContext();
-		if (context != null) {
-			String message = getString(R.string.about_dialog_message, BuildConfig.VERSION_NAME);
-			new AlertDialog.Builder(getContext())
-					.setTitle(R.string.app_name)
-					.setMessage(message)
-					.setPositiveButton(R.string.ok, null)
-					.create()
-					.show();
-		}
-	}
+    private void showAboutDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
+                .setTitle(R.string.app_name)
+                .setPositiveButton(R.string.ok, null);
+        final FrameLayout frameView = new FrameLayout(getContext());
+        builder.setView(frameView);
+
+        final AlertDialog dialog = builder.create();
+        LayoutInflater inflater = dialog.getLayoutInflater();
+        View dialoglayout = inflater.inflate(R.layout.about_dialog, frameView);
+        TextView versionTextView = dialoglayout.findViewById(R.id.about_dialog_version);
+		versionTextView.setText(getString(R.string.about_dialog_version, BuildConfig.VERSION_NAME));
+        dialog.show();
+    }
 
 	private void startImportFile() {
 		MainActivity mainActivity = (MainActivity) getActivity();
