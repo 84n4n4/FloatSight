@@ -22,12 +22,14 @@
 
 package com.watchthybridle.floatsight.csvparser;
 
-import com.github.mikephil.charting.data.Entry;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import static com.watchthybridle.floatsight.csvparser.FlySightTrackData.PARSING_ERRORS;
 
@@ -84,51 +86,46 @@ public class FlySightCsvParser {
                     !row[0].matches("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{2}Z")) {
                 throw new NumberFormatException();
             }
-            String time = row[0];
-            Float vertVelocity = Float.parseFloat(row[6]) * 3.6f;
-            Float altitude = Float.parseFloat(row[3]);
 
-            Double velocityNorth = Double.parseDouble(row[4]) * 3.6f;
-            Double velocityEast = Double.parseDouble(row[5]) * 3.6f;
-            Float horVelocity = calculateHorizontalVelocity(velocityNorth, velocityEast);
-            Float glide = calculateGlide(horVelocity, vertVelocity);
-            GPSCoordinate gpsCoordinate = new GPSCoordinate(Double.parseDouble(row[1]), Double.parseDouble(row[2]), GPSCoordinate.VALID);
-            Float distance = 0f;
-            if (flySightTrackData.getPositions().size() > 0 &&
-                gpsCoordinate.valid == GPSCoordinate.VALID){
-                GPSCoordinate previousPoint = flySightTrackData.getPositions().get(flySightTrackData.getPositions().size() - 1);
-                float previousDistance = flySightTrackData.getDistance().get(flySightTrackData.getDistance().size() - 1).getY();
-                distance = previousDistance + previousPoint.calculateHaversinDistanceMeters(gpsCoordinate);
+            FlySightTrackPoint flySightTrackPoint = new FlySightTrackPoint();
+            flySightTrackPoint.csvRow = csvRow;
+            flySightTrackPoint.unixTimeStamp = getUnixTimeForTimeString(row[0]);
+            flySightTrackPoint.position = new GPSCoordinate(Double.parseDouble(row[1]), Double.parseDouble(row[2]), GPSCoordinate.VALID);
+            flySightTrackPoint.altitude = Float.parseFloat(row[3]);
+            flySightTrackPoint.velN = Float.parseFloat(row[4]) * 3.6f;
+            flySightTrackPoint.velE = Float.parseFloat(row[5]) * 3.6f;
+            flySightTrackPoint.vertVelocity = Float.parseFloat(row[6]) * 3.6f;
+            flySightTrackPoint.hAcc = Float.parseFloat(row[7]);
+            flySightTrackPoint.vAcc = Float.parseFloat(row[8]);
+            flySightTrackPoint.sAcc = Float.parseFloat(row[9]);
+            flySightTrackPoint.heading = Float.parseFloat(row[10]);
+            flySightTrackPoint.cAcc = Float.parseFloat(row[11]);
+            flySightTrackPoint.gpsFix = Integer.parseInt(row[12]);
+            flySightTrackPoint.numSV = Integer.parseInt(row[13]);
+
+            flySightTrackPoint.horVelocity = calculateHorizontalVelocity(flySightTrackPoint.velN, flySightTrackPoint.velE);
+            flySightTrackPoint.glide = calculateGlide(flySightTrackPoint.horVelocity, flySightTrackPoint.vertVelocity);
+
+            if (flySightTrackData.getFlySightTrackPoints().isEmpty()) {
+                flySightTrackPoint.trackTimeInSeconds = 0;
+                flySightTrackPoint.distance = 0;
+            } else {
+                FlySightTrackPoint firstPoint = flySightTrackData.getFlySightTrackPoints().get(0);
+                flySightTrackPoint.trackTimeInSeconds = (flySightTrackPoint.unixTimeStamp - firstPoint.unixTimeStamp) / 1000f;
+
+                FlySightTrackPoint previousPoint = flySightTrackData.getFlySightTrackPoints()
+                        .get(flySightTrackData.getFlySightTrackPoints().size() - 1);
+                flySightTrackPoint.distance = previousPoint.distance
+                        + previousPoint.position.calculateHaversinDistanceMeters(flySightTrackPoint.position);
             }
+            flySightTrackData.getFlySightTrackPoints().add(flySightTrackPoint);
 
-            int entryPosition = flySightTrackData.getTimeStamps().size();
-            flySightTrackData.getTimeStamps().add(time);
-            flySightTrackData.getPositions().add(gpsCoordinate);
-            flySightTrackData.getHorVelocity().add(new Entry(entryPosition, horVelocity));
-            flySightTrackData.getVertVelocity().add(new Entry(entryPosition,vertVelocity));
-            flySightTrackData.getAltitude().add(new Entry(entryPosition, altitude));
-            flySightTrackData.getGlide().add(new Entry(entryPosition, glide));
-            flySightTrackData.getDistance().add(new Entry(entryPosition, distance));
-            flySightTrackData.getDistanceVsAltitude().add(new Entry(distance, altitude));
         } catch (Exception e) {
-            handleLineParsingError(flySightTrackData);
+            flySightTrackData.setParsingStatus(PARSING_ERRORS);
         }
     }
 
-    private void handleLineParsingError(FlySightTrackData flySightTrackData) {
-        flySightTrackData.setParsingStatus(PARSING_ERRORS);
-
-        int entryPosition = flySightTrackData.getTimeStamps().size();
-        flySightTrackData.getTimeStamps().add("invalid");
-        flySightTrackData.getPositions().add(new GPSCoordinate(0,0, GPSCoordinate.INVALID));
-        flySightTrackData.getHorVelocity().add(new Entry(entryPosition, 0f));
-        flySightTrackData.getVertVelocity().add(new Entry(entryPosition, 0f));
-        flySightTrackData.getAltitude().add(new Entry(entryPosition, 0f));
-        flySightTrackData.getGlide().add(new Entry(entryPosition, 0f));
-        flySightTrackData.getDistance().add(new Entry(entryPosition, 0f));
-    }
-
-    private Float calculateHorizontalVelocity(Double velocityNorth, Double velocityEast) {
+    private Float calculateHorizontalVelocity(Float velocityNorth, Float velocityEast) {
         Double glide = Math.sqrt(Math.pow(velocityNorth, 2) + Math.pow(velocityEast, 2));
         return glide.floatValue();
     }
@@ -143,5 +140,12 @@ public class FlySightCsvParser {
 
         Float capGlideAt = 5f;
         return glide > capGlideAt ? capGlideAt : glide;
+    }
+
+    //2018-08-12T14:25:43.07Z
+    private long getUnixTimeForTimeString(String timeStamp) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        Date dateTime = dateFormat.parse(timeStamp.replace("Z","0Z"));
+        return dateTime.getTime();
     }
 }

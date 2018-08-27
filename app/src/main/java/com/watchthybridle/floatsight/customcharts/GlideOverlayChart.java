@@ -177,7 +177,7 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
         float minX = minMaxAltitude.second.getX();
         float maxX = minMaxAltitude.first.getX();
         float scaleY = 1;
-        float scaleX = chartDataSetHolder.getFlySightTrackData().getAltitude().size() / (maxX - minX);
+        float scaleX = getLineData().getXMax() / (maxX - minX);
         float centerX = (maxX - minX) / 2 + minX;
         float centerY = 1;
         zoom(scaleX, scaleY, centerX, centerY, YAxis.AxisDependency.RIGHT);

@@ -57,7 +57,7 @@ public abstract class ChartFragment extends Fragment {
     abstract protected void actOnDataChanged(FlySightTrackData flySightTrackData);
 
     public boolean isInvalid(FlySightTrackData flySightTrackData) {
-        return flySightTrackData.isAnyMetricEmpty()
+        return flySightTrackData.getFlySightTrackPoints().isEmpty()
                 || flySightTrackData.getParsingStatus() == FlySightTrackData.PARSING_FAIL;
     }
 }

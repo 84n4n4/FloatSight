@@ -26,12 +26,8 @@ import android.support.annotation.LongDef;
 import com.github.mikephil.charting.data.Entry;
 
 import java.lang.annotation.Retention;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
@@ -48,40 +44,14 @@ public class FlySightTrackData {
 
     private String sourceFileName = "";
 
-    private List<String> time;
-    private List<GPSCoordinate> position;
-    private List<Entry> horVelocity;
-    private List<Entry> vertVelocity;
-    private List<Entry> altitude;
-    private List<Entry> glide;
-    private List<Entry> distance;
-    private List<Entry> distanceVsAltitude;
+    private List<FlySightTrackPoint> flySightTrackPoints;
 
     public FlySightTrackData() {
-        time = new ArrayList<>();
-        position = new ArrayList<>();
-        horVelocity = new ArrayList<>();
-        vertVelocity = new ArrayList<>();
-        altitude = new ArrayList<>();
-        glide = new ArrayList<>();
-        distance = new ArrayList<>();
-        distanceVsAltitude = new ArrayList<>();
+        flySightTrackPoints = new ArrayList<>();
     }
 
-    public float calculateTimeDiffSec(int start, int end) {
-        return calculateTimeDiffSec(time.get(start), time.get(end));
-    }
-
-    //2018-08-12T14:25:43.07Z
-    private float calculateTimeDiffSec(String startTimeStamp, String endTimeStamp) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-        try {
-            Date start = dateFormat.parse(startTimeStamp.replace("Z","0Z"));
-            Date end = dateFormat.parse(endTimeStamp.replace("Z","0Z"));
-            return (end.getTime() - start.getTime()) / 1000f ;
-        } catch (ParseException exception) {
-            return 0;
-        }
+    public List<FlySightTrackPoint> getFlySightTrackPoints() {
+        return flySightTrackPoints;
     }
 
     public long getParsingStatus() {
@@ -92,40 +62,52 @@ public class FlySightTrackData {
         this.parsingStatus = parsingStatus;
     }
 
-    public List<String> getTimeStamps() {
-        return time;
+    public List<Entry> getHorVelocityVTime() {
+        List<Entry> entries = new ArrayList<>();
+        for (FlySightTrackPoint trackPoint : flySightTrackPoints) {
+            entries.add(new Entry(trackPoint.trackTimeInSeconds, trackPoint.horVelocity));
+        }
+        return entries;
     }
 
-    public List<Entry> getHorVelocity() {
-        return horVelocity;
+    public List<Entry> getVertVelocityVTime() {
+        List<Entry> entries = new ArrayList<>();
+        for (FlySightTrackPoint trackPoint : flySightTrackPoints) {
+            entries.add(new Entry(trackPoint.trackTimeInSeconds, trackPoint.vertVelocity));
+        }
+        return entries;
     }
 
-    public List<Entry> getVertVelocity() {
-        return vertVelocity;
+    public List<Entry> getAltitudeVTime() {
+        List<Entry> entries = new ArrayList<>();
+        for (FlySightTrackPoint trackPoint : flySightTrackPoints) {
+            entries.add(new Entry(trackPoint.trackTimeInSeconds, trackPoint.altitude));
+        }
+        return entries;
     }
 
-    public List<Entry> getAltitude() {
-        return altitude;
+    public List<Entry> getGlideVTime() {
+        List<Entry> entries = new ArrayList<>();
+        for (FlySightTrackPoint trackPoint : flySightTrackPoints) {
+            entries.add(new Entry(trackPoint.trackTimeInSeconds, trackPoint.glide));
+        }
+        return entries;
     }
 
-    public List<Entry> getGlide() {
-        return glide;
-    }
-
-    public List<Entry> getDistance() {
-        return distance;
+    public List<Entry> getDistanceVTime() {
+        List<Entry> entries = new ArrayList<>();
+        for (FlySightTrackPoint trackPoint : flySightTrackPoints) {
+            entries.add(new Entry(trackPoint.trackTimeInSeconds, trackPoint.distance));
+        }
+        return entries;
     }
 
     public List<Entry> getDistanceVsAltitude() {
-        return distanceVsAltitude;
-    }
-
-    public List<GPSCoordinate> getPositions() {
-        return position;
-    }
-
-    public boolean isAnyMetricEmpty() {
-        return time.isEmpty() || vertVelocity.isEmpty() || horVelocity.isEmpty() || altitude.isEmpty() || glide.isEmpty();
+        List<Entry> entries = new ArrayList<>();
+        for (FlySightTrackPoint trackPoint : flySightTrackPoints) {
+            entries.add(new Entry(trackPoint.distance, trackPoint.altitude));
+        }
+        return entries;
     }
 
     public String getSourceFileName() {

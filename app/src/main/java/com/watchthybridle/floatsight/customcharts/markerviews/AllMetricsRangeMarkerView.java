@@ -34,8 +34,7 @@ public class AllMetricsRangeMarkerView extends RangeMarkerView {
         }
         TextView textView = findViewById(R.id.time_marker_text_view);
         textView.setTextColor(getResources().getColor(R.color.time));
-        FlySightTrackData flySightTrackData = chart.getDataSetHolder().getFlySightTrackData();
-        float timeDiff = flySightTrackData.calculateTimeDiffSec(limitStart, limitEnd);
+        float timeDiff = limitEnd - limitStart;
 
         textView.setText(getContext().getString(R.string.seconds, ChartDataSetProperties.TIME_FORMAT.format(timeDiff)));
         super.refreshContent(entry, highlight);

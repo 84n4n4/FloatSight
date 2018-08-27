@@ -132,7 +132,7 @@ public class ChartDataSetProperties {
                 YAxis.AxisDependency.LEFT,
                 VELOCITY_FORMAT,
                 R.id.hor_velocity_marker_text_view,
-                flySightTrackData.getHorVelocity(),
+                flySightTrackData.getHorVelocityVTime(),
                 AVERAGE,
                 context);
     }
@@ -145,7 +145,7 @@ public class ChartDataSetProperties {
                  YAxis.AxisDependency.LEFT,
                  VELOCITY_FORMAT,
                  R.id.vert_velocity_marker_text_view,
-                 flySightTrackData.getVertVelocity(),
+                 flySightTrackData.getVertVelocityVTime(),
                  AVERAGE,
                  context);
     }
@@ -158,7 +158,7 @@ public class ChartDataSetProperties {
                 YAxis.AxisDependency.RIGHT,
                 DISTANCE_FORMAT,
                 R.id.altitude_marker_text_view,
-                flySightTrackData.getAltitude(),
+                flySightTrackData.getAltitudeVTime(),
                 DIFFERENCE,
                 context);
     }
@@ -171,7 +171,7 @@ public class ChartDataSetProperties {
                 YAxis.AxisDependency.RIGHT,
                 DISTANCE_FORMAT,
                 R.id.distance_marker_text_view,
-                flySightTrackData.getDistance(),
+                flySightTrackData.getDistanceVTime(),
                 DIFFERENCE,
                 context);
     }
@@ -184,7 +184,7 @@ public class ChartDataSetProperties {
                 YAxis.AxisDependency.LEFT,
                 GLIDE_FORMAT,
                 R.id.glide_marker_text_view,
-                flySightTrackData.getGlide(),
+                flySightTrackData.getGlideVTime(),
                 AVERAGE,
                 context);
     }

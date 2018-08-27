@@ -42,7 +42,7 @@ public class MainMenuFragment extends ChartFragment implements AdapterView.OnIte
 	}
 
 	protected void actOnDataChanged(FlySightTrackData flySightTrackData) {
-		if (flySightTrackData.isAnyMetricEmpty()
+		if (flySightTrackData.getFlySightTrackPoints().isEmpty()
 				|| flySightTrackData.getParsingStatus() == FlySightTrackData.PARSING_FAIL) {
 			showParsingErrorMessage(R.string.fail_parsing_file);
 		} else if (flySightTrackData.getParsingStatus() == FlySightTrackData.PARSING_ERRORS) {
