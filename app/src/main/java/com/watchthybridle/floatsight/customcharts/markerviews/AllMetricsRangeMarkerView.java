@@ -28,21 +28,13 @@ public class AllMetricsRangeMarkerView extends RangeMarkerView {
 
         List<ChartDataSetProperties> dataSetPropertiesList = chart.getDataSetHolder().getDataSetPropertiesList();
         for (ChartDataSetProperties chartDataSetProperties : dataSetPropertiesList) {
-            setTextView(chartDataSetProperties, flySightTrackData);
+            setTextView(chartDataSetProperties, flySightTrackData, limitStart, limitEnd);
         }
-        TextView textView = findViewById(R.id.time_marker_text_view);
-        textView.setTextColor(getResources().getColor(R.color.time));
-        float timeDiff = limitEnd - limitStart;
-
-        textView.setText(getContext().getString(R.string.seconds, ChartDataSetProperties.TIME_FORMAT.format(timeDiff)));
         super.refreshContent(entry, highlight);
     }
 
-    private void setTextView(ChartDataSetProperties dataSetProperties, FlySightTrackData trackData) {
-        GlideOverlayChart chart = (GlideOverlayChart) AllMetricsRangeMarkerView.this.getChartView();
-        List<LimitLine> limitLines = chart.getXAxis().getLimitLines();
-        float limitStart = limitLines.get(0).getLimit();
-        float limitEnd = limitLines.get(1).getLimit();
+    private void setTextView(ChartDataSetProperties dataSetProperties, FlySightTrackData trackData,
+                             float limitStart, float limitEnd) {
         String formattedValue = dataSetProperties.getFormattedValueForRange(getContext(), limitStart, limitEnd, trackData);
 
         TextView textView = findViewById(dataSetProperties.markerTextView);

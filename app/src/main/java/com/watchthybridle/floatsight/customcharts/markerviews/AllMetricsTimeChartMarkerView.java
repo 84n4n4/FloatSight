@@ -7,6 +7,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.utils.MPPointF;
 import com.watchthybridle.floatsight.R;
+import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
 import com.watchthybridle.floatsight.customcharts.GlideOverlayChart;
 import com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetProperties;
 
@@ -27,21 +28,27 @@ public class AllMetricsTimeChartMarkerView extends TouchAbleMarkerView {
 
     @Override
     public void refreshContent(Entry entry, Highlight highlight) {
-        GlideOverlayChart chart = (GlideOverlayChart) AllMetricsTimeChartMarkerView.this.getChartView();
+        GlideOverlayChart chart = (GlideOverlayChart) getChartView();
+        FlySightTrackData flySightTrackData = chart.getDataSetHolder().getFlySightTrackData();
         List<ChartDataSetProperties> dataSetPropertiesList = chart.getDataSetHolder().getDataSetPropertiesList();
         for (ChartDataSetProperties chartDataSetProperties : dataSetPropertiesList) {
-            TextView textView = findViewById(chartDataSetProperties.markerTextView);
-            textView.setTextColor(getResources().getColor(chartDataSetProperties.color));
-            textView.setText(chartDataSetProperties.getFormattedValueForPosition(getContext(), entry.getX()));
+            setTextView(chartDataSetProperties, entry.getX(), flySightTrackData);
         }
         super.refreshContent(entry, highlight);
+    }
+
+    private void setTextView(ChartDataSetProperties dataSetProperties, float xValue, FlySightTrackData flySightTrackData) {
+        String formattedValue = dataSetProperties.getFormattedValueForPosition(getContext(), xValue, flySightTrackData);
+
+        TextView textView = findViewById(dataSetProperties.markerTextView);
+        textView.setTextColor(getResources().getColor(dataSetProperties.color));
+        textView.setText(formattedValue);
     }
 
     @Override
     public MPPointF getOffset() {
         return new MPPointF(-getWidth(), 0);
     }
-
 
     @Override
     public void draw(Canvas canvas, float posX, float posY)

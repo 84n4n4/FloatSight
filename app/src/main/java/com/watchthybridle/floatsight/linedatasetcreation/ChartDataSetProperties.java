@@ -7,6 +7,7 @@ import android.support.annotation.IntDef;
 import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.util.Pair;
+import android.widget.TextView;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -75,9 +76,15 @@ public abstract class ChartDataSetProperties {
         iLineDataSet.setHighlightLineWidth(2);
     }
 
-    public String getFormattedValueForPosition(Context context, float xPosition) {
-        Entry entry = iLineDataSet.getEntriesForXValue(xPosition).get(0);
-        return context.getString(unitStringResource, decimalFormat.format(entry.getY()));
+    public String getFormattedValueForPosition(Context context, float xPosition, FlySightTrackData flySightTrackData) {
+        float value = 0;
+        for (FlySightTrackPoint trackPoint : flySightTrackData.getFlySightTrackPoints()) {
+            if (xValueProvider.getValue(trackPoint) >= xPosition) {
+                value = yValueProvider.getValue(trackPoint);
+                break;
+            }
+        }
+        return context.getString(unitStringResource, decimalFormat.format(value));
     }
 
     public String getFormattedValueForRange(Context context, float start, float end, FlySightTrackData flySightTrackData) {
@@ -129,8 +136,8 @@ public abstract class ChartDataSetProperties {
         }
     }
 
-    public static class AltitudeVsTimeDataSetProperties extends ChartDataSetProperties {
-        public AltitudeVsTimeDataSetProperties(TrackPointValueProvider xValueProvider) {
+    public static class AltitudeDataSetProperties extends ChartDataSetProperties {
+        public AltitudeDataSetProperties(TrackPointValueProvider xValueProvider) {
             super(R.string.altitude_label,
                     R.color.altitude,
                     R.string.m,
@@ -143,8 +150,42 @@ public abstract class ChartDataSetProperties {
         }
     }
 
-    public static class DistanceVsTimeDataSetProperties extends ChartDataSetProperties {
-        public DistanceVsTimeDataSetProperties(TrackPointValueProvider xValueProvider) {
+    public static class GlideDataSetProperties extends ChartDataSetProperties {
+        public GlideDataSetProperties(TrackPointValueProvider xValueProvider) {
+            super(R.string.glide_label,
+                    R.color.glide,
+                    R.string.glide,
+                    YAxis.AxisDependency.LEFT,
+                    GLIDE_FORMAT,
+                    R.id.glide_marker_text_view,
+                    RANGE_AVERAGE,
+                    xValueProvider,
+                    GLIDE_VALUE_PROVIDER);
+        }
+    }
+
+    public static class TimeDataSetProperties extends ChartDataSetProperties {
+        public TimeDataSetProperties(TrackPointValueProvider xValueProvider) {
+            super(-1,
+                    R.color.time,
+                    R.string.seconds,
+                    null,
+                    TIME_FORMAT,
+                    R.id.time_marker_text_view,
+                    RANGE_DIFFERENTIAL,
+                    xValueProvider,
+                    TIME_VALUE_PROVIDER);
+        }
+
+        @Override
+        public void initLineData(Context context, FlySightTrackData flySightTrackData) {
+            //Y axis data! dont init linedata!
+        }
+    }
+
+
+    public static class DistanceDataSetProperties extends ChartDataSetProperties {
+        public DistanceDataSetProperties(TrackPointValueProvider xValueProvider) {
             super(R.string.distance_label,
                     R.color.distance,
                     R.string.m,
@@ -155,19 +196,10 @@ public abstract class ChartDataSetProperties {
                     xValueProvider,
                     DISTANCE_VALUE_PROVIDER);
         }
-    }
 
-    public static class GlideVsTimeDataSetProperties extends ChartDataSetProperties {
-        public GlideVsTimeDataSetProperties(TrackPointValueProvider xValueProvider) {
-            super(R.string.glide_label,
-                    R.color.glide,
-                    R.string.glide,
-                    YAxis.AxisDependency.LEFT,
-                    GLIDE_FORMAT,
-                    R.id.glide_marker_text_view,
-                    RANGE_AVERAGE,
-                    xValueProvider,
-                    GLIDE_VALUE_PROVIDER);
+        @Override
+        public void initLineData(Context context, FlySightTrackData flySightTrackData) {
+            //Y axis data! dont init linedata!
         }
     }
 

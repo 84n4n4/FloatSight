@@ -6,6 +6,10 @@
                 android:orientation="vertical">
 
     <TextView
+            android:id="@+id/time_marker_text_view"
+            style="@style/markerTextView"
+            android:drawableLeft="@drawable/ic_time"/>
+    <TextView
             android:id="@+id/altitude_marker_text_view"
             style="@style/markerTextView"
             android:drawableLeft="@drawable/ic_alt_tot"/>

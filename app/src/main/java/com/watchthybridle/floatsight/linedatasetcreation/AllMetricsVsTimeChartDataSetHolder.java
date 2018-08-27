@@ -15,6 +15,7 @@ public class AllMetricsVsTimeChartDataSetHolder {
     public static final Integer ALTITUDE = 2;
     public static final Integer GLIDE = 3;
     public static final Integer DISTANCE = 4;
+    public static final Integer TIME = 5;
 
     private static final List<Integer> OUTER_GRAPH_METRICS = Arrays.asList(ALTITUDE, VERT_VELOCITY, HOR_VELOCITY);
     private static final List<Integer> INNER_GRAPH_METRICS = Arrays.asList(GLIDE);
@@ -27,15 +28,13 @@ public class AllMetricsVsTimeChartDataSetHolder {
         dataSetPropertiesList = new ArrayList<>();
         dataSetPropertiesList.add(new ChartDataSetProperties.VerticalVelocityDataSetProperties(TrackPointValueProvider.TIME_VALUE_PROVIDER));
         dataSetPropertiesList.add(new ChartDataSetProperties.HorizontalVelocityDataSetProperties(TrackPointValueProvider.TIME_VALUE_PROVIDER));
-        dataSetPropertiesList.add(new ChartDataSetProperties.AltitudeVsTimeDataSetProperties(TrackPointValueProvider.TIME_VALUE_PROVIDER));
-        dataSetPropertiesList.add(new ChartDataSetProperties.GlideVsTimeDataSetProperties(TrackPointValueProvider.TIME_VALUE_PROVIDER));
-        dataSetPropertiesList.add(new ChartDataSetProperties.DistanceVsTimeDataSetProperties(TrackPointValueProvider.TIME_VALUE_PROVIDER));
+        dataSetPropertiesList.add(new ChartDataSetProperties.AltitudeDataSetProperties(TrackPointValueProvider.TIME_VALUE_PROVIDER));
+        dataSetPropertiesList.add(new ChartDataSetProperties.GlideDataSetProperties(TrackPointValueProvider.TIME_VALUE_PROVIDER));
+        dataSetPropertiesList.add(new ChartDataSetProperties.DistanceDataSetProperties(TrackPointValueProvider.TIME_VALUE_PROVIDER));
+        dataSetPropertiesList.add(new ChartDataSetProperties.TimeDataSetProperties(TrackPointValueProvider.TIME_VALUE_PROVIDER));
         for(ChartDataSetProperties dataSetProperties : dataSetPropertiesList) {
             dataSetProperties.initLineData(context, flySightTrackData);
         }
-        //dont initLineData
-        //dataSetPropertiesList.add(new ChartDataSetProperties.DistanceVsTimeDataSetProperties());
-
     }
 
     public FlySightTrackData getFlySightTrackData() {
