@@ -4,6 +4,7 @@ import android.content.Context;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
+import com.watchthybridle.floatsight.csvparser.FlySightTrackPoint;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,15 +24,15 @@ public class AllMetricsChartDataSetHolder {
     private List<ChartDataSetProperties> dataSetPropertiesList;
     private FlySightTrackData flySightTrackData;
 
-    public AllMetricsChartDataSetHolder(Context context, FlySightTrackData flySightTrackData) {
+    public AllMetricsChartDataSetHolder(Context context, FlySightTrackData flySightTrackData, TrackPointValueProvider xAxisValueProvider) {
         this.flySightTrackData = flySightTrackData;
         dataSetPropertiesList = new ArrayList<>();
-        dataSetPropertiesList.add(new ChartDataSetProperties.VerticalVelocityDataSetProperties(TrackPointValueProvider.TIME_VALUE_PROVIDER));
-        dataSetPropertiesList.add(new ChartDataSetProperties.HorizontalVelocityDataSetProperties(TrackPointValueProvider.TIME_VALUE_PROVIDER));
-        dataSetPropertiesList.add(new ChartDataSetProperties.AltitudeDataSetProperties(TrackPointValueProvider.TIME_VALUE_PROVIDER));
-        dataSetPropertiesList.add(new ChartDataSetProperties.GlideDataSetProperties(TrackPointValueProvider.TIME_VALUE_PROVIDER));
-        dataSetPropertiesList.add(new ChartDataSetProperties.DistanceDataSetProperties(TrackPointValueProvider.TIME_VALUE_PROVIDER));
-        dataSetPropertiesList.add(new ChartDataSetProperties.TimeDataSetProperties(TrackPointValueProvider.TIME_VALUE_PROVIDER));
+        dataSetPropertiesList.add(new ChartDataSetProperties.VerticalVelocityDataSetProperties(xAxisValueProvider));
+        dataSetPropertiesList.add(new ChartDataSetProperties.HorizontalVelocityDataSetProperties(xAxisValueProvider));
+        dataSetPropertiesList.add(new ChartDataSetProperties.AltitudeDataSetProperties(xAxisValueProvider));
+        dataSetPropertiesList.add(new ChartDataSetProperties.GlideDataSetProperties(xAxisValueProvider));
+        dataSetPropertiesList.add(new ChartDataSetProperties.DistanceDataSetProperties(xAxisValueProvider));
+        dataSetPropertiesList.add(new ChartDataSetProperties.TimeDataSetProperties(xAxisValueProvider));
         for(ChartDataSetProperties dataSetProperties : dataSetPropertiesList) {
             dataSetProperties.initLineData(context, flySightTrackData);
         }

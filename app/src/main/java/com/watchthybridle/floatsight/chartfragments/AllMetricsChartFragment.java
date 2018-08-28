@@ -30,16 +30,20 @@ import android.support.v7.app.AlertDialog;
 import android.view.*;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
+import android.widget.Spinner;
 import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
 import com.watchthybridle.floatsight.customcharts.GlideOverlayChart;
 import com.watchthybridle.floatsight.linedatasetcreation.AllMetricsChartDataSetHolder;
+import com.watchthybridle.floatsight.linedatasetcreation.TrackPointValueProvider;
+import com.watchthybridle.floatsight.linedatasetcreation.XAxisValueProviderWrapper;
 
 import static com.watchthybridle.floatsight.linedatasetcreation.AllMetricsChartDataSetHolder.*;
 
 public class AllMetricsChartFragment extends ChartFragment {
 
     private GlideOverlayChart chart;
+    private XAxisValueProviderWrapper xAxisValueProviderWrapper;
 
     public AllMetricsChartFragment() {
     }
@@ -47,6 +51,7 @@ public class AllMetricsChartFragment extends ChartFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
+        xAxisValueProviderWrapper = new XAxisValueProviderWrapper();
         super.onCreate(savedInstanceState);
     }
 
@@ -66,7 +71,8 @@ public class AllMetricsChartFragment extends ChartFragment {
             return;
         }
 
-        AllMetricsChartDataSetHolder chartDataSetHolder = new AllMetricsChartDataSetHolder(getContext(), flySightTrackData);
+        AllMetricsChartDataSetHolder chartDataSetHolder =
+                new AllMetricsChartDataSetHolder(getContext(), flySightTrackData, xAxisValueProviderWrapper.xAxisValueProvider);
 
         chart.setDataSetHolder(chartDataSetHolder);
         chart.invalidate();
@@ -74,31 +80,34 @@ public class AllMetricsChartFragment extends ChartFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_all_metrics_time_chart, menu);
+        inflater.inflate(R.menu.plot_fragment_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_item_metrics_visibility:
-                showMetricsDialog();
+            case R.id.menu_item_y_axis:
+                showYAxisDialog();
+                return true;
+            case R.id.menu_item_x_axis:
+                showXAxisDialog();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void showMetricsDialog() {
+    private void showYAxisDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
-                .setTitle(R.string.metrics_dialgo_title)
+                .setTitle(R.string.y_axis_dialog_title)
                 .setPositiveButton(R.string.ok, null);
         final FrameLayout frameView = new FrameLayout(getContext());
         builder.setView(frameView);
 
         final AlertDialog dialog = builder.create();
         LayoutInflater inflater = dialog.getLayoutInflater();
-        View dialoglayout = inflater.inflate(R.layout.metrics_dialog, frameView);
+        View dialoglayout = inflater.inflate(R.layout.y_axis_dialog, frameView);
         ((CheckBox) dialoglayout.findViewById(R.id.checkbox_altitude)).setChecked(chart.getDataSetHolder().getDataSetPropertiesList().get(ALTITUDE).iLineDataSet.isVisible());
         ((CheckBox) dialoglayout.findViewById(R.id.checkbox_glide)).setChecked(chart.glideChart.getData().getDataSets().get(0).isVisible());
         ((CheckBox) dialoglayout.findViewById(R.id.checkbox_hor_velocity)).setChecked(chart.getDataSetHolder().getDataSetPropertiesList().get(HOR_VELOCITY).iLineDataSet.isVisible());
@@ -106,7 +115,7 @@ public class AllMetricsChartFragment extends ChartFragment {
         dialog.show();
     }
 
-    public void onDialogCheckboxClicked(View view) {
+    public void onYAxisDialogCheckboxClicked(View view) {
         boolean checked = ((CheckBox) view).isChecked();
         switch(view.getId()) {
             case R.id.checkbox_altitude:
@@ -125,13 +134,50 @@ public class AllMetricsChartFragment extends ChartFragment {
         chart.invalidate();
     }
 
+    private void showXAxisDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
+                .setTitle(R.string.x_axis_dialog_title)
+                .setPositiveButton(R.string.ok, null);
+        final FrameLayout frameView = new FrameLayout(getContext());
+        builder.setView(frameView);
+
+        final AlertDialog dialog = builder.create();
+        LayoutInflater inflater = dialog.getLayoutInflater();
+        View dialoglayout = inflater.inflate(R.layout.x_axis_dialog, frameView);
+        ((CheckBox) dialoglayout.findViewById(R.id.checkbox_distance)).setChecked(xAxisValueProviderWrapper.isDistance());
+        ((CheckBox) dialoglayout.findViewById(R.id.checkbox_time)).setChecked(xAxisValueProviderWrapper.isTime());
+        dialog.show();
+    }
+
+    public void onXAxisDialogCheckboxClicked(View view) {
+        boolean checked = ((CheckBox) view).isChecked();
+        switch(view.getId()) {
+            case R.id.checkbox_time:
+                ((CheckBox) view.getRootView().findViewById(R.id.checkbox_distance)).setChecked(!checked);
+                if(checked) {
+                    xAxisValueProviderWrapper.setTime();
+                } else {
+                    xAxisValueProviderWrapper.setDistance();;
+                }
+                break;
+            case R.id.checkbox_distance:
+                ((CheckBox) view.getRootView().findViewById(R.id.checkbox_time)).setChecked(!checked);
+                if(checked) {
+                    xAxisValueProviderWrapper.setDistance();
+                } else {
+                    xAxisValueProviderWrapper.setTime();;
+                }
+                break;
+        }
+        actOnDataChanged(chart.getDataSetHolder().getFlySightTrackData());
+    }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         chart.saveState(outState);
         chart.glideChart.saveState(outState);
-
+        outState.putString(XAxisValueProviderWrapper.BUNDLE_KEY, xAxisValueProviderWrapper.getStringValue());
     }
 
     @Override
@@ -139,11 +185,14 @@ public class AllMetricsChartFragment extends ChartFragment {
         super.onActivityCreated(savedInstanceState);
         chart.restoreState(savedInstanceState);
         chart.glideChart.restoreState(savedInstanceState);
+        if(savedInstanceState != null) {
+            xAxisValueProviderWrapper = new XAxisValueProviderWrapper(
+                    savedInstanceState.getString(XAxisValueProviderWrapper.BUNDLE_KEY));
+        }
     }
 
     @VisibleForTesting
     public GlideOverlayChart getChart() {
         return chart;
     }
-
 }

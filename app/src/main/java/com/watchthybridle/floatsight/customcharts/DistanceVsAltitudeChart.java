@@ -133,14 +133,14 @@ public class DistanceVsAltitudeChart extends RangeMarkerChart {
     }
 
     private void zoomInOnMinMaxAltitude() {
-        Pair<Entry, Entry> minMaxAltitude = chartDataSetProperties.getMinMaxYEntries();
+        /*Pair<Entry, Entry> minMaxAltitude = chartDataSetProperties.getMinMaxYEntries();
         float minX = minMaxAltitude.second.getX();
         float maxX = minMaxAltitude.first.getX();
         float scaleY = 1;
         float scaleX = getLineData().getXMax() / (maxX - minX);
         float centerX = (maxX - minX) / 2 + minX;
         float centerY = 1;
-        zoom(scaleX, scaleY, centerX, centerY, YAxis.AxisDependency.LEFT);
+        zoom(scaleX, scaleY, centerX, centerY, YAxis.AxisDependency.LEFT);*/
     }
 
     public ChartDataSetProperties getChartDataSetProperties() {

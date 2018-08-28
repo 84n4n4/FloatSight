@@ -182,12 +182,21 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public void onDialogCheckboxClicked(View view) {
+    public void onYAxisDialogCheckboxClicked(View view) {
         AllMetricsChartFragment allMetricsChartFragment =
                 (AllMetricsChartFragment) getSupportFragmentManager()
                         .findFragmentByTag(MainActivity.TAG_ALL_METRICS_V_TIME_CHART_FRAGMENT);
         if (allMetricsChartFragment != null) {
-            allMetricsChartFragment.onDialogCheckboxClicked(view);
+            allMetricsChartFragment.onYAxisDialogCheckboxClicked(view);
+        }
+    }
+
+    public void onXAxisDialogCheckboxClicked(View view) {
+        AllMetricsChartFragment allMetricsChartFragment =
+                (AllMetricsChartFragment) getSupportFragmentManager()
+                        .findFragmentByTag(MainActivity.TAG_ALL_METRICS_V_TIME_CHART_FRAGMENT);
+        if (allMetricsChartFragment != null) {
+            allMetricsChartFragment.onXAxisDialogCheckboxClicked(view);
         }
     }
 

@@ -46,10 +46,10 @@
     <string name="about_dialog_version">Version %1$s</string>
     <string name="about_dialog_link">https://github.com/84n4n4/FloatSight/blob/master/README.md</string>
 
-    <!-- Metrics dialog -->
-    <string name="metrics_dialgo_title">Visible metrics</string>
-    <string name="metrics_dialog_x_values">Values for X-axis</string>
-    <string-array name="metrics_dialog_x_values_spinner">
+    <!-- Plot fragment dialogs -->
+    <string name="y_axis_dialog_title">Show values for</string>
+    <string name="x_axis_dialog_title">Show values by</string>
+    <string-array name="x_axis_values_spinner">
         <item>Time</item>
         <item>Distance</item>
     </string-array>
@@ -68,7 +68,8 @@
     <string name="menu_item_start_point">Set range marker</string>
     <string name="menu_item_end_point">Clear range markers</string>
     <string name="menu_item_range_data">Show range data</string>
-    <string name="menu_item_metrics_visibility">Metrics</string>
+    <string name="menu_item_x_axis">X-axis</string>
+    <string name="menu_item_y_axis">Y-axis</string>
 
     <!-- Units -->
     <string name="kmh">%1$s km/h</string>
