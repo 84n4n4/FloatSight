@@ -1,6 +1,5 @@
 package com.watchthybridle.floatsight.linedatasetcreation;
 
-import android.support.annotation.LongDef;
 import android.support.annotation.StringDef;
 
 import java.lang.annotation.Retention;

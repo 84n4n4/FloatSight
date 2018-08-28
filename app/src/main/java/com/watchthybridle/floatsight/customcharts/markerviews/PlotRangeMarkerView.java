@@ -12,15 +12,15 @@ import com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetProperties;
 
 import java.util.List;
 
-public class AllMetricsRangeMarkerView extends RangeMarkerView {
+public class PlotRangeMarkerView extends RangeMarkerView {
 
-    public AllMetricsRangeMarkerView(Context context) {
-        super(context, R.layout.all_metrics_range_marker);
+    public PlotRangeMarkerView(Context context) {
+        super(context, R.layout.plot_range_marker);
     }
 
     @Override
     public void refreshContent(Entry entry, Highlight highlight) {
-        GlideOverlayChart chart = (GlideOverlayChart) AllMetricsRangeMarkerView.this.getChartView();
+        GlideOverlayChart chart = (GlideOverlayChart) PlotRangeMarkerView.this.getChartView();
         List<LimitLine> limitLines = chart.getXAxis().getLimitLines();
         float limitStart = limitLines.get(0).getLimit();
         float limitEnd = limitLines.get(1).getLimit();

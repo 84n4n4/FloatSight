@@ -51,13 +51,13 @@ public abstract class ChartFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_chart, container, false);
+        return inflater.inflate(R.layout.fragment_plot, container, false);
     }
 
     abstract protected void actOnDataChanged(FlySightTrackData flySightTrackData);
 
-    public boolean isInvalid(FlySightTrackData flySightTrackData) {
-        return flySightTrackData.getFlySightTrackPoints().isEmpty()
-                || flySightTrackData.getParsingStatus() == FlySightTrackData.PARSING_FAIL;
+    public boolean isValid(FlySightTrackData flySightTrackData) {
+        return !flySightTrackData.getFlySightTrackPoints().isEmpty()
+                && !(flySightTrackData.getParsingStatus() == FlySightTrackData.PARSING_FAIL);
     }
 }

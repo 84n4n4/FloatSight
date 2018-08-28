@@ -9,7 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import com.watchthybridle.floatsight.Actions;
 import com.watchthybridle.floatsight.MainActivity;
 import com.watchthybridle.floatsight.R;
-import com.watchthybridle.floatsight.chartfragments.AllMetricsChartFragment;
+import com.watchthybridle.floatsight.chartfragments.PlotFragment;
 import com.watchthybridle.floatsight.customcharts.markerviews.TouchAbleMarkerView;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataRepository;
 import org.junit.Before;
@@ -29,17 +29,17 @@ import static org.junit.Assert.assertFalse;
 @RunWith(AndroidJUnit4.class)
 public class RangeMarkerViewTest {
 
-    private AllMetricsChartFragment allMetricsChartFragment;
+    private PlotFragment plotFragment;
 
     @Rule
     public ActivityTestRule<MainActivity> rule = new ActivityTestRule<>(MainActivity.class);
 
     @Before
     public void setUp() {
-        allMetricsChartFragment = new AllMetricsChartFragment();
+        plotFragment = new PlotFragment();
         FragmentTransaction transaction = rule.getActivity().getSupportFragmentManager().beginTransaction();
         transaction
-                .replace(R.id.fragment_container, allMetricsChartFragment,
+                .replace(R.id.fragment_container, plotFragment,
                         TAG_ALL_METRICS_V_TIME_CHART_FRAGMENT)
                 .addToBackStack(TAG_MAIN_MENU_FRAGMENT)
                 .commit();
@@ -122,9 +122,9 @@ public class RangeMarkerViewTest {
     }
 
     private GlideOverlayChart getChart() {
-        AllMetricsChartFragment allMetricsChartFragment =
-                (AllMetricsChartFragment) rule.getActivity().getSupportFragmentManager()
+        PlotFragment plotFragment =
+                (PlotFragment) rule.getActivity().getSupportFragmentManager()
                         .findFragmentByTag(MainActivity.TAG_ALL_METRICS_V_TIME_CHART_FRAGMENT);
-        return allMetricsChartFragment.getChart();
+        return plotFragment.getChart();
     }
 }

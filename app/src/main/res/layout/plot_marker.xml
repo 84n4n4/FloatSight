@@ -2,33 +2,33 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@mipmap/all_metrics_range_marker"
+                android:background="@mipmap/plot_marker"
                 android:orientation="vertical">
 
     <TextView
             android:id="@+id/time_marker_text_view"
             style="@style/markerTextView"
-            android:drawableLeft="@drawable/ic_time"
-            android:layout_marginTop="25dp"/>
+            android:drawableLeft="@drawable/ic_time"/>
     <TextView
             android:id="@+id/altitude_marker_text_view"
-            android:drawableLeft="@drawable/ic_alt_diff"
-            style="@style/markerTextView"/>
+            style="@style/markerTextView"
+            android:drawableLeft="@drawable/ic_alt_tot"/>
     <TextView
             android:id="@+id/distance_marker_text_view"
-            android:drawableLeft="@drawable/ic_dist_diff"
-            style="@style/markerTextView"/>
+            style="@style/markerTextView"
+            android:drawableLeft="@drawable/ic_dist_tot"/>
     <TextView
             android:id="@+id/hor_velocity_marker_text_view"
-            android:drawableLeft="@drawable/ic_hor_vel_avg"
+            android:drawableLeft="@drawable/ic_hor_vel"
             style="@style/markerTextView"/>
     <TextView
             android:id="@+id/vert_velocity_marker_text_view"
-            android:drawableLeft="@drawable/ic_vert_vel_avg"
+            android:drawableLeft="@drawable/ic_vert_vel"
             style="@style/markerTextView"/>
     <TextView
             android:id="@+id/glide_marker_text_view"
-            android:drawableLeft="@drawable/ic_glide_avg"
-            style="@style/markerTextView"/>
+            android:drawableLeft="@drawable/ic_glide"
+            style="@style/markerTextView"
+            android:layout_marginBottom="25dp"/>
 
 </LinearLayout>

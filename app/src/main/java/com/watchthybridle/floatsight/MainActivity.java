@@ -40,7 +40,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import com.watchthybridle.floatsight.chartfragments.AllMetricsChartFragment;
+import com.watchthybridle.floatsight.chartfragments.PlotFragment;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataRepository;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
@@ -183,20 +183,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onYAxisDialogCheckboxClicked(View view) {
-        AllMetricsChartFragment allMetricsChartFragment =
-                (AllMetricsChartFragment) getSupportFragmentManager()
+        PlotFragment plotFragment =
+                (PlotFragment) getSupportFragmentManager()
                         .findFragmentByTag(MainActivity.TAG_ALL_METRICS_V_TIME_CHART_FRAGMENT);
-        if (allMetricsChartFragment != null) {
-            allMetricsChartFragment.onYAxisDialogCheckboxClicked(view);
+        if (plotFragment != null) {
+            plotFragment.onYAxisDialogCheckboxClicked(view);
         }
     }
 
     public void onXAxisDialogCheckboxClicked(View view) {
-        AllMetricsChartFragment allMetricsChartFragment =
-                (AllMetricsChartFragment) getSupportFragmentManager()
+        PlotFragment plotFragment =
+                (PlotFragment) getSupportFragmentManager()
                         .findFragmentByTag(MainActivity.TAG_ALL_METRICS_V_TIME_CHART_FRAGMENT);
-        if (allMetricsChartFragment != null) {
-            allMetricsChartFragment.onXAxisDialogCheckboxClicked(view);
+        if (plotFragment != null) {
+            plotFragment.onXAxisDialogCheckboxClicked(view);
         }
     }
 

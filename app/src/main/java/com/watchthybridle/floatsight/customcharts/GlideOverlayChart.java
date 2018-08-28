@@ -32,19 +32,19 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.watchthybridle.floatsight.R;
-import com.watchthybridle.floatsight.customcharts.markerviews.AllMetricsChartMarkerView;
-import com.watchthybridle.floatsight.customcharts.markerviews.AllMetricsRangeMarkerView;
+import com.watchthybridle.floatsight.customcharts.markerviews.PlotMarkerView;
+import com.watchthybridle.floatsight.customcharts.markerviews.PlotRangeMarkerView;
 import com.watchthybridle.floatsight.customcharts.markerviews.TouchAbleMarkerView;
-import com.watchthybridle.floatsight.linedatasetcreation.AllMetricsChartDataSetHolder;
+import com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetHolder;
 import com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetProperties;
 
 import static com.github.mikephil.charting.components.YAxis.YAxisLabelPosition.INSIDE_CHART;
-import static com.watchthybridle.floatsight.linedatasetcreation.AllMetricsChartDataSetHolder.ALTITUDE;
+import static com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetHolder.ALTITUDE;
 
 public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueSelectedListener {
 
     public GlideChart glideChart;
-    private AllMetricsChartDataSetHolder chartDataSetHolder;
+    private ChartDataSetHolder chartDataSetHolder;
 
     public GlideOverlayChart(Context context) {
         super(context);
@@ -160,23 +160,25 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
         return success;
     }
 
-    public void setDataSetHolder(AllMetricsChartDataSetHolder chartDataSetHolder) {
+    public void setDataSetHolder(ChartDataSetHolder chartDataSetHolder) {
         this.chartDataSetHolder = chartDataSetHolder;
 
         setData(chartDataSetHolder.getLineDataOuterGraph());
         glideChart.setData(chartDataSetHolder.getLineDataGlideGraph());
 
-        AllMetricsChartMarkerView markerViewOutsideGraph = new AllMetricsChartMarkerView(getContext());
+        PlotMarkerView markerViewOutsideGraph = new PlotMarkerView(getContext());
         markerViewOutsideGraph.setChartView(this);
         setMarker(markerViewOutsideGraph);
 
-        AllMetricsRangeMarkerView rangeMarkerView = new AllMetricsRangeMarkerView(getContext());
+        PlotRangeMarkerView rangeMarkerView = new PlotRangeMarkerView(getContext());
         rangeMarkerView.setChartView(this);
         setRangeMarkerView(rangeMarkerView);
         zoomInOnMinMaxAltitude();
     }
 
     private void zoomInOnMinMaxAltitude() {
+        resetZoom();
+        glideChart.resetZoom();
         Pair<Entry, Entry> minMaxAltitude = chartDataSetHolder.getDataSetPropertiesList().get(ALTITUDE).getMinMaxYEntries();
         float minX = minMaxAltitude.second.getX();
         float maxX = minMaxAltitude.first.getX();
@@ -188,7 +190,7 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
         glideChart.zoom(scaleX, scaleY, centerX, centerY, YAxis.AxisDependency.RIGHT);
     }
 
-    public AllMetricsChartDataSetHolder getDataSetHolder() {
+    public ChartDataSetHolder getDataSetHolder() {
         return chartDataSetHolder;
     }
 
@@ -205,6 +207,13 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
             super(context);
             restorableCharIdentifier = "GLIDE_CHART";
         }
+    }
+
+    public void resetUserChanges() {
+        clearRangeMarkers();
+        highlightValues(null);
+        resetZoom();
+        glideChart.resetZoom();
     }
 }
 

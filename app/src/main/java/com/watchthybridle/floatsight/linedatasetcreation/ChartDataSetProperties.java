@@ -198,18 +198,4 @@ public abstract class ChartDataSetProperties {
             //Y axis data! dont init linedata!
         }
     }
-
-    public static class DistanceVsAltitudeDataSetProperties extends ChartDataSetProperties {
-        public DistanceVsAltitudeDataSetProperties() {
-            super(R.string.distance_altitude_label,
-                    R.color.distanceAltitude,
-                    R.string.m,
-                    YAxis.AxisDependency.LEFT,
-                    DISTANCE_FORMAT,
-                    R.id.distance_marker_text_view,
-                    RANGE_DIFFERENTIAL,
-                    DISTANCE_VALUE_PROVIDER,
-                    ALTITUDE_VALUE_PROVIDER);
-        }
-    }
 }

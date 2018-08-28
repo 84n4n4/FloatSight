@@ -17,26 +17,25 @@ import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.watchthybridle.floatsight.chartfragments.AllMetricsChartFragment;
 import com.watchthybridle.floatsight.chartfragments.ChartFragment;
-import com.watchthybridle.floatsight.chartfragments.DistanceVsAltitudeChartFragment;
+import com.watchthybridle.floatsight.chartfragments.PlotFragment;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
 
 import java.lang.annotation.Retention;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.watchthybridle.floatsight.MainActivity.*;
+import static com.watchthybridle.floatsight.MainActivity.TAG_ALL_METRICS_V_TIME_CHART_FRAGMENT;
+import static com.watchthybridle.floatsight.MainActivity.TAG_MAIN_MENU_FRAGMENT;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 public class MainMenuFragment extends ChartFragment implements AdapterView.OnItemClickListener {
 	@Retention(SOURCE)
-	@IntDef({BUTTON_IMPORT, BUTTON_ALL_METRICS_CHART, BUTTON_DISTANCE_VS_TIME_CHART, BUTTON_ABOUT})
+	@IntDef({BUTTON_IMPORT, BUTTON_ALL_METRICS_CHART, BUTTON_ABOUT})
 	private @interface MainMenuButtonPosition {}
 	private static final int BUTTON_IMPORT = 0;
 	private static final int BUTTON_ALL_METRICS_CHART = 1;
-	private static final int BUTTON_DISTANCE_VS_TIME_CHART = 2;
-	private static final int BUTTON_ABOUT = 3;
+	private static final int BUTTON_ABOUT = 2;
 
 	public MainMenuFragment() {
 	}
@@ -84,7 +83,6 @@ public class MainMenuFragment extends ChartFragment implements AdapterView.OnIte
 		List<MainMenuButtonItem> mainMenuButtonList = new ArrayList<>();
 		mainMenuButtonList.add(new MainMenuButtonItem(R.string.button_import_title, R.string.button_import_description));
 		mainMenuButtonList.add(new MainMenuButtonItem(R.string.button_all_metrics_chart_title, R.string.button_all_metrics_chart_description));
-		mainMenuButtonList.add(new MainMenuButtonItem(R.string.button_altitude_distance_chart_title, R.string.button_altitude_distance_chart_description));
 		mainMenuButtonList.add(new MainMenuButtonItem(R.string.button_about_title, R.string.button_about_description));
 		return mainMenuButtonList;
 	}
@@ -96,10 +94,7 @@ public class MainMenuFragment extends ChartFragment implements AdapterView.OnIte
 				startImportFile();
 				break;
 			case BUTTON_ALL_METRICS_CHART:
-				showAllMetricsFragmentChart();
-				break;
-			case BUTTON_DISTANCE_VS_TIME_CHART:
-				showDistanceAltitudeFragmentChart();
+				showPlotFragment();
 				break;
 			case BUTTON_ABOUT:
 				showAboutDialog();
@@ -131,26 +126,14 @@ public class MainMenuFragment extends ChartFragment implements AdapterView.OnIte
 		}
 	}
 
-	private void showAllMetricsFragmentChart() {
+	private void showPlotFragment() {
 		FragmentActivity activity = getActivity();
 		if (activity != null) {
-			AllMetricsChartFragment allMetricsChartFragment = new AllMetricsChartFragment();
+			PlotFragment plotFragment = new PlotFragment();
 			FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
 			transaction
-					.replace(R.id.fragment_container, allMetricsChartFragment,
+					.replace(R.id.fragment_container, plotFragment,
 					TAG_ALL_METRICS_V_TIME_CHART_FRAGMENT)
-					.addToBackStack(TAG_MAIN_MENU_FRAGMENT)
-					.commit();
-		}
-	}
-
-	private void showDistanceAltitudeFragmentChart() {
-		FragmentActivity activity = getActivity();
-		if (activity != null) {
-			DistanceVsAltitudeChartFragment distanceVsAltitudeChartFragment = new DistanceVsAltitudeChartFragment();
-			FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
-			transaction.replace(R.id.fragment_container, distanceVsAltitudeChartFragment,
-					TAG_DISTANCE_V_ALTITUDE_CHART_FRAGMENT)
 					.addToBackStack(TAG_MAIN_MENU_FRAGMENT)
 					.commit();
 		}

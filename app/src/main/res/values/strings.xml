@@ -49,18 +49,12 @@
     <!-- Plot fragment dialogs -->
     <string name="y_axis_dialog_title">Show values for</string>
     <string name="x_axis_dialog_title">Show values by</string>
-    <string-array name="x_axis_values_spinner">
-        <item>Time</item>
-        <item>Distance</item>
-    </string-array>
 
     <!-- Main menu -->
     <string name="button_import_title">Import file</string>
     <string name="button_import_description">Import FlySight track file from either plugged in FlySight or file on mobiles internal storage</string>
-    <string name="button_all_metrics_chart_title">All metrics vs time</string>
-    <string name="button_all_metrics_chart_description">Plot altitude, distance, glide, horizontal velocity, and vertical velocity in one chart</string>
-    <string name="button_altitude_distance_chart_title">Altitude vs distance</string>
-    <string name="button_altitude_distance_chart_description">Plot altitude against distance</string>
+    <string name="button_all_metrics_chart_title">Plot</string>
+    <string name="button_all_metrics_chart_description">Plot altitude, distance, time, glide, horizontal velocity, and vertical velocity in one chart</string>
     <string name="button_about_title">About</string>
     <string name="button_about_description">About this app</string>
 

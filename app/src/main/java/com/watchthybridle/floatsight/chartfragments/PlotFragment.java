@@ -30,22 +30,20 @@ import android.support.v7.app.AlertDialog;
 import android.view.*;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
-import android.widget.Spinner;
 import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
 import com.watchthybridle.floatsight.customcharts.GlideOverlayChart;
-import com.watchthybridle.floatsight.linedatasetcreation.AllMetricsChartDataSetHolder;
-import com.watchthybridle.floatsight.linedatasetcreation.TrackPointValueProvider;
+import com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetHolder;
 import com.watchthybridle.floatsight.linedatasetcreation.XAxisValueProviderWrapper;
 
-import static com.watchthybridle.floatsight.linedatasetcreation.AllMetricsChartDataSetHolder.*;
+import static com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetHolder.*;
 
-public class AllMetricsChartFragment extends ChartFragment {
+public class PlotFragment extends ChartFragment {
 
     private GlideOverlayChart chart;
     private XAxisValueProviderWrapper xAxisValueProviderWrapper;
 
-    public AllMetricsChartFragment() {
+    public PlotFragment() {
     }
 
     @Override
@@ -67,12 +65,16 @@ public class AllMetricsChartFragment extends ChartFragment {
     }
 
     public void actOnDataChanged(FlySightTrackData flySightTrackData) {
-        if (isInvalid(flySightTrackData)) {
+        if(getActivity() != null) {
+            getActivity().invalidateOptionsMenu();
+        }
+
+        if (!isValid(flySightTrackData)) {
             return;
         }
 
-        AllMetricsChartDataSetHolder chartDataSetHolder =
-                new AllMetricsChartDataSetHolder(getContext(), flySightTrackData, xAxisValueProviderWrapper.xAxisValueProvider);
+        ChartDataSetHolder chartDataSetHolder =
+                new ChartDataSetHolder(getContext(), flySightTrackData, xAxisValueProviderWrapper.xAxisValueProvider);
 
         chart.setDataSetHolder(chartDataSetHolder);
         chart.invalidate();
@@ -81,6 +83,10 @@ public class AllMetricsChartFragment extends ChartFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.plot_fragment_menu, menu);
+        boolean enabled = chart.getDataSetHolder() != null &&
+                isValid(chart.getDataSetHolder().getFlySightTrackData());
+        menu.findItem(R.id.menu_item_y_axis).setEnabled(enabled);
+        menu.findItem(R.id.menu_item_x_axis).setEnabled(enabled);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -157,7 +163,7 @@ public class AllMetricsChartFragment extends ChartFragment {
                 if(checked) {
                     xAxisValueProviderWrapper.setTime();
                 } else {
-                    xAxisValueProviderWrapper.setDistance();;
+                    xAxisValueProviderWrapper.setDistance();
                 }
                 break;
             case R.id.checkbox_distance:
@@ -165,10 +171,11 @@ public class AllMetricsChartFragment extends ChartFragment {
                 if(checked) {
                     xAxisValueProviderWrapper.setDistance();
                 } else {
-                    xAxisValueProviderWrapper.setTime();;
+                    xAxisValueProviderWrapper.setTime();
                 }
                 break;
         }
+        chart.resetUserChanges();
         actOnDataChanged(chart.getDataSetHolder().getFlySightTrackData());
     }
 
