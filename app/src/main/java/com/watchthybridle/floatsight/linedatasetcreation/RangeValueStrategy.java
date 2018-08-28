@@ -1,6 +1,6 @@
 package com.watchthybridle.floatsight.linedatasetcreation;
 
-import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
+import com.watchthybridle.floatsight.data.FlySightTrackData;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackPoint;
 
 interface RangeValueStrategy {

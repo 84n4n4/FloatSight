@@ -25,19 +25,23 @@ package com.watchthybridle.floatsight.viewmodel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
-import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
+import com.watchthybridle.floatsight.data.FlySightTrackData;
 
-public class FlySightTrackDataViewModel extends ViewModel {
-    private MutableLiveData<FlySightTrackData> flySightTrackDataLiveData = new MutableLiveData<>();
+public class FlySightTrackDataViewModel extends DataViewModel<FlySightTrackData> {
+
+    private MutableLiveData<FlySightTrackData> flySightTrackDataLiveData;
 
     public FlySightTrackDataViewModel() {
+        flySightTrackDataLiveData = new MutableLiveData<>();
     }
 
-    public LiveData<FlySightTrackData> getFlySightTrackDataLiveData() {
+    @Override
+    public LiveData<FlySightTrackData> getLiveData() {
         return flySightTrackDataLiveData;
     }
 
-    MutableLiveData<FlySightTrackData> getMutableFlySightTrackDataLiveData() {
+    @Override
+    public MutableLiveData<FlySightTrackData> getMutableLiveData() {
         return flySightTrackDataLiveData;
     }
 }

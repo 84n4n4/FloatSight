@@ -24,16 +24,12 @@ package com.watchthybridle.floatsight.csvparser;
 
 import com.watchthybridle.floatsight.configparser.ConfigParser;
 import com.watchthybridle.floatsight.configparser.ConfigSetting;
-
+import com.watchthybridle.floatsight.data.ConfigSettingsData;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,7 +86,8 @@ public class SettingsParserTest {
 
         InputStream inputStream = new ByteArrayInputStream(defaultConfigContent.getBytes());
 
-        String content = ConfigParser.readToString(inputStream);
+        ConfigParser parser = new ConfigParser();
+        String content = parser.readToString(inputStream);
 
         assertEquals(content, defaultConfigContent);
         inputStream.close();
@@ -109,7 +106,8 @@ public class SettingsParserTest {
 
         InputStream inputStream = new ByteArrayInputStream(expectedContent.getBytes());
 
-        List<ConfigSetting> settings = ConfigParser.parse(inputStream);
+        ConfigParser parser = new ConfigParser();
+        List<ConfigSetting> settings = parser.read(inputStream).getSettings();
 
         assertEquals("setting0", settings.get(0).name);
         assertEquals(0, settings.get(0).value);
@@ -140,16 +138,19 @@ public class SettingsParserTest {
                 "                ;   Comment0\n" +
                 "setting2: 2 ; description2\n";
 
+        ConfigSettingsData settingsData = new ConfigSettingsData();
         List<ConfigSetting> settings = new ArrayList<>();
         settings.add(new ConfigSetting("setting0", 0,
                 "description0", "Comment0", "Comment1 comment with 10 [m/s]"));
         settings.add(new ConfigSetting("setting1", 1,
                 "description1", "Comment0"));
         settings.add(new ConfigSetting("setting2", 2, "description2"));
+        settingsData.setSettings(settings);
 
         OutputStream outputStream = new ByteArrayOutputStream();
 
-        ConfigParser.write(outputStream, settings);
+        ConfigParser parser = new ConfigParser();
+        parser.write(outputStream, settingsData);
 
         assertEquals(expectedContent, outputStream.toString());
         outputStream.close();

@@ -31,7 +31,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.watchthybridle.floatsight.R;
-import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
+import com.watchthybridle.floatsight.data.FlySightTrackData;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
 
 public abstract class ChartFragment extends Fragment {
@@ -44,7 +44,7 @@ public abstract class ChartFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		FlySightTrackDataViewModel trackDataViewModel = ViewModelProviders.of(getActivity()).get(FlySightTrackDataViewModel.class);
 
-		trackDataViewModel.getFlySightTrackDataLiveData()
+		trackDataViewModel.getLiveData()
 				.observe(this, flySightTrackData -> actOnDataChanged(flySightTrackData));
 	}
 

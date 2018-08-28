@@ -3,7 +3,7 @@ package com.watchthybridle.floatsight.linedatasetcreation;
 import android.content.Context;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
+import com.watchthybridle.floatsight.data.FlySightTrackData;
 
 import java.util.ArrayList;
 import java.util.Arrays;

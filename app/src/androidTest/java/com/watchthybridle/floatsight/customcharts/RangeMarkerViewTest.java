@@ -1,3 +1,25 @@
+/*
+ *
+ *     FloatSight
+ *     Copyright 2018 Thomas Hirsch
+ *     https://github.com/84n4n4/FloatSight
+ *
+ *     This file is part of FloatSight.
+ *     FloatSight is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     FloatSight is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with FloatSight.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
 package com.watchthybridle.floatsight.customcharts;
 
 import android.content.pm.ActivityInfo;
@@ -10,8 +32,10 @@ import com.watchthybridle.floatsight.Actions;
 import com.watchthybridle.floatsight.MainActivity;
 import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.chartfragments.PlotFragment;
+import com.watchthybridle.floatsight.csvparser.FlySightCsvParser;
 import com.watchthybridle.floatsight.customcharts.markerviews.TouchAbleMarkerView;
-import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataRepository;
+import com.watchthybridle.floatsight.data.FlySightTrackData;
+import com.watchthybridle.floatsight.datarepository.DataRepository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,10 +44,9 @@ import org.junit.runner.RunWith;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static com.watchthybridle.floatsight.MainActivity.TAG_PLOT_FRAGMENT;
 import static com.watchthybridle.floatsight.MainActivity.TAG_MAIN_MENU_FRAGMENT;
+import static com.watchthybridle.floatsight.MainActivity.TAG_PLOT_FRAGMENT;
 import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 @RunWith(AndroidJUnit4.class)
@@ -45,9 +68,11 @@ public class RangeMarkerViewTest {
                 .commit();
         rule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        FlySightTrackDataRepository repository = new FlySightTrackDataRepository(rule.getActivity().getContentResolver());
+        DataRepository<FlySightTrackData> repository = new DataRepository<>(
+                FlySightTrackData.class, rule.getActivity().getContentResolver(), new FlySightCsvParser());
+
         Uri testTrackUri = Uri.parse("android.resource://com.watchthybridle.floatsight.test/" + com.watchthybridle.floatsight.test.R.raw.sample_track);
-        repository.loadFlySightTrackData(testTrackUri, rule.getActivity().getFlySightTrackDataViewModel());
+        repository.load(testTrackUri, rule.getActivity().getFlySightTrackDataViewModel());
     }
 
     @Test

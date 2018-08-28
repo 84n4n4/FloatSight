@@ -20,16 +20,26 @@
  *
  */
 
-package com.watchthybridle.floatsight;
+package com.watchthybridle.floatsight.data;
 
-import android.support.annotation.StringRes;
+import com.watchthybridle.floatsight.configparser.ConfigSetting;
 
-public class MainMenuButtonItem {
-	@StringRes int title;
-	@StringRes int description;
+import java.util.ArrayList;
+import java.util.List;
 
-	public MainMenuButtonItem(@StringRes int title, @StringRes int description) {
-		this.title = title;
-		this.description = description;
-	}
+public class ConfigSettingsData extends ParsableData {
+
+    private List<ConfigSetting> settings;
+
+    public ConfigSettingsData() {
+        settings = new ArrayList<>();
+    }
+
+    public List<ConfigSetting> getSettings() {
+        return settings;
+    }
+
+    public void setSettings(List<ConfigSetting> settings) {
+        this.settings = settings;
+    }
 }

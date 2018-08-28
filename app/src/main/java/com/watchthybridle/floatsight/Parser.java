@@ -22,14 +22,15 @@
 
 package com.watchthybridle.floatsight;
 
-import android.support.annotation.StringRes;
+import com.watchthybridle.floatsight.data.ParsableData;
 
-public class MainMenuButtonItem {
-	@StringRes int title;
-	@StringRes int description;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
-	public MainMenuButtonItem(@StringRes int title, @StringRes int description) {
-		this.title = title;
-		this.description = description;
-	}
+public interface Parser<T extends ParsableData> {
+
+    T read(InputStream inputStream) throws IOException;
+
+    void write(OutputStream outputStream, T data) throws IOException;
 }

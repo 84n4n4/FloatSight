@@ -22,33 +22,25 @@
 
 package com.watchthybridle.floatsight.csvparser;
 
+import com.watchthybridle.floatsight.Parser;
+import com.watchthybridle.floatsight.data.FlySightTrackData;
 import org.apache.commons.lang3.time.DateParser;
 import org.apache.commons.lang3.time.FastDateFormat;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.Locale;
 
-import static com.watchthybridle.floatsight.csvparser.FlySightTrackData.PARSING_ERRORS;
+import static com.watchthybridle.floatsight.data.FlySightTrackData.PARSING_ERRORS;
 
-public class FlySightCsvParser {
+public class FlySightCsvParser implements Parser<FlySightTrackData> {
+
     public static final String FLYSIGHT_CSV_HEADER = "time,lat,lon,hMSL,velN,velE,velD,hAcc,vAcc,sAcc,heading,cAcc,gpsFix,numSV";
     public static final String FLYSIGHT_CSV_HEADER_UNITS = ",(deg),(deg),(m),(m/s),(m/s),(m/s),(m),(m),(m/s),(deg),(deg),,";
     private static final DateParser DATE_PARSER = FastDateFormat.getInstance("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
-    private InputStream inputStream;
-
-    public FlySightCsvParser(InputStream inputStream){
-        this.inputStream = inputStream;
-    }
-
-    public FlySightTrackData read() throws CsvParsingException {
+    @Override
+    public FlySightTrackData read(InputStream inputStream) throws IOException {
         FlySightTrackData flySightTrackData = new FlySightTrackData();
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         try {
@@ -57,25 +49,15 @@ public class FlySightCsvParser {
             while ((csvLine = reader.readLine()) != null) {
                 addCsvRow(flySightTrackData, csvLine);
             }
-        }
-        catch (IOException exception) {
-            throw new CsvParsingException("Error in reading CSV file: " + exception);
-        }
-        finally {
-            try {
-                inputStream.close();
-            }
-            catch (IOException exception) {
-                throw new CsvParsingException("Error while closing input stream: " + exception);
-            }
+        } finally {
+            inputStream.close();
         }
         return flySightTrackData;
     }
 
-    public class CsvParsingException extends Exception {
-        public CsvParsingException(String message) {
-            super(message);
-        }
+    @Override
+    public void write(OutputStream outputStream, FlySightTrackData data) throws IOException {
+        // not implemented for CSV parser.
     }
 
     //0   ,1  ,2  ,3   ,4   ,5   ,6   ,7   ,8   ,9   ,10     ,11  ,12    ,13
@@ -149,7 +131,7 @@ public class FlySightCsvParser {
 
     //2018-08-12T14:25:43.07Z
     private long getUnixTimeForTimeString(String timeStamp) throws ParseException {
-        Date dateTime = DATE_PARSER.parse(timeStamp.replace("Z","0Z"));
+        Date dateTime = DATE_PARSER.parse(timeStamp.replace("Z", "0Z"));
         return dateTime.getTime();
     }
 }
