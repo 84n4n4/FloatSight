@@ -50,8 +50,7 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String TAG_ALL_METRICS_V_TIME_CHART_FRAGMENT = "TAG_ALL_METRICS_V_TIME_CHART_FRAGMENT";
-    public static final String TAG_DISTANCE_V_ALTITUDE_CHART_FRAGMENT = "TAG_DISTANCE_V_ALTITUDE_CHART_FRAGMENT";
+    public static final String TAG_PLOT_FRAGMENT = "TAG_PLOT_FRAGMENT";
     public static final String TAG_MAIN_MENU_FRAGMENT = "TAG_MAIN_MENU_FRAGMENT";
 
     public static final int REQUEST_FILE = 666;
@@ -185,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
     public void onYAxisDialogCheckboxClicked(View view) {
         PlotFragment plotFragment =
                 (PlotFragment) getSupportFragmentManager()
-                        .findFragmentByTag(MainActivity.TAG_ALL_METRICS_V_TIME_CHART_FRAGMENT);
+                        .findFragmentByTag(MainActivity.TAG_PLOT_FRAGMENT);
         if (plotFragment != null) {
             plotFragment.onYAxisDialogCheckboxClicked(view);
         }
@@ -194,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
     public void onXAxisDialogCheckboxClicked(View view) {
         PlotFragment plotFragment =
                 (PlotFragment) getSupportFragmentManager()
-                        .findFragmentByTag(MainActivity.TAG_ALL_METRICS_V_TIME_CHART_FRAGMENT);
+                        .findFragmentByTag(MainActivity.TAG_PLOT_FRAGMENT);
         if (plotFragment != null) {
             plotFragment.onXAxisDialogCheckboxClicked(view);
         }

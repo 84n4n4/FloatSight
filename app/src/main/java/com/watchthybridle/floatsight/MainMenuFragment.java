@@ -25,16 +25,16 @@ import java.lang.annotation.Retention;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.watchthybridle.floatsight.MainActivity.TAG_ALL_METRICS_V_TIME_CHART_FRAGMENT;
+import static com.watchthybridle.floatsight.MainActivity.TAG_PLOT_FRAGMENT;
 import static com.watchthybridle.floatsight.MainActivity.TAG_MAIN_MENU_FRAGMENT;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 public class MainMenuFragment extends ChartFragment implements AdapterView.OnItemClickListener {
 	@Retention(SOURCE)
-	@IntDef({BUTTON_IMPORT, BUTTON_ALL_METRICS_CHART, BUTTON_ABOUT})
+	@IntDef({BUTTON_IMPORT, BUTTON_PLOT, BUTTON_ABOUT})
 	private @interface MainMenuButtonPosition {}
 	private static final int BUTTON_IMPORT = 0;
-	private static final int BUTTON_ALL_METRICS_CHART = 1;
+	private static final int BUTTON_PLOT = 1;
 	private static final int BUTTON_ABOUT = 2;
 
 	public MainMenuFragment() {
@@ -82,7 +82,7 @@ public class MainMenuFragment extends ChartFragment implements AdapterView.OnIte
 	private List<MainMenuButtonItem> getButtons() {
 		List<MainMenuButtonItem> mainMenuButtonList = new ArrayList<>();
 		mainMenuButtonList.add(new MainMenuButtonItem(R.string.button_import_title, R.string.button_import_description));
-		mainMenuButtonList.add(new MainMenuButtonItem(R.string.button_all_metrics_chart_title, R.string.button_all_metrics_chart_description));
+		mainMenuButtonList.add(new MainMenuButtonItem(R.string.button_plot_title, R.string.button_plot_description));
 		mainMenuButtonList.add(new MainMenuButtonItem(R.string.button_about_title, R.string.button_about_description));
 		return mainMenuButtonList;
 	}
@@ -93,7 +93,7 @@ public class MainMenuFragment extends ChartFragment implements AdapterView.OnIte
 			case BUTTON_IMPORT:
 				startImportFile();
 				break;
-			case BUTTON_ALL_METRICS_CHART:
+			case BUTTON_PLOT:
 				showPlotFragment();
 				break;
 			case BUTTON_ABOUT:
@@ -133,7 +133,7 @@ public class MainMenuFragment extends ChartFragment implements AdapterView.OnIte
 			FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
 			transaction
 					.replace(R.id.fragment_container, plotFragment,
-					TAG_ALL_METRICS_V_TIME_CHART_FRAGMENT)
+							TAG_PLOT_FRAGMENT)
 					.addToBackStack(TAG_MAIN_MENU_FRAGMENT)
 					.commit();
 		}

@@ -21,7 +21,7 @@ import org.junit.runner.RunWith;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static com.watchthybridle.floatsight.MainActivity.TAG_ALL_METRICS_V_TIME_CHART_FRAGMENT;
+import static com.watchthybridle.floatsight.MainActivity.TAG_PLOT_FRAGMENT;
 import static com.watchthybridle.floatsight.MainActivity.TAG_MAIN_MENU_FRAGMENT;
 import static org.junit.Assert.assertEquals;
 
@@ -39,7 +39,7 @@ public class TouchableMarkerViewTest {
         FragmentTransaction transaction = rule.getActivity().getSupportFragmentManager().beginTransaction();
         transaction
                 .replace(R.id.fragment_container, plotFragment,
-                        TAG_ALL_METRICS_V_TIME_CHART_FRAGMENT)
+                        TAG_PLOT_FRAGMENT)
                 .addToBackStack(TAG_MAIN_MENU_FRAGMENT)
                 .commit();
         rule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -123,7 +123,7 @@ public class TouchableMarkerViewTest {
     private GlideOverlayChart getChart() {
         PlotFragment plotFragment =
                 (PlotFragment) rule.getActivity().getSupportFragmentManager()
-                        .findFragmentByTag(MainActivity.TAG_ALL_METRICS_V_TIME_CHART_FRAGMENT);
+                        .findFragmentByTag(MainActivity.TAG_PLOT_FRAGMENT);
         return plotFragment.getChart();
     }
 }

@@ -29,7 +29,6 @@
     <string name="altitude_label">Altitude</string>
     <string name="glide_label">Glide</string>
     <string name="distance_label">Distance</string>
-    <string name="distance_altitude_label">distance x altitude</string>
     <string name="time_label">time</string>
 
     <!-- File import -->
@@ -53,8 +52,8 @@
     <!-- Main menu -->
     <string name="button_import_title">Import file</string>
     <string name="button_import_description">Import FlySight track file from either plugged in FlySight or file on mobiles internal storage</string>
-    <string name="button_all_metrics_chart_title">Plot</string>
-    <string name="button_all_metrics_chart_description">Plot altitude, distance, time, glide, horizontal velocity, and vertical velocity in one chart</string>
+    <string name="button_plot_title">Plot</string>
+    <string name="button_plot_description">Plot altitude, distance, time, glide, horizontal velocity, and vertical velocity in one chart</string>
     <string name="button_about_title">About</string>
     <string name="button_about_description">About this app</string>
 

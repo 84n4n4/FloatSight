@@ -30,6 +30,7 @@ import org.junit.runners.JUnit4;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(JUnit4.class)
 public class FlySightTrackDataTest {
@@ -53,20 +54,15 @@ public class FlySightTrackDataTest {
 
         assertEquals(FlySightTrackData.PARSING_SUCCESS, flySightTrackData.getParsingStatus());
 
-        assertFalse(flySightTrackData.getTimeStamps().isEmpty());
-        assertFalse(flySightTrackData.getAltitude().isEmpty());
-        assertFalse(flySightTrackData.getDistance().isEmpty());
-        assertFalse(flySightTrackData.getGlide().isEmpty());
-        assertFalse(flySightTrackData.getHorVelocity().isEmpty());
-        assertFalse(flySightTrackData.getVertVelocity().isEmpty());
-        assertFalse(flySightTrackData.getDistanceVsAltitude().isEmpty());
+        assertFalse(flySightTrackData.getFlySightTrackPoints().isEmpty());
+        FlySightTrackPoint flySightTrackPoint = flySightTrackData.getFlySightTrackPoints().get(0);
 
-        assertEquals("2018-08-12T12:44:06.20Z", flySightTrackData.getTimeStamps().get(0));
-        assertEquals(3522.051f, flySightTrackData.getAltitude().get(0).getY());
-        assertEquals(0f, flySightTrackData.getDistance().get(0).getY());
-        assertEquals(0f, flySightTrackData.getGlide().get(0).getY());
-        assertEquals(horVelocity.floatValue(), flySightTrackData.getHorVelocity().get(0).getY());
-        assertEquals(verVelocity.floatValue(), flySightTrackData.getVertVelocity().get(0).getY());
+        assertEquals(0f, flySightTrackPoint.trackTimeInSeconds);
+        assertEquals(3522.051f, flySightTrackPoint.altitude);
+        assertEquals(0f, flySightTrackPoint.distance);
+        assertEquals(0f, flySightTrackPoint.glide);
+        assertEquals(horVelocity.floatValue(), flySightTrackPoint.horVelocity, 0.0001);
+        assertEquals(verVelocity.floatValue(), flySightTrackPoint.vertVelocity, 0.001);
     }
 
     @Test
@@ -90,7 +86,10 @@ public class FlySightTrackDataTest {
         flySightCsvParser.addCsvRow(flySightTrackData, pointA);
         flySightCsvParser.addCsvRow(flySightTrackData, pointB);
 
-        assertEquals(1295.6837f, flySightTrackData.getDistance().get(1).getY());
+        assertEquals(2, flySightTrackData.getFlySightTrackPoints().size());
+        FlySightTrackPoint flySightTrackPoint = flySightTrackData.getFlySightTrackPoints().get(1);
+
+        assertEquals(1295.6837f, flySightTrackPoint.distance);
     }
 
     @Test
@@ -103,7 +102,10 @@ public class FlySightTrackDataTest {
         flySightCsvParser.addCsvRow(flySightTrackData, pointA);
         flySightCsvParser.addCsvRow(flySightTrackData, pointB);
 
-        assertEquals(16059592.00f, flySightTrackData.getDistance().get(1).getY());
+        assertEquals(2, flySightTrackData.getFlySightTrackPoints().size());
+        FlySightTrackPoint flySightTrackPoint = flySightTrackData.getFlySightTrackPoints().get(1);
+
+        assertEquals(16059592.00f, flySightTrackPoint.distance);
     }
 
     @Test
@@ -116,9 +118,10 @@ public class FlySightTrackDataTest {
         flySightCsvParser.addCsvRow(flySightTrackData, pointA);
         flySightCsvParser.addCsvRow(flySightTrackData, pointB);
 
-        float timeDiff = flySightTrackData.calculateTimeDiffSec(0, 1);
+        assertEquals(2, flySightTrackData.getFlySightTrackPoints().size());
+        FlySightTrackPoint flySightTrackPoint = flySightTrackData.getFlySightTrackPoints().get(1);
 
-        assertEquals(1.15f, timeDiff);
+        assertEquals(1.15f, flySightTrackPoint.trackTimeInSeconds);
     }
 
     @Test
@@ -131,8 +134,9 @@ public class FlySightTrackDataTest {
         flySightCsvParser.addCsvRow(flySightTrackData, pointA);
         flySightCsvParser.addCsvRow(flySightTrackData, pointB);
 
-        float timeDiff = flySightTrackData.calculateTimeDiffSec(0, 1);
+        assertEquals(2, flySightTrackData.getFlySightTrackPoints().size());
+        FlySightTrackPoint flySightTrackPoint = flySightTrackData.getFlySightTrackPoints().get(1);
 
-        assertEquals(3600.00f, timeDiff);
+        assertEquals(3600.00f, flySightTrackPoint.trackTimeInSeconds);
     }
 }
