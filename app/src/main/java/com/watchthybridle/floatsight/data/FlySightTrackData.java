@@ -20,30 +20,16 @@
  *
  */
 
-package com.watchthybridle.floatsight.csvparser;
+package com.watchthybridle.floatsight.data;
 
-import android.support.annotation.LongDef;
 import com.github.mikephil.charting.data.Entry;
+import com.watchthybridle.floatsight.csvparser.FlySightTrackPoint;
 import com.watchthybridle.floatsight.linedatasetcreation.TrackPointValueProvider;
 
-import java.lang.annotation.Retention;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.annotation.RetentionPolicy.SOURCE;
-
-public class FlySightTrackData {
-
-    @Retention(SOURCE)
-    @LongDef({PARSING_SUCCESS, PARSING_FAIL, PARSING_ERRORS})
-    public @interface ParsingResult {}
-    public static final long PARSING_SUCCESS = 0;
-    public static final long PARSING_FAIL = -1;
-    public static final long PARSING_ERRORS = 1;
-
-    private long parsingStatus = PARSING_SUCCESS;
-
-    private String sourceFileName = "";
+public class FlySightTrackData extends ParsableData {
 
     private List<FlySightTrackPoint> flySightTrackPoints;
 
@@ -55,27 +41,11 @@ public class FlySightTrackData {
         return flySightTrackPoints;
     }
 
-    public long getParsingStatus() {
-        return parsingStatus;
-    }
-
-    public void setParsingStatus(@ParsingResult long parsingStatus) {
-        this.parsingStatus = parsingStatus;
-    }
-
     public List<Entry> getEntries(TrackPointValueProvider xValueProvider, TrackPointValueProvider yValueProvider) {
         List<Entry> entries = new ArrayList<>();
         for (FlySightTrackPoint trackPoint : flySightTrackPoints) {
             entries.add(new Entry(xValueProvider.getValue(trackPoint), yValueProvider.getValue(trackPoint)));
         }
         return entries;
-    }
-
-    public String getSourceFileName() {
-        return sourceFileName;
-    }
-
-    public void setSourceFileName(String sourceFileName) {
-        this.sourceFileName = sourceFileName;
     }
 }

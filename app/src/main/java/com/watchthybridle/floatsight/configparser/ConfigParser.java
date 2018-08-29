@@ -22,94 +22,97 @@
 
 package com.watchthybridle.floatsight.configparser;
 
+import com.watchthybridle.floatsight.Parser;
+import com.watchthybridle.floatsight.data.ConfigSettingsData;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public final class ConfigParser {
+public class ConfigParser implements Parser<ConfigSettingsData> {
 
-    private ConfigParser() {
-        throw new AssertionError("No.");
-    }
+	public String readToString(InputStream inputStream) throws IOException {
 
-    public static String readToString(InputStream inputStream) throws IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+		StringBuilder builder = new StringBuilder();
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        StringBuilder builder = new StringBuilder();
+		for (String line; (line = reader.readLine()) != null; ) {
+			builder.append(line).append("\n");
+		}
 
-        for (String line; (line = reader.readLine()) != null; ) {
-            builder.append(line).append("\n");
-        }
+		reader.close();
 
-        reader.close();
+		return builder.toString();
+	}
 
-        return builder.toString();
-    }
+	@Override
+	public ConfigSettingsData read(InputStream inputStream) throws IOException {
 
-    public static List<ConfigSetting> parse(InputStream inputStream) throws IOException {
+		List<ConfigSetting> settings = new ArrayList<>();
+		BufferedReader reader = new BufferedReader(new StringReader(readToString(inputStream)));
 
-        List<ConfigSetting> settings = new ArrayList<>();
-        BufferedReader reader = new BufferedReader(new StringReader(readToString(inputStream)));
+		Pattern commentPattern = Pattern.compile(";[^\\n]*");
+		Pattern namePattern = Pattern.compile("[\\S]+:");
+		Pattern valuePattern = Pattern.compile("[0-9]+");
 
-        Pattern commentPattern = Pattern.compile(";[^\\n]*");
-        Pattern namePattern = Pattern.compile("[\\S]+:");
-        Pattern valuePattern = Pattern.compile("[0-9]+");
+		for (String line = reader.readLine(); line != null; ) {
 
-        for (String line = reader.readLine(); line != null; ) {
+			Matcher nameMatcher = namePattern.matcher(line);
+			if (nameMatcher.find()) {
+				String settingName = nameMatcher.group().replace(":", "");
+				line = line.replace(nameMatcher.group(), "");
 
-            Matcher nameMatcher = namePattern.matcher(line);
-            if (nameMatcher.find()) {
-                String settingName = nameMatcher.group().replace(":", "");
-                line = line.replace(nameMatcher.group(), "");
+				Matcher valueMatcher = valuePattern.matcher(line);
+				if (!valueMatcher.find()) {
+					throw new AssertionError("Missing value after setting "
+							+ settingName);
+				}
 
-                Matcher valueMatcher = valuePattern.matcher(line);
-                if (!valueMatcher.find()) {
-                    throw new AssertionError("Missing value after setting "
-                            + settingName);
-                }
+				int value = Integer.parseInt(valueMatcher.group());
 
-                int value = Integer.parseInt(valueMatcher.group());
+				Matcher commentMatcher = commentPattern.matcher(line);
+				String description = "";
 
-                Matcher commentMatcher = commentPattern.matcher(line);
-                String description = "";
+				if (commentMatcher.find()) {
+					description = commentMatcher.group().replace(";", "").trim();
+				}
 
-                if (commentMatcher.find()) {
-                    description = commentMatcher.group().replace(";", "").trim();
-                }
+				List<String> commentList = new ArrayList<>();
 
-                List<String> commentList = new ArrayList<>();
+				for (line = reader.readLine();
+					 line != null && line.startsWith(" ") && (commentMatcher = commentPattern.matcher(line)).find(); ) {
 
-                for (line = reader.readLine();
-                     line != null && line.startsWith(" ") && (commentMatcher = commentPattern.matcher(line)).find(); ) {
+					commentList.add(commentMatcher.group().replace(";", "").trim());
+					line = reader.readLine();
+				}
 
-                    commentList.add(commentMatcher.group().replace(";", "").trim());
-                    line = reader.readLine();
-                }
+				String[] comments = new String[commentList.size()];
+				comments = commentList.toArray(comments);
 
-                String[] comments = new String[commentList.size()];
-                comments = commentList.toArray(comments);
+				settings.add(new ConfigSetting(settingName, value, description, comments));
+			} else {
+				line = reader.readLine();
+			}
+		}
 
-                settings.add(new ConfigSetting(settingName, value, description, comments));
-            } else {
-                line = reader.readLine();
-            }
-        }
+		reader.close();
+		ConfigSettingsData settingsData = new ConfigSettingsData();
+		settingsData.setSettings(settings);
 
-        reader.close();
+		return settingsData;
+	}
 
-        return settings;
-    }
+	@Override
+	public void write(OutputStream outputStream, ConfigSettingsData settingsData) throws IOException {
 
-    public static void write(OutputStream outputStream, List<ConfigSetting> settings) throws IOException {
+		OutputStreamWriter writer = new OutputStreamWriter(outputStream);
 
-        OutputStreamWriter writer = new OutputStreamWriter(outputStream);
+		for (ConfigSetting setting : settingsData.getSettings()) {
+			writer.write(setting.getString());
+		}
 
-        for (ConfigSetting setting : settings) {
-            writer.write(setting.getString());
-        }
-
-        writer.close();
-    }
+		writer.close();
+	}
 }

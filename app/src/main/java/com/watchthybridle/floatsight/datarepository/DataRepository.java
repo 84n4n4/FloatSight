@@ -20,7 +20,7 @@
  *
  */
 
-package com.watchthybridle.floatsight.viewmodel;
+package com.watchthybridle.floatsight.datarepository;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.content.ContentResolver;
@@ -29,69 +29,88 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Process;
 import android.provider.OpenableColumns;
-import com.watchthybridle.floatsight.csvparser.FlySightCsvParser;
-import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
+import com.watchthybridle.floatsight.Parser;
+import com.watchthybridle.floatsight.data.ParsableData;
+import com.watchthybridle.floatsight.viewmodel.DataViewModel;
 
-import java.io.InputStream;
+import java.io.IOException;
 
 import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
 import static android.os.Process.THREAD_PRIORITY_MORE_FAVORABLE;
+import static com.watchthybridle.floatsight.data.ParsableData.PARSING_FAIL;
+import static com.watchthybridle.floatsight.data.ParsableData.PARSING_SUCCESS;
 
-public class FlySightTrackDataRepository {
+public class DataRepository<T extends ParsableData> {
+
+    private Class<T> parsableDataClass;
     private ContentResolver contentResolver;
+    private Parser<T> parser;
 
-    public FlySightTrackDataRepository(ContentResolver contentResolver) {
+    public DataRepository(Class<T> parsableDataClass, ContentResolver contentResolver, Parser<T> parser) {
+        this.parsableDataClass = parsableDataClass;
         this.contentResolver = contentResolver;
+        this.parser = parser;
     }
 
-    public void loadFlySightTrackData(Uri uri, FlySightTrackDataViewModel flySightTrackDataViewModel) {
-        new ParseFileTask(contentResolver, flySightTrackDataViewModel.getMutableFlySightTrackDataLiveData()).execute(uri);
+    public void load(Uri uri, DataViewModel<T> viewModel) {
+        try {
+            new ParseFileTask<>(parsableDataClass, contentResolver, parser, viewModel.getMutableLiveData()).execute(uri);
+        } catch (IllegalAccessException | InstantiationException e) {
+            throw new IllegalArgumentException("Could not instantiate class: " + parsableDataClass.getSimpleName());
+        }
     }
 
-    public static class ParseFileTask extends AsyncTask<Uri, Integer, Long> {
-        private FlySightTrackData flySightTrackData = new FlySightTrackData();
+    static class ParseFileTask<T extends ParsableData> extends AsyncTask<Uri, Integer, Long> {
+
+        private T data;
         private ContentResolver contentResolver;
-        private MutableLiveData<FlySightTrackData> liveData;
+        private Parser<T> parser;
+        private MutableLiveData<T> liveData;
 
-        ParseFileTask(ContentResolver contentResolver, MutableLiveData<FlySightTrackData> liveData) {
+        ParseFileTask(Class<T> parsableDataClass, ContentResolver contentResolver, Parser<T> parser,
+                      MutableLiveData<T> liveData) throws IllegalAccessException, InstantiationException {
+
+            data = parsableDataClass.newInstance();
             this.contentResolver = contentResolver;
+            this.parser = parser;
             this.liveData = liveData;
         }
 
+        @Override
         protected Long doInBackground(Uri... uris) {
             Process.setThreadPriority(THREAD_PRIORITY_BACKGROUND + THREAD_PRIORITY_MORE_FAVORABLE);
-            if(uris.length > 0) {
+            if (uris.length > 0) {
                 try {
-                    InputStream inputStream = contentResolver.openInputStream(uris[0]);
-                    FlySightCsvParser flySightCsvParser = new FlySightCsvParser(inputStream);
-                    flySightTrackData = flySightCsvParser.read();
-                } catch (Exception e) {
-                    flySightTrackData.setParsingStatus(FlySightTrackData.PARSING_FAIL);
+                    data = parser.read(contentResolver.openInputStream(uris[0]));
+                    data.setParsingStatus(PARSING_SUCCESS);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    data.setParsingStatus(PARSING_FAIL);
                 } finally {
-                    flySightTrackData.setSourceFileName(resolveFileName(uris[0]));
+                    data.setSourceFileName(resolveFileName(uris[0]));
                 }
             } else {
-                flySightTrackData.setParsingStatus(FlySightTrackData.PARSING_FAIL);
+                data.setParsingStatus(PARSING_FAIL);
             }
             return 0L;
         }
 
-        protected void onPostExecute(Long result) {
-            liveData.setValue(flySightTrackData);
+        @Override
+        protected void onPostExecute(Long aLong) {
+            liveData.setValue(data);
         }
 
-        public String resolveFileName(Uri uri) {
+        private String resolveFileName(Uri uri) {
             String result = null;
+
             if (uri.getScheme().equals("content")) {
-                Cursor cursor = contentResolver.query(uri, null, null, null, null);
-                try {
+                try (Cursor cursor = contentResolver.query(uri, null, null, null, null)) {
                     if (cursor != null && cursor.moveToFirst()) {
                         result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
                     }
-                } finally {
-                    cursor.close();
                 }
             }
+
             if (result == null) {
                 result = uri.getPath();
                 int cut = result.lastIndexOf('/');
@@ -99,6 +118,7 @@ public class FlySightTrackDataRepository {
                     result = result.substring(cut + 1);
                 }
             }
+
             return result;
         }
     }

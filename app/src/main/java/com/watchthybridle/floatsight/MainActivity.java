@@ -41,8 +41,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import com.watchthybridle.floatsight.chartfragments.PlotFragment;
-import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
-import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataRepository;
+import com.watchthybridle.floatsight.csvparser.FlySightCsvParser;
+import com.watchthybridle.floatsight.datarepository.DataRepository;
+import com.watchthybridle.floatsight.data.FlySightTrackData;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int REQUEST_FILE = 666;
     private static final int PERMISSION_REQUEST_CODE = 200;
+
     private FlySightTrackDataViewModel flySightTrackDataViewModel;
 
     @Override
@@ -73,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 		}
 
         flySightTrackDataViewModel = ViewModelProviders.of(this).get(FlySightTrackDataViewModel.class);
-        flySightTrackDataViewModel.getFlySightTrackDataLiveData()
+        flySightTrackDataViewModel.getLiveData()
                 .observe(this, flySightTrackData -> setToolbarInfoText(flySightTrackData));
     }
 
@@ -116,8 +118,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQUEST_FILE && resultCode == RESULT_OK) {
-            FlySightTrackDataRepository repository = new FlySightTrackDataRepository(getContentResolver());
-            repository.loadFlySightTrackData(data.getData(), flySightTrackDataViewModel);
+            DataRepository<FlySightTrackData> repository =
+                    new DataRepository<>(FlySightTrackData.class, getContentResolver(), new FlySightCsvParser());
+            repository.load(data.getData(), flySightTrackDataViewModel);
         }
     }
 
@@ -147,13 +150,10 @@ public class MainActivity extends AppCompatActivity {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             if (shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE)) {
                                 showAlertOKCancel(getResources().getString(R.string.permissions_rationale),
-                                        new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                                    requestPermissions(new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE},
-                                                            PERMISSION_REQUEST_CODE);
-                                                }
+                                        (dialog, which) -> {
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                                requestPermissions(new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE},
+                                                        PERMISSION_REQUEST_CODE);
                                             }
                                         });
                                 return;
