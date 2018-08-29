@@ -34,13 +34,18 @@ import android.widget.TextView;
 import java.util.List;
 
 class MainMenuButtonAdapter extends ArrayAdapter<MainMenuButtonItem> {
+
 	MainMenuButtonAdapter(Context context, List<MainMenuButtonItem> objects) {
 		super(context, 0, objects);
 	}
 
 	@Override
-	public @NonNull	View getView(int position, View convertView, ViewGroup parent) {
+	public boolean isEnabled(int position) {
+		return getItem(position).isEnabled;
+	}
 
+	@Override
+	public @NonNull	View getView(int position, View convertView, ViewGroup parent) {
 		MainMenuButtonItem mainMenuButtonItem = getItem(position);
 		if (convertView == null) {
 			convertView = LayoutInflater.from(getContext()).inflate(R.layout.main_menu_button, parent, false);
@@ -51,7 +56,9 @@ class MainMenuButtonAdapter extends ArrayAdapter<MainMenuButtonItem> {
 
 		if(mainMenuButtonItem != null) {
 			description.setText(mainMenuButtonItem.description);
+			description.setEnabled(mainMenuButtonItem.isEnabled);
 			title.setText(mainMenuButtonItem.title);
+			title.setEnabled(mainMenuButtonItem.isEnabled);
 		}
 		return convertView;
 	}

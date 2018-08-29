@@ -27,9 +27,14 @@ import android.support.annotation.StringRes;
 public class MainMenuButtonItem {
 	@StringRes int title;
 	@StringRes int description;
+	boolean isEnabled = true;
 
 	public MainMenuButtonItem(@StringRes int title, @StringRes int description) {
 		this.title = title;
 		this.description = description;
+	}
+
+	public void setEnabled(boolean enabled) {
+		isEnabled = enabled;
 	}
 }

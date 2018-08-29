@@ -27,11 +27,11 @@
                                                  android:layout_height="match_parent"
                                                  tools:context=".chartfragments.PlotFragment"
                                                  tools:showIn="@layout/activity_main"
-                                                 android:divider="@color/colorPrimary">
+                                                 android:divider="@color/colorPrimary"
+                                                 android:orientation="vertical">
     <ListView
         android:id="@+id/main_menu_button_list_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
     </ListView>
-
 </LinearLayout>

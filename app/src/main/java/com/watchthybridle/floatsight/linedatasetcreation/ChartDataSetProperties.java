@@ -10,8 +10,8 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.watchthybridle.floatsight.R;
-import com.watchthybridle.floatsight.data.FlySightTrackData;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackPoint;
+import com.watchthybridle.floatsight.data.FlySightTrackData;
 
 import java.text.DecimalFormat;
 import java.util.List;

@@ -42,8 +42,8 @@ import android.view.View;
 import android.view.WindowManager;
 import com.watchthybridle.floatsight.chartfragments.PlotFragment;
 import com.watchthybridle.floatsight.csvparser.FlySightCsvParser;
-import com.watchthybridle.floatsight.datarepository.DataRepository;
 import com.watchthybridle.floatsight.data.FlySightTrackData;
+import com.watchthybridle.floatsight.datarepository.DataRepository;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void setToolbarInfoText(FlySightTrackData flySightTrackData) {
         getSupportActionBar().setSubtitle(flySightTrackData.getSourceFileName());
+        findViewById(R.id.toolbar_progress_bar).setVisibility(View.GONE);
     }
 
     private void showMainMenuFragment() {
@@ -99,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
                     .setType("text/*")
                     .addCategory(Intent.CATEGORY_OPENABLE)
                     .setAction(Intent.ACTION_OPEN_DOCUMENT);
+            findViewById(R.id.toolbar_progress_bar).setVisibility(View.VISIBLE);
             startActivityForResult(Intent.createChooser(intent, "Select a file"), REQUEST_FILE);
         }
     }
@@ -117,10 +119,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_FILE && resultCode == RESULT_OK) {
-            DataRepository<FlySightTrackData> repository =
-                    new DataRepository<>(FlySightTrackData.class, getContentResolver(), new FlySightCsvParser());
-            repository.load(data.getData(), flySightTrackDataViewModel);
+        if(requestCode == REQUEST_FILE) {
+            if(resultCode == RESULT_OK) {
+                DataRepository<FlySightTrackData> repository =
+                        new DataRepository<>(FlySightTrackData.class, getContentResolver(), new FlySightCsvParser());
+                repository.load(data.getData(), flySightTrackDataViewModel);
+            } else {
+                findViewById(R.id.toolbar_progress_bar).setVisibility(View.GONE);
+            }
         }
     }
 

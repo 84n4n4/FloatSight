@@ -6,8 +6,8 @@ import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.watchthybridle.floatsight.R;
-import com.watchthybridle.floatsight.data.FlySightTrackData;
 import com.watchthybridle.floatsight.customcharts.GlideOverlayChart;
+import com.watchthybridle.floatsight.data.FlySightTrackData;
 import com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetProperties;
 
 import java.util.List;

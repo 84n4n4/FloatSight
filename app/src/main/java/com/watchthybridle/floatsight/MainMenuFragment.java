@@ -47,8 +47,8 @@ import java.lang.annotation.Retention;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.watchthybridle.floatsight.MainActivity.TAG_PLOT_FRAGMENT;
 import static com.watchthybridle.floatsight.MainActivity.TAG_MAIN_MENU_FRAGMENT;
+import static com.watchthybridle.floatsight.MainActivity.TAG_PLOT_FRAGMENT;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 public class MainMenuFragment extends ChartFragment implements AdapterView.OnItemClickListener {
@@ -58,6 +58,7 @@ public class MainMenuFragment extends ChartFragment implements AdapterView.OnIte
 	private static final int BUTTON_IMPORT = 0;
 	private static final int BUTTON_PLOT = 1;
 	private static final int BUTTON_ABOUT = 2;
+	MainMenuButtonAdapter mainMenuButtonAdapter;
 
 	public MainMenuFragment() {
 	}
@@ -72,6 +73,12 @@ public class MainMenuFragment extends ChartFragment implements AdapterView.OnIte
 			Snackbar mySnackbar = Snackbar.make(getView(), R.string.file_import_success, Snackbar.LENGTH_SHORT);
 			mySnackbar.show();
 		}
+		updateButtonVisiblity();
+	}
+
+	private void updateButtonVisiblity() {
+		mainMenuButtonAdapter.getItem(BUTTON_PLOT).setEnabled(trackDataViewModel.containsValidData());
+		mainMenuButtonAdapter.notifyDataSetChanged();
 	}
 
 	protected void showParsingErrorMessage(@StringRes int stringResId) {
@@ -95,10 +102,11 @@ public class MainMenuFragment extends ChartFragment implements AdapterView.OnIte
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		MainMenuButtonAdapter mainMenuButtonAdapter = new MainMenuButtonAdapter(getContext(), getButtons());
+		mainMenuButtonAdapter = new MainMenuButtonAdapter(getContext(), getButtons());
 		ListView mainMenuButtonListView = view.findViewById(R.id.main_menu_button_list_view);
 		mainMenuButtonListView.setAdapter(mainMenuButtonAdapter);
 		mainMenuButtonListView.setOnItemClickListener(this);
+		updateButtonVisiblity();
 	}
 
 	private List<MainMenuButtonItem> getButtons() {

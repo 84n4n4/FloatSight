@@ -31,8 +31,8 @@ import android.view.*;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import com.watchthybridle.floatsight.R;
-import com.watchthybridle.floatsight.data.FlySightTrackData;
 import com.watchthybridle.floatsight.customcharts.GlideOverlayChart;
+import com.watchthybridle.floatsight.data.FlySightTrackData;
 import com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetHolder;
 import com.watchthybridle.floatsight.linedatasetcreation.XAxisValueProviderWrapper;
 

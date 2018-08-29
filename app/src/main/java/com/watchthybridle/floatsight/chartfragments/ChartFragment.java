@@ -36,13 +36,14 @@ import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
 
 public abstract class ChartFragment extends Fragment {
 
+    protected FlySightTrackDataViewModel trackDataViewModel;
     public ChartFragment() {
     }
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		FlySightTrackDataViewModel trackDataViewModel = ViewModelProviders.of(getActivity()).get(FlySightTrackDataViewModel.class);
+		trackDataViewModel = ViewModelProviders.of(getActivity()).get(FlySightTrackDataViewModel.class);
 
 		trackDataViewModel.getLiveData()
 				.observe(this, flySightTrackData -> actOnDataChanged(flySightTrackData));
