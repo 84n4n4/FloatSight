@@ -27,11 +27,15 @@ import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Process;
 import android.provider.OpenableColumns;
 import com.watchthybridle.floatsight.csvparser.FlySightCsvParser;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackData;
 
 import java.io.InputStream;
+
+import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
+import static android.os.Process.THREAD_PRIORITY_MORE_FAVORABLE;
 
 public class FlySightTrackDataRepository {
     private ContentResolver contentResolver;
@@ -55,6 +59,7 @@ public class FlySightTrackDataRepository {
         }
 
         protected Long doInBackground(Uri... uris) {
+            Process.setThreadPriority(THREAD_PRIORITY_BACKGROUND + THREAD_PRIORITY_MORE_FAVORABLE);
             if(uris.length > 0) {
                 try {
                     InputStream inputStream = contentResolver.openInputStream(uris[0]);
@@ -97,7 +102,4 @@ public class FlySightTrackDataRepository {
             return result;
         }
     }
-
-
-
 }

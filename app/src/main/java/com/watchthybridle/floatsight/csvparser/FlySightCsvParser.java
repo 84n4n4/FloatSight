@@ -22,12 +22,16 @@
 
 package com.watchthybridle.floatsight.csvparser;
 
+import org.apache.commons.lang3.time.DateParser;
+import org.apache.commons.lang3.time.FastDateFormat;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
 
@@ -36,8 +40,9 @@ import static com.watchthybridle.floatsight.csvparser.FlySightTrackData.PARSING_
 public class FlySightCsvParser {
     public static final String FLYSIGHT_CSV_HEADER = "time,lat,lon,hMSL,velN,velE,velD,hAcc,vAcc,sAcc,heading,cAcc,gpsFix,numSV";
     public static final String FLYSIGHT_CSV_HEADER_UNITS = ",(deg),(deg),(m),(m/s),(m/s),(m/s),(m),(m),(m/s),(deg),(deg),,";
+    private static final DateParser DATE_PARSER = FastDateFormat.getInstance("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
-    InputStream inputStream;
+    private InputStream inputStream;
 
     public FlySightCsvParser(InputStream inputStream){
         this.inputStream = inputStream;
@@ -144,8 +149,7 @@ public class FlySightCsvParser {
 
     //2018-08-12T14:25:43.07Z
     private long getUnixTimeForTimeString(String timeStamp) throws ParseException {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-        Date dateTime = dateFormat.parse(timeStamp.replace("Z","0Z"));
+        Date dateTime = DATE_PARSER.parse(timeStamp.replace("Z","0Z"));
         return dateTime.getTime();
     }
 }

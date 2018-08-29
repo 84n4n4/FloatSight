@@ -23,7 +23,7 @@
 package com.watchthybridle.floatsight.csvparser;
 
 public class FlySightTrackPoint {
-    public String csvRow = "";
+    public String csvRow;
 
     public long unixTimeStamp;
     public float trackTimeInSeconds;
