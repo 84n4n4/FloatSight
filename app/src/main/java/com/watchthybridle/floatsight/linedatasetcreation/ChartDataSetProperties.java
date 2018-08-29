@@ -147,7 +147,7 @@ public abstract class ChartDataSetProperties {
     }
 
     public static class GlideDataSetProperties extends ChartDataSetProperties {
-        public GlideDataSetProperties(TrackPointValueProvider xValueProvider) {
+        public GlideDataSetProperties(TrackPointValueProvider xValueProvider, CappedTrackPointValueProvider yGlideValueProvider) {
             super(R.string.glide_label,
                     R.color.glide,
                     R.string.glide,
@@ -156,7 +156,7 @@ public abstract class ChartDataSetProperties {
                     R.id.glide_marker_text_view,
                     RANGE_AVERAGE,
                     xValueProvider,
-                    GLIDE_VALUE_PROVIDER);
+                    yGlideValueProvider);
         }
     }
 

@@ -14,12 +14,12 @@ public interface TrackPointValueProvider {
     TrackPointValueProvider ALTITUDE_VALUE_PROVIDER =
             (FlySightTrackPoint trackPoint) -> trackPoint.altitude;
 
-    TrackPointValueProvider GLIDE_VALUE_PROVIDER =
-            (FlySightTrackPoint trackPoint) -> trackPoint.glide;
-
     TrackPointValueProvider HOR_VELOCITY_VALUE_PROVIDER =
             (FlySightTrackPoint trackPoint) -> trackPoint.horVelocity;
 
     TrackPointValueProvider VERT_VELOCITY_VALUE_PROVIDER =
             (FlySightTrackPoint trackPoint) -> trackPoint.vertVelocity;
+
+    TrackPointValueProvider GLIDE_VALUE_PROVIDER =
+            (FlySightTrackPoint trackPoint) -> trackPoint.glide;
 }

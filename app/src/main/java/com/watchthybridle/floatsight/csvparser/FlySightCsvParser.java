@@ -125,8 +125,7 @@ public class FlySightCsvParser implements Parser<FlySightTrackData> {
             glide = horVelocity / vertVelocity;
         }
 
-        Float capGlideAt = 5f;
-        return glide > capGlideAt ? capGlideAt : glide;
+        return glide;
     }
 
     //2018-08-12T14:25:43.07Z

@@ -48,6 +48,7 @@
     <!-- Plot fragment dialogs -->
     <string name="y_axis_dialog_title">Show values for</string>
     <string name="x_axis_dialog_title">Show values by</string>
+    <string name="glide_cap_dialog_title">Cap glide at</string>
 
     <!-- Main menu -->
     <string name="button_import_title">Import file</string>
@@ -58,11 +59,9 @@
     <string name="button_about_description">About this app</string>
 
     <!-- Toolbar -->
-    <string name="menu_item_start_point">Set range marker</string>
-    <string name="menu_item_end_point">Clear range markers</string>
-    <string name="menu_item_range_data">Show range data</string>
     <string name="menu_item_x_axis">X-axis</string>
     <string name="menu_item_y_axis">Y-axis</string>
+    <string name="menu_item_cap_glide">Glide limit</string>
 
     <!-- Units -->
     <string name="kmh">%1$s km/h</string>

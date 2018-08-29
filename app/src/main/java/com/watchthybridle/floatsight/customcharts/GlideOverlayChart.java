@@ -59,7 +59,6 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
         setDragDecelerationEnabled(false);
         glideChart.setDragDecelerationEnabled(false);
 
-
         setAxisLabelPosition();
         setAxisLabelCount();
         setAxisLabelValueFormats();
@@ -173,7 +172,7 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
         PlotRangeMarkerView rangeMarkerView = new PlotRangeMarkerView(getContext());
         rangeMarkerView.setChartView(this);
         setRangeMarkerView(rangeMarkerView);
-        zoomInOnMinMaxAltitude();
+        //zoomInOnMinMaxAltitude();
     }
 
     private void zoomInOnMinMaxAltitude() {

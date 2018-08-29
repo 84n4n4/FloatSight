@@ -30,18 +30,26 @@ import android.support.v7.app.AlertDialog;
 import android.view.*;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.customcharts.GlideOverlayChart;
 import com.watchthybridle.floatsight.data.FlySightTrackData;
+import com.watchthybridle.floatsight.linedatasetcreation.CappedTrackPointValueProvider;
 import com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetHolder;
+import com.watchthybridle.floatsight.linedatasetcreation.TrackPointValueProvider;
 import com.watchthybridle.floatsight.linedatasetcreation.XAxisValueProviderWrapper;
 
 import static com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetHolder.*;
+import static com.watchthybridle.floatsight.linedatasetcreation.ChartDataSetProperties.GLIDE_FORMAT;
 
 public class PlotFragment extends ChartFragment {
 
     private GlideOverlayChart chart;
     private XAxisValueProviderWrapper xAxisValueProviderWrapper;
+    private CappedTrackPointValueProvider cappedGlideValueProvider;
+    private static final int GLIDE_CAP_MAX = 16;
+    private static final int GLIDE_CAP_MIN = 2;
 
     public PlotFragment() {
     }
@@ -50,6 +58,7 @@ public class PlotFragment extends ChartFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         xAxisValueProviderWrapper = new XAxisValueProviderWrapper();
+        cappedGlideValueProvider = new CappedTrackPointValueProvider(TrackPointValueProvider.GLIDE_VALUE_PROVIDER, 5f);
         super.onCreate(savedInstanceState);
     }
 
@@ -72,9 +81,9 @@ public class PlotFragment extends ChartFragment {
         if (!isValid(flySightTrackData)) {
             return;
         }
-
         ChartDataSetHolder chartDataSetHolder =
-                new ChartDataSetHolder(getContext(), flySightTrackData, xAxisValueProviderWrapper.xAxisValueProvider);
+                new ChartDataSetHolder(getContext(), flySightTrackData, xAxisValueProviderWrapper.xAxisValueProvider,
+                        cappedGlideValueProvider);
 
         chart.setDataSetHolder(chartDataSetHolder);
         chart.invalidate();
@@ -98,6 +107,9 @@ public class PlotFragment extends ChartFragment {
                 return true;
             case R.id.menu_item_x_axis:
                 showXAxisDialog();
+                return true;
+            case R.id.menu_item_cap_glide:
+                showGlideCapDialog();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -179,12 +191,56 @@ public class PlotFragment extends ChartFragment {
         actOnDataChanged(chart.getDataSetHolder().getFlySightTrackData());
     }
 
+    private void showGlideCapDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
+                .setTitle(R.string.glide_cap_dialog_title)
+                .setPositiveButton(R.string.ok, null);
+        final FrameLayout frameView = new FrameLayout(getContext());
+        builder.setView(frameView);
+
+        final AlertDialog dialog = builder.create();
+        LayoutInflater inflater = dialog.getLayoutInflater();
+        View dialoglayout = inflater.inflate(R.layout.glide_cap_dialog, frameView);
+        TextView seekBarTextView = ((TextView) dialoglayout.findViewById(R.id.text_view_glide_cap));
+        SeekBar glideCapSeekBar = ((SeekBar) dialoglayout.findViewById(R.id.seekbar_glide_cap));
+        glideCapSeekBar.setMax(GLIDE_CAP_MAX);
+        glideCapSeekBar.setProgress((int) cappedGlideValueProvider.getCapYValueAt());
+        seekBarTextView.setText(GLIDE_FORMAT.format(cappedGlideValueProvider.getCapYValueAt()));
+        glideCapSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                setNewGlideCapValue(seekBar.getProgress());
+            }
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(progress < 2) {
+                    glideCapSeekBar.setProgress(2);
+                } else {
+                    seekBarTextView.setText(GLIDE_FORMAT.format(progress));
+                }
+            }
+        });
+        dialog.show();
+    }
+
+    private void setNewGlideCapValue(float glideCapValue) {
+        cappedGlideValueProvider = new CappedTrackPointValueProvider(TrackPointValueProvider.GLIDE_VALUE_PROVIDER, glideCapValue);
+        chart.resetUserChanges();
+        actOnDataChanged(chart.getDataSetHolder().getFlySightTrackData());
+    }
+
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         chart.saveState(outState);
         chart.glideChart.saveState(outState);
         outState.putString(XAxisValueProviderWrapper.BUNDLE_KEY, xAxisValueProviderWrapper.getStringValue());
+        outState.putFloat(CappedTrackPointValueProvider.BUNDLE_KEY, cappedGlideValueProvider.getCapYValueAt());
     }
 
     @Override
@@ -195,6 +251,8 @@ public class PlotFragment extends ChartFragment {
         if(savedInstanceState != null) {
             xAxisValueProviderWrapper = new XAxisValueProviderWrapper(
                     savedInstanceState.getString(XAxisValueProviderWrapper.BUNDLE_KEY));
+            cappedGlideValueProvider = new CappedTrackPointValueProvider(TrackPointValueProvider.GLIDE_VALUE_PROVIDER,
+                    savedInstanceState.getFloat(CappedTrackPointValueProvider.BUNDLE_KEY));
         }
     }
 
