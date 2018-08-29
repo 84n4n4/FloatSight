@@ -8,9 +8,10 @@ import android.support.annotation.Nullable;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.watchthybridle.floatsight.customcharts.parcelables.ParcelableHighlight;
 import com.watchthybridle.floatsight.customcharts.parcelables.ParcelableLimitLine;
-import com.watchthybridle.floatsight.customcharts.parcelables.ParcelableLineDataVisibility;
+import com.watchthybridle.floatsight.customcharts.parcelables.ParcelableLineDataSetVisibility;
 
 import java.util.ArrayList;
 
@@ -22,26 +23,27 @@ public class RestorableChart extends LineChart {
     protected String restorableCharIdentifier = "";
 
     private ArrayList<ParcelableHighlight> restoredHighlights;
-    private ParcelableLineDataVisibility restoredLineDataVisibility;
+    private ArrayList<ParcelableLineDataSetVisibility> restoredLineDataVisibility;
 
     public RestorableChart(Context context) {
         super(context);
         restoredHighlights = new ArrayList<>();
-        restoredLineDataVisibility = null;
+        restoredLineDataVisibility = new ArrayList<>();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         if(!isEmpty()) {
-            if(restoredLineDataVisibility != null) {
-                restoredLineDataVisibility.setLineDataVisibily(getLineData());
-                restoredLineDataVisibility = null;
+            int index = 0;
+            for (ParcelableLineDataSetVisibility parcelableLineDataSetVisibility : restoredLineDataVisibility) {
+                parcelableLineDataSetVisibility.setLineDataSetVisibily(getLineData().getDataSetByIndex(index));
             }
             for (ParcelableHighlight parcelableHighlight : restoredHighlights) {
                 highlightValue(parcelableHighlight.getHighLight());
             }
         }
         restoredHighlights.clear();
+        restoredLineDataVisibility.clear();
         super.onDraw(canvas);
     }
 
@@ -73,25 +75,31 @@ public class RestorableChart extends LineChart {
         return parcelableLimitLines;
     }
 
-    private ParcelableLineDataVisibility getParcelableLineDataVisibility() {
-        return new ParcelableLineDataVisibility(getLineData());
+    private ArrayList<ParcelableLineDataSetVisibility> getParcelableLineDataVisibility() {
+        ArrayList<ParcelableLineDataSetVisibility> parcelableLineVisibilities = new ArrayList<>();
+        if(getLineData() != null) {
+            for(ILineDataSet lineDataSet : getLineData().getDataSets()) {
+                parcelableLineVisibilities.add(new ParcelableLineDataSetVisibility(lineDataSet));
+            }
+        }
+        return parcelableLineVisibilities;
     }
 
-    private void setParcelableLineDataVisibility(ParcelableLineDataVisibility parcelableLineDataVisibility) {
-        restoredLineDataVisibility = parcelableLineDataVisibility;
+    private void setParcelableLineDataSetVisibility(ArrayList<ParcelableLineDataSetVisibility> parcelableLineDataSetVisibility) {
+        restoredLineDataVisibility = parcelableLineDataSetVisibility;
     }
 
     public void saveState(@NonNull Bundle outState) {
         outState.putParcelableArrayList(KEY_LIMIT_LINES + restorableCharIdentifier, getParcelableXAxisLimitLines());
-        outState.putSerializable(KEY_HIGHLIGHTS + restorableCharIdentifier, getParcelableHighlights());
-        outState.putParcelable(KEY_LINE_DATA_VISIBILITY + restorableCharIdentifier, getParcelableLineDataVisibility());
+        outState.putParcelableArrayList(KEY_HIGHLIGHTS + restorableCharIdentifier, getParcelableHighlights());
+        outState.putParcelableArrayList(KEY_LINE_DATA_VISIBILITY + restorableCharIdentifier, getParcelableLineDataVisibility());
     }
 
     public void restoreState(@Nullable Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             setParcelableXAxisLimitLines(savedInstanceState.getParcelableArrayList(KEY_LIMIT_LINES + restorableCharIdentifier));
             setParcelableHighlights(savedInstanceState.getParcelableArrayList(KEY_HIGHLIGHTS + restorableCharIdentifier));
-            setParcelableLineDataVisibility(savedInstanceState.getParcelable(KEY_LINE_DATA_VISIBILITY + restorableCharIdentifier));
+            setParcelableLineDataSetVisibility(savedInstanceState.getParcelableArrayList(KEY_LINE_DATA_VISIBILITY + restorableCharIdentifier));
         }
     }
 }

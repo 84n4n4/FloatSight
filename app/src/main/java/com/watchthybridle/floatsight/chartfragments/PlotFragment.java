@@ -89,6 +89,12 @@ public class PlotFragment extends ChartFragment {
         chart.invalidate();
     }
 
+    private void triggerOnDataChanged() {
+        if(chart != null && chart.getDataSetHolder() != null) {
+            actOnDataChanged(chart.getDataSetHolder().getFlySightTrackData());
+        }
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.plot_fragment_menu, menu);
@@ -96,6 +102,7 @@ public class PlotFragment extends ChartFragment {
                 isValid(chart.getDataSetHolder().getFlySightTrackData());
         menu.findItem(R.id.menu_item_y_axis).setEnabled(enabled);
         menu.findItem(R.id.menu_item_x_axis).setEnabled(enabled);
+        menu.findItem(R.id.menu_item_cap_glide).setEnabled(enabled);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -188,7 +195,7 @@ public class PlotFragment extends ChartFragment {
                 break;
         }
         chart.resetUserChanges();
-        actOnDataChanged(chart.getDataSetHolder().getFlySightTrackData());
+        triggerOnDataChanged();
     }
 
     private void showGlideCapDialog() {
@@ -231,7 +238,7 @@ public class PlotFragment extends ChartFragment {
     private void setNewGlideCapValue(float glideCapValue) {
         cappedGlideValueProvider = new CappedTrackPointValueProvider(TrackPointValueProvider.GLIDE_VALUE_PROVIDER, glideCapValue);
         chart.resetUserChanges();
-        actOnDataChanged(chart.getDataSetHolder().getFlySightTrackData());
+        triggerOnDataChanged();
     }
 
     @Override
