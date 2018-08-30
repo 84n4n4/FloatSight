@@ -29,11 +29,11 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import com.watchthybridle.floatsight.chartfragments.ChartFragment;
 import com.watchthybridle.floatsight.chartfragments.PlotFragment;
 import com.watchthybridle.floatsight.data.FlySightTrackData;
@@ -45,15 +45,16 @@ import java.util.List;
 import static com.watchthybridle.floatsight.MainActivity.*;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
-public class MainMenuFragment extends ChartFragment implements AdapterView.OnItemClickListener {
+public class MainMenuFragment extends ChartFragment implements MainMenuButtonAdapter.MainMenuItemClickListener {
 	@Retention(SOURCE)
 	@IntDef({BUTTON_IMPORT, BUTTON_PLOT, BUTTON_SAVE, BUTTON_LOAD, BUTTON_ABOUT})
-	private @interface MainMenuButtonPosition {}
+	private @interface MainMenuButtonId {}
 	private static final int BUTTON_IMPORT = 0;
 	private static final int BUTTON_PLOT = 1;
 	private static final int BUTTON_SAVE = 2;
 	private static final int BUTTON_LOAD = 3;
 	private static final int BUTTON_ABOUT = 4;
+
 	MainMenuButtonAdapter mainMenuButtonAdapter;
 	private FlySightTrackData flySightTrackData = new FlySightTrackData();
 
@@ -75,8 +76,8 @@ public class MainMenuFragment extends ChartFragment implements AdapterView.OnIte
 	}
 
 	private void updateButtonVisiblity() {
-		mainMenuButtonAdapter.getItem(BUTTON_PLOT).setEnabled(trackDataViewModel.containsValidData());
-		mainMenuButtonAdapter.getItem(BUTTON_SAVE).setEnabled(trackDataViewModel.containsValidData());
+		mainMenuButtonAdapter.mainMenuButtonItems.get(BUTTON_PLOT).setEnabled(trackDataViewModel.containsValidData());
+		mainMenuButtonAdapter.mainMenuButtonItems.get(BUTTON_SAVE).setEnabled(trackDataViewModel.containsValidData());
 		mainMenuButtonAdapter.notifyDataSetChanged();
 	}
 
@@ -89,27 +90,28 @@ public class MainMenuFragment extends ChartFragment implements AdapterView.OnIte
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-
-		mainMenuButtonAdapter = new MainMenuButtonAdapter(getContext(), getButtons());
-		ListView mainMenuButtonListView = view.findViewById(R.id.main_menu_button_list_view);
-		mainMenuButtonListView.setAdapter(mainMenuButtonAdapter);
-		mainMenuButtonListView.setOnItemClickListener(this);
+		RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.main_menu_button_list_view);
+		recyclerView.setHasFixedSize(true);
+		RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+		recyclerView.setLayoutManager(layoutManager);
+        mainMenuButtonAdapter = new MainMenuButtonAdapter(getButtons());
+        mainMenuButtonAdapter.setMainMenuItemClickListener(this);
+		recyclerView.setAdapter(mainMenuButtonAdapter);
 		updateButtonVisiblity();
 	}
 
 	private List<MainMenuButtonItem> getButtons() {
 		List<MainMenuButtonItem> mainMenuButtonList = new ArrayList<>();
-		mainMenuButtonList.add(new MainMenuButtonItem(R.string.button_import_title, R.string.button_import_description));
-		mainMenuButtonList.add(new MainMenuButtonItem(R.string.button_plot_title, R.string.button_plot_description));
-		mainMenuButtonList.add(new MainMenuButtonItem(R.string.button_save_title, R.string.button_save_description));
-		mainMenuButtonList.add(new MainMenuButtonItem(R.string.button_load_title, R.string.button_load_description));
-		mainMenuButtonList.add(new MainMenuButtonItem(R.string.button_about_title, R.string.button_about_description));
+		mainMenuButtonList.add(new MainMenuButtonItem(BUTTON_IMPORT, R.string.button_import_title, R.string.button_import_description));
+		mainMenuButtonList.add(new MainMenuButtonItem(BUTTON_PLOT, R.string.button_plot_title, R.string.button_plot_description));
+		mainMenuButtonList.add(new MainMenuButtonItem(BUTTON_SAVE, R.string.button_save_title, R.string.button_save_description));
+		mainMenuButtonList.add(new MainMenuButtonItem(BUTTON_LOAD, R.string.button_load_title, R.string.button_load_description));
+		mainMenuButtonList.add(new MainMenuButtonItem(BUTTON_ABOUT, R.string.button_about_title, R.string.button_about_description));
 		return mainMenuButtonList;
 	}
 
-	@Override
-	public void onItemClick(AdapterView<?> av, View v, @MainMenuButtonPosition int pos, long arg3) {
-		switch (pos) {
+	public void onItemClick(@MainMenuButtonId int id) {
+		switch (id) {
 			case BUTTON_IMPORT:
 				startImportFile();
 				break;

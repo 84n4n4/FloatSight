@@ -23,34 +23,70 @@
 
 package com.watchthybridle.floatsight;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.*;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
 
-class FileAdapter extends ArrayAdapter<FileAdapterItem> {
+class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileAdapterViewHolder> {
+	private FileItemClickListener fileItemClickListener;
+	List<FileAdapterItem> fileAdapterItems;
 
-	FileAdapter(Context context, List<FileAdapterItem> objects) {
-		super(context, 0, objects);
+	FileAdapter(List<FileAdapterItem> fileAdapterItems) {
+		this.fileAdapterItems = fileAdapterItems;
+	}
+
+	public void setFileItemClickListener(FileItemClickListener fileItemClickListener) {
+		this.fileItemClickListener = fileItemClickListener;
 	}
 
 	@Override
-	public @NonNull	View getView(int position, View convertView, ViewGroup parent) {
-		FileAdapterItem fileAdapterItem = getItem(position);
-		if (convertView == null) {
-			convertView = LayoutInflater.from(getContext()).inflate(R.layout.file_adapter_item, parent, false);
+	@NonNull
+	public FileAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+		LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(parent.getContext())
+				.inflate(R.layout.file_view_holder, parent, false);
+		return new FileAdapterViewHolder(linearLayout);
+	}
+
+	@Override
+	public void onBindViewHolder(@NonNull FileAdapterViewHolder holder, int position) {
+		holder.fileName.setText(fileAdapterItems.get(position).fileName);
+		holder.itemView.setOnClickListener(new ViewOnClickListener(fileAdapterItems.get(position)));
+	}
+
+	@Override
+	public int getItemCount() {
+		return fileAdapterItems.size();
+	}
+
+	private class ViewOnClickListener implements View.OnClickListener {
+		FileAdapterItem fileAdapterItem;
+
+		ViewOnClickListener(FileAdapterItem fileAdapterItem) {
+			this.fileAdapterItem = fileAdapterItem;
 		}
 
-		TextView fileName = convertView.findViewById(R.id.file_name);
-
-		if(fileAdapterItem != null) {
-			fileName.setText(fileAdapterItem.fileName);
+		@Override
+		public void onClick(View v) {
+			fileItemClickListener.onItemClick(fileAdapterItem);
 		}
-		return convertView;
+	}
+
+	class FileAdapterViewHolder extends RecyclerView.ViewHolder {
+		TextView fileName;
+		FileAdapterViewHolder(View itemView) {
+			super(itemView);
+			fileName = itemView.findViewById(R.id.file_name);
+		}
+	}
+
+	public interface FileItemClickListener {
+		void onItemClick(FileAdapterItem fileAdapterItem);
 	}
 }

@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +21,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FilePickerFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class FilePickerFragment extends Fragment implements FileAdapter.FileItemClickListener {
     FileAdapter fileAdapter;
 
     public FilePickerFragment() {
@@ -34,21 +36,20 @@ public class FilePickerFragment extends Fragment implements AdapterView.OnItemCl
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        fileAdapter = new FileAdapter(getContext(), getFiles());
-        ListView fileListView = view.findViewById(R.id.file_list_view);
-        fileListView.setAdapter(fileAdapter);
-        fileListView.setOnItemClickListener(this);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.file_list_view);
+        recyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+        fileAdapter = new FileAdapter(getFiles());
+        fileAdapter.setFileItemClickListener(this);
+        recyclerView.setAdapter(fileAdapter);
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if(fileAdapter != null && position < fileAdapter.getCount() && fileAdapter.getItem(position) != null) {
-            if(fileAdapter.getItem(position).isEnabled) {
-                Uri uri = Uri.fromFile(fileAdapter.getItem(position).file);
-                ((MainActivity) getActivity()).loadFlySightTrackData(uri);
-                getFragmentManager().popBackStackImmediate();
-            }
+    public void onItemClick(FileAdapterItem fileAdapterItem) {
+        if(fileAdapterItem.isEnabled) {
+            Uri uri = Uri.fromFile(fileAdapterItem.file);
+            ((MainActivity) getActivity()).loadFlySightTrackData(uri);
+            getFragmentManager().popBackStackImmediate();
         }
     }
 
