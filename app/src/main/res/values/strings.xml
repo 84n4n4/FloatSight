@@ -45,6 +45,15 @@
     <string name="about_dialog_version">Version %1$s</string>
     <string name="about_dialog_link">https://github.com/84n4n4/FloatSight/blob/master/README.md</string>
 
+    <!-- Save dialog -->
+    <string name="save_dialog_title">Save file as</string>
+    <string name="save_error">Couldn\'t write file to local storage.</string>
+    <string name="file_save_success">Track stored.</string>
+    <string name="file_already_exists">File with this name already exists</string>
+    <string name="file_has_to_be_csv">File name has to end with ".CSV"</string>
+    <string name="file_name_hint">File name</string>
+
+
     <!-- Plot fragment dialogs -->
     <string name="y_axis_dialog_title">Show values for</string>
     <string name="x_axis_dialog_title">Show values by</string>
@@ -55,8 +64,16 @@
     <string name="button_import_description">Import FlySight track file from either plugged in FlySight or file on mobiles internal storage</string>
     <string name="button_plot_title">Plot</string>
     <string name="button_plot_description">Plot altitude, distance, time, glide, horizontal velocity, and vertical velocity in one chart</string>
+    <string name="button_save_title">Save locally</string>
+    <string name="button_save_description">Save track on local storage</string>
+    <string name="button_load_title">Load</string>
+    <string name="button_load_description">Load track from local storage</string>
     <string name="button_about_title">About</string>
     <string name="button_about_description">About this app</string>
+
+    <!-- File picker fragment -->
+    <string name="error_opening_local_storage">Couldn\'t read from local storage.</string>
+
 
     <!-- Toolbar -->
     <string name="menu_item_x_axis">X-axis</string>

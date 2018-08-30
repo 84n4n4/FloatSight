@@ -29,7 +29,7 @@
                                                  android:divider="@color/colorPrimary"
                                                  android:orientation="vertical">
     <ListView
-        android:id="@+id/main_menu_button_list_view"
+        android:id="@+id/file_list_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
     </ListView>

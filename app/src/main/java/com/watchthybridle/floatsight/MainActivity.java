@@ -26,8 +26,10 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.ActivityCompat;
@@ -46,12 +48,16 @@ import com.watchthybridle.floatsight.data.FlySightTrackData;
 import com.watchthybridle.floatsight.datarepository.DataRepository;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG_PLOT_FRAGMENT = "TAG_PLOT_FRAGMENT";
+    public static final String TAG_FILE_PICKER_FRAGMENT = "TAG_FILE_PICKER_FRAGMENT";
     public static final String TAG_MAIN_MENU_FRAGMENT = "TAG_MAIN_MENU_FRAGMENT";
 
     public static final int REQUEST_FILE = 666;
@@ -100,9 +106,20 @@ public class MainActivity extends AppCompatActivity {
                     .setType("text/*")
                     .addCategory(Intent.CATEGORY_OPENABLE)
                     .setAction(Intent.ACTION_OPEN_DOCUMENT);
-            findViewById(R.id.toolbar_progress_bar).setVisibility(View.VISIBLE);
             startActivityForResult(Intent.createChooser(intent, "Select a file"), REQUEST_FILE);
         }
+    }
+
+    public File getTracksFolder() throws FileNotFoundException {
+        File folder = new File(Environment.getExternalStorageDirectory() + File.separator
+                + "FloatSight" + File.separator + "tracks");
+        if(!folder.exists()) {
+            folder.mkdirs();
+        }
+        if(!folder.exists() || !folder.isDirectory()) {
+            throw new FileNotFoundException("Could not access folder on local storage");
+        }
+        return folder;
     }
 
     @Override
@@ -121,13 +138,18 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQUEST_FILE) {
             if(resultCode == RESULT_OK) {
-                DataRepository<FlySightTrackData> repository =
-                        new DataRepository<>(FlySightTrackData.class, getContentResolver(), new FlySightCsvParser());
-                repository.load(data.getData(), flySightTrackDataViewModel);
+                loadFlySightTrackData(data.getData());
             } else {
                 findViewById(R.id.toolbar_progress_bar).setVisibility(View.GONE);
             }
         }
+    }
+
+    public void loadFlySightTrackData(Uri uri) {
+        findViewById(R.id.toolbar_progress_bar).setVisibility(View.VISIBLE);
+        DataRepository<FlySightTrackData> repository =
+                new DataRepository<>(FlySightTrackData.class, getContentResolver(), new FlySightCsvParser());
+        repository.load(uri, flySightTrackDataViewModel);
     }
 
     private boolean checkPermission() {
