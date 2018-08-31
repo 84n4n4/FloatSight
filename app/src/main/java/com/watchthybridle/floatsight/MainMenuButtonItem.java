@@ -28,10 +28,12 @@ public class MainMenuButtonItem {
 	@StringRes int title;
 	@StringRes int description;
 	boolean isEnabled = true;
+	int id;
 
-	public MainMenuButtonItem(@StringRes int title, @StringRes int description) {
+	public MainMenuButtonItem(int id, @StringRes int title, @StringRes int description) {
 		this.title = title;
 		this.description = description;
+		this.id = id;
 	}
 
 	public void setEnabled(boolean enabled) {

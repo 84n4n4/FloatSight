@@ -49,10 +49,10 @@
     <string name="save_dialog_title">Save file as</string>
     <string name="save_error">Couldn\'t write file to local storage.</string>
     <string name="file_save_success">Track stored.</string>
+    <string name="file_name_empty">File name should contain at least one character.</string>
     <string name="file_already_exists">File with this name already exists</string>
-    <string name="file_has_to_be_csv">File name has to end with ".CSV"</string>
+    <string name="file_has_to_be_csv">File name has to end with ".csv" or ".CSV"</string>
     <string name="file_name_hint">File name</string>
-
 
     <!-- Plot fragment dialogs -->
     <string name="y_axis_dialog_title">Show values for</string>
@@ -74,6 +74,9 @@
     <!-- File picker fragment -->
     <string name="error_opening_local_storage">Couldn\'t read from local storage.</string>
 
+    <string name="open">open</string>
+    <string name="delete">delete</string>
+    <string name="rename">rename</string>
 
     <!-- Toolbar -->
     <string name="menu_item_x_axis">X-axis</string>
@@ -85,4 +88,5 @@
     <string name="m">%1$s m</string>
     <string name="glide">%1$s</string>
     <string name="seconds">%1$s sec</string>
+
 </resources>

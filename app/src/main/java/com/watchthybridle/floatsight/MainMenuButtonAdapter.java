@@ -23,43 +23,76 @@
 
 package com.watchthybridle.floatsight;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
 
-class MainMenuButtonAdapter extends ArrayAdapter<MainMenuButtonItem> {
+class MainMenuButtonAdapter extends RecyclerView.Adapter<MainMenuButtonAdapter.MainMenuButtonViewHolder> {
+    List<MainMenuButtonItem> mainMenuButtonItems;
+    private MainMenuItemClickListener mainMenuItemClickListener;
 
-	MainMenuButtonAdapter(Context context, List<MainMenuButtonItem> objects) {
-		super(context, 0, objects);
+	MainMenuButtonAdapter(List<MainMenuButtonItem> mainMenuButtonItem) {
+        this.mainMenuButtonItems = mainMenuButtonItem;
 	}
 
-	@Override
-	public boolean isEnabled(int position) {
-		return getItem(position).isEnabled;
+    public void setMainMenuItemClickListener(MainMenuItemClickListener mainMenuItemClickListener) {
+        this.mainMenuItemClickListener = mainMenuItemClickListener;
+    }
+
+    @Override
+    @NonNull
+    public MainMenuButtonViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.main_menu_button_view_holder, parent, false);
+        return new MainMenuButtonViewHolder(linearLayout);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull MainMenuButtonViewHolder holder, int position) {
+        holder.title.setText(mainMenuButtonItems.get(position).title);
+        holder.description.setText(mainMenuButtonItems.get(position).description);
+        holder.title.setEnabled(mainMenuButtonItems.get(position).isEnabled);
+        holder.description.setEnabled(mainMenuButtonItems.get(position).isEnabled);
+        holder.itemView.setOnClickListener(new ViewOnClickListener(mainMenuButtonItems.get(position)));
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return mainMenuButtonItems.size();
+    }
+
+    private class ViewOnClickListener implements View.OnClickListener {
+	    MainMenuButtonItem mainMenuButtonItem;
+
+	    ViewOnClickListener(MainMenuButtonItem mainMenuButtonItem) {
+	        this.mainMenuButtonItem = mainMenuButtonItem;
+        }
+
+        @Override
+        public void onClick(View v) {
+            mainMenuItemClickListener.onItemClick(mainMenuButtonItem.id);
+        }
+    }
+
+    public class MainMenuButtonViewHolder extends RecyclerView.ViewHolder {
+		public TextView title;
+		public TextView description;
+        MainMenuButtonViewHolder(View itemView) {
+            super(itemView);
+            title = itemView.findViewById(R.id.button_title);
+            description = itemView.findViewById(R.id.button_description);
+        }
 	}
 
-	@Override
-	public @NonNull	View getView(int position, View convertView, ViewGroup parent) {
-		MainMenuButtonItem mainMenuButtonItem = getItem(position);
-		if (convertView == null) {
-			convertView = LayoutInflater.from(getContext()).inflate(R.layout.main_menu_button, parent, false);
-		}
-
-		TextView title = convertView.findViewById(R.id.button_title);
-		TextView description = convertView.findViewById(R.id.button_description);
-
-		if(mainMenuButtonItem != null) {
-			description.setText(mainMenuButtonItem.description);
-			description.setEnabled(mainMenuButtonItem.isEnabled);
-			title.setText(mainMenuButtonItem.title);
-			title.setEnabled(mainMenuButtonItem.isEnabled);
-		}
-		return convertView;
-	}
+    public interface MainMenuItemClickListener {
+        void onItemClick(int id);
+    }
 }
