@@ -24,7 +24,7 @@ package com.watchthybridle.floatsight.data;
 
 import com.github.mikephil.charting.data.Entry;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackPoint;
-import com.watchthybridle.floatsight.linedatasetcreation.TrackPointValueProvider;
+import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.TrackPointValueProvider;
 
 import java.util.ArrayList;
 import java.util.List;

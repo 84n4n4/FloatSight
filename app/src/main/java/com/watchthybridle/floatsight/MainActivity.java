@@ -42,10 +42,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import com.watchthybridle.floatsight.chartfragments.PlotFragment;
 import com.watchthybridle.floatsight.csvparser.FlySightCsvParser;
 import com.watchthybridle.floatsight.data.FlySightTrackData;
 import com.watchthybridle.floatsight.datarepository.DataRepository;
+import com.watchthybridle.floatsight.fragment.mainmenu.MainMenuFragment;
+import com.watchthybridle.floatsight.fragment.plot.PlotFragment;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
 
 import java.io.File;
