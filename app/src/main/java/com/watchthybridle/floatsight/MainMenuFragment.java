@@ -155,7 +155,7 @@ public class MainMenuFragment extends ChartFragment implements MainMenuButtonAda
 	private void showFilePickerFragment() {
 		FragmentActivity activity = getActivity();
 		if (activity != null) {
-			FilePickerFragment filePickerFragment = new FilePickerFragment();
+			PickerFragment filePickerFragment = new PickerFragment();
 			FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
 			transaction
 					.replace(R.id.fragment_container, filePickerFragment,

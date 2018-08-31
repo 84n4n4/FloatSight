@@ -20,23 +20,11 @@
  *
  */
 
-package com.watchthybridle.floatsight;
+package com.watchthybridle.floatsight.recyclerview;
 
-import java.io.File;
+public interface ItemClickListener<T> {
 
-public class FileAdapterItem {
+    void onItemClick(T item);
 
-	File file;
-	String fileName;
-	boolean isEnabled;
-
-	public FileAdapterItem(File file) {
-		this.file = file;
-		this.fileName = file.getName();
-		this.isEnabled = fileName.endsWith(".CSV") || fileName.endsWith(".csv");
-	}
-
-	public void setEnabled(boolean enabled) {
-		isEnabled = enabled;
-	}
+    void onItemLongClick(T item);
 }
