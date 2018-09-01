@@ -1,5 +1,6 @@
 package com.watchthybridle.floatsight.fragment.trackpicker;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
@@ -90,26 +91,26 @@ public class TrackPickerFragment extends Fragment implements ItemClickListener<F
     }
 
     public void renameItem(FileAdapterItem item) {
-        TextInputLayout textInputLayout =
-                (TextInputLayout) LayoutInflater.from(getContext()).inflate(R.layout.text_input_layout, null);
-
         AlertDialog alertDialog = new AlertDialog.Builder(getContext())
-                .setView(textInputLayout)
-                .setPositiveButton(R.string.rename, (dialog, which) -> {
+                .setView(R.layout.text_input_layout)
+                .setPositiveButton(getString(R.string.rename), (dialog, which) -> {
+                    TextInputLayout textInputLayout = ((Dialog) dialog).findViewById(R.id.text_input_layout);
                     String newFileName = textInputLayout.getEditText().getText().toString().trim();
                     fileAdapter.rename(item, newFileName);
                 })
                 .create();
 
-        textInputLayout.setHint(getString(R.string.file_name_hint));
-        textInputLayout.getEditText().setText(item.fileName);
-        textInputLayout.getEditText().setSelection(0,
+        alertDialog.show();
+
+        TextInputLayout inputLayout = alertDialog.findViewById(R.id.text_input_layout);
+        inputLayout.setHint(getString(R.string.file_name_hint));
+        inputLayout.getEditText().setText(item.fileName);
+        inputLayout.getEditText().setSelection(0,
                 item.fileName.contains(".") ? item.fileName.lastIndexOf(".") : item.fileName.length());
 
         RenameFileAdapterItemDialogTextWatcher textWatcher =
-                new RenameFileAdapterItemDialogTextWatcher(item, textInputLayout, alertDialog);
-        textInputLayout.getEditText().addTextChangedListener(textWatcher);
-        alertDialog.show();
+                new RenameFileAdapterItemDialogTextWatcher(item, inputLayout, alertDialog);
+        inputLayout.getEditText().addTextChangedListener(textWatcher);
     }
 
     protected void showErrorMessage(@StringRes int stringResId) {
