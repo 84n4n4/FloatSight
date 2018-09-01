@@ -22,18 +22,21 @@
 
 package com.watchthybridle.floatsight.fragment.mainmenu;
 
+import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 
 public class MainMenuButtonItem {
 	@StringRes int title;
 	@StringRes int description;
+	@DrawableRes int icon;
 	boolean isEnabled = true;
 	int id;
 
-	public MainMenuButtonItem(int id, @StringRes int title, @StringRes int description) {
+	public MainMenuButtonItem(int id, @StringRes int title, @StringRes int description, @DrawableRes int icon) {
 		this.title = title;
 		this.description = description;
 		this.id = id;
+		this.icon = icon;
 	}
 
 	public void setEnabled(boolean enabled) {

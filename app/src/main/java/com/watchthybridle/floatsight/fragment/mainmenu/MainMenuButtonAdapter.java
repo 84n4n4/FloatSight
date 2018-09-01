@@ -28,6 +28,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.watchthybridle.floatsight.R;
@@ -58,8 +59,10 @@ class MainMenuButtonAdapter extends RecyclerView.Adapter<MainMenuButtonAdapter.M
     public void onBindViewHolder(@NonNull MainMenuButtonViewHolder holder, int position) {
         holder.title.setText(mainMenuButtonItems.get(position).title);
         holder.description.setText(mainMenuButtonItems.get(position).description);
+        holder.icon.setImageResource(mainMenuButtonItems.get(position).icon);
         holder.title.setEnabled(mainMenuButtonItems.get(position).isEnabled);
         holder.description.setEnabled(mainMenuButtonItems.get(position).isEnabled);
+        holder.icon.setEnabled(mainMenuButtonItems.get(position).isEnabled);
         holder.itemView.setOnClickListener(new ViewOnClickListener(mainMenuButtonItems.get(position)));
 
     }
@@ -78,21 +81,23 @@ class MainMenuButtonAdapter extends RecyclerView.Adapter<MainMenuButtonAdapter.M
 
         @Override
         public void onClick(View v) {
-            mainMenuItemClickListener.onItemClick(mainMenuButtonItem.id);
+            mainMenuItemClickListener.onItemClick(mainMenuButtonItem);
         }
     }
 
     public class MainMenuButtonViewHolder extends RecyclerView.ViewHolder {
 		public TextView title;
 		public TextView description;
+		public ImageView icon;
         MainMenuButtonViewHolder(View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.button_title);
             description = itemView.findViewById(R.id.button_description);
+            icon = itemView.findViewById(R.id.button_icon);
         }
 	}
 
     public interface MainMenuItemClickListener {
-        void onItemClick(int id);
+        void onItemClick(MainMenuButtonItem buttonItem);
     }
 }

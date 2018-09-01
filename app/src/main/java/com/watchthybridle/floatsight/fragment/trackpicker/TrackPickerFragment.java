@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.watchthybridle.floatsight.MainActivity;
 import com.watchthybridle.floatsight.R;
+import com.watchthybridle.floatsight.recyclerview.DividerLineDecorator;
 import com.watchthybridle.floatsight.recyclerview.ItemClickListener;
 
 import java.io.File;
@@ -51,6 +52,7 @@ public class TrackPickerFragment extends Fragment implements ItemClickListener<F
         fileAdapter = new FileAdapter(getFiles());
         fileAdapter.setItemClickListener(this);
         recyclerView.setAdapter(fileAdapter);
+        recyclerView.addItemDecoration(new DividerLineDecorator(view.getContext()));
     }
 
     @Override

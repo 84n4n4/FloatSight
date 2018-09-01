@@ -28,6 +28,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.watchthybridle.floatsight.R;
@@ -60,9 +61,15 @@ class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileAdapterViewHolder
     @Override
     public void onBindViewHolder(@NonNull FileAdapterViewHolder holder, int position) {
         holder.fileName.setText(fileAdapterItems.get(position).fileName);
+        holder.fileName.setEnabled(fileAdapterItems.get(position).isEnabled);
 
-        ViewOnClickListener onClickListener = new ViewOnClickListener(fileAdapterItems.get(position));
+        if (fileAdapterItems.get(position).isEnabled) {
+            holder.fileIcon.setImageResource(R.drawable.ic_flysight_tile);
+        } else {
+            holder.fileIcon.setImageResource(R.drawable.ic_flysight_tile_greyed);
+        }
 
+            ViewOnClickListener onClickListener = new ViewOnClickListener(fileAdapterItems.get(position));
         holder.itemView.setOnClickListener(onClickListener);
         holder.itemView.setOnLongClickListener(onClickListener);
     }
@@ -128,9 +135,11 @@ class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileAdapterViewHolder
     static class FileAdapterViewHolder extends RecyclerView.ViewHolder {
 
         TextView fileName;
+        ImageView fileIcon;
 
         FileAdapterViewHolder(View itemView) {
             super(itemView);
+            fileIcon = itemView.findViewById(R.id.file_icon);
             fileName = itemView.findViewById(R.id.file_name);
         }
     }

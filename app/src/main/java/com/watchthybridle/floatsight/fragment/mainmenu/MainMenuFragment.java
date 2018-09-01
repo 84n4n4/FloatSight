@@ -41,6 +41,7 @@ import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.data.FlySightTrackData;
 import com.watchthybridle.floatsight.fragment.plot.PlotFragment;
 import com.watchthybridle.floatsight.fragment.trackpicker.TrackPickerFragment;
+import com.watchthybridle.floatsight.recyclerview.DividerLineDecorator;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
 
 import java.lang.annotation.Retention;
@@ -110,38 +111,42 @@ public class MainMenuFragment extends Fragment implements MainMenuButtonAdapter.
         mainMenuButtonAdapter = new MainMenuButtonAdapter(getButtons());
         mainMenuButtonAdapter.setMainMenuItemClickListener(this);
 		recyclerView.setAdapter(mainMenuButtonAdapter);
+		recyclerView.addItemDecoration(new DividerLineDecorator(view.getContext()));
 		updateButtonVisiblity();
 	}
 
 	private List<MainMenuButtonItem> getButtons() {
 		List<MainMenuButtonItem> mainMenuButtonList = new ArrayList<>();
-		mainMenuButtonList.add(new MainMenuButtonItem(BUTTON_IMPORT, R.string.button_import_title, R.string.button_import_description));
-		mainMenuButtonList.add(new MainMenuButtonItem(BUTTON_PLOT, R.string.button_plot_title, R.string.button_plot_description));
-		mainMenuButtonList.add(new MainMenuButtonItem(BUTTON_SAVE, R.string.button_save_title, R.string.button_save_description));
-		mainMenuButtonList.add(new MainMenuButtonItem(BUTTON_LOAD, R.string.button_load_title, R.string.button_load_description));
-		mainMenuButtonList.add(new MainMenuButtonItem(BUTTON_ABOUT, R.string.button_about_title, R.string.button_about_description));
+		mainMenuButtonList.add(new MainMenuButtonItem(BUTTON_IMPORT, R.string.button_import_title, R.string.button_import_description, R.drawable.import_grey));
+		mainMenuButtonList.add(new MainMenuButtonItem(BUTTON_PLOT, R.string.button_plot_title, R.string.button_plot_description, R.drawable.plot));
+		mainMenuButtonList.add(new MainMenuButtonItem(BUTTON_SAVE, R.string.button_save_title, R.string.button_save_description, R.drawable.save));
+		mainMenuButtonList.add(new MainMenuButtonItem(BUTTON_LOAD, R.string.button_load_title, R.string.button_load_description, R.drawable.load));
+		mainMenuButtonList.add(new MainMenuButtonItem(BUTTON_ABOUT, R.string.button_about_title, R.string.button_about_description, R.drawable.info));
 		return mainMenuButtonList;
 	}
 
-	public void onItemClick(@MainMenuButtonId int id) {
-		switch (id) {
-			case BUTTON_IMPORT:
-				startImportFile();
-				break;
-			case BUTTON_PLOT:
-				showPlotFragment();
-				break;
-			case BUTTON_SAVE:
-				MainMenuDialogs.showSaveDialog(this, trackDataViewModel.getLiveData().getValue());
-				break;
-			case BUTTON_LOAD:
-				showFilePickerFragment();
-				break;
-			case BUTTON_ABOUT:
-				MainMenuDialogs.showAboutDialog(getContext());
-				break;
-			default:
-				break;
+	public void onItemClick(MainMenuButtonItem buttonItem) {
+		if (buttonItem.isEnabled) {
+			int id = buttonItem.id;
+			switch (id) {
+				case BUTTON_IMPORT:
+					startImportFile();
+					break;
+				case BUTTON_PLOT:
+					showPlotFragment();
+					break;
+				case BUTTON_SAVE:
+					MainMenuDialogs.showSaveDialog(this, trackDataViewModel.getLiveData().getValue());
+					break;
+				case BUTTON_LOAD:
+					showFilePickerFragment();
+					break;
+				case BUTTON_ABOUT:
+					MainMenuDialogs.showAboutDialog(getContext());
+					break;
+				default:
+					break;
+			}
 		}
 	}
 

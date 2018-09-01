@@ -60,11 +60,11 @@
     <string name="glide_cap_dialog_title">Cap glide at</string>
 
     <!-- Main menu -->
-    <string name="button_import_title">Import file</string>
-    <string name="button_import_description">Import FlySight track file from either plugged in FlySight or file on mobiles internal storage</string>
+    <string name="button_import_title">Import</string>
+    <string name="button_import_description">Import FlySight track file</string>
     <string name="button_plot_title">Plot</string>
-    <string name="button_plot_description">Plot altitude, distance, time, glide, horizontal velocity, and vertical velocity in one chart</string>
-    <string name="button_save_title">Save locally</string>
+    <string name="button_plot_description">Show track plot</string>
+    <string name="button_save_title">Save</string>
     <string name="button_save_description">Save track on local storage</string>
     <string name="button_load_title">Load</string>
     <string name="button_load_description">Load track from local storage</string>

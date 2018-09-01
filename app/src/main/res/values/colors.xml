@@ -37,5 +37,9 @@
     <color name="rangeColor">#325165ff</color>
     <color name="limitLineColor">#aa5165ff</color>
 
+    <color name="flysightLightGreen">#b5d92a</color>
+    <color name="flysightDarkGreen">#9cb145</color>
+    <color name="flysightLightGrey">#918f90</color>
+    <color name="flysightDarkGrey">#4f4c4d</color>
 
 </resources>
