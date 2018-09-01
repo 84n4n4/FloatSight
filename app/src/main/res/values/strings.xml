@@ -22,6 +22,7 @@
 
 <resources>
     <string name="app_name">FloatSight</string>
+    <string name="config_activity">Config editor</string>
 
     <!-- Chart labels -->
     <string name="vert_velocity_label">V-vert</string>
@@ -68,8 +69,16 @@
     <string name="button_save_description">Save track on local storage</string>
     <string name="button_load_title">Load</string>
     <string name="button_load_description">Load track from local storage</string>
+    <string name="button_config_title">Config editor</string>
+    <string name="button_config_description">Flysight config editor</string>
     <string name="button_about_title">About</string>
     <string name="button_about_description">About this app</string>
+
+    <!-- Config menu -->
+    <string name="button_config_import_title">Import</string>
+    <string name="button_config_import_description">Import FlySight config file</string>
+    <string name="button_config_save_title">Save</string>
+    <string name="button_config_save_description">Save FlySight config to file</string>
 
     <!-- File picker fragment -->
     <string name="error_opening_local_storage">Couldn\'t read from local storage.</string>

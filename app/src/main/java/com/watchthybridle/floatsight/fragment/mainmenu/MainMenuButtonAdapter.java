@@ -51,7 +51,7 @@ class MainMenuButtonAdapter extends RecyclerView.Adapter<MainMenuButtonAdapter.M
     @NonNull
     public MainMenuButtonViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.main_menu_button_view_holder, parent, false);
+                .inflate(R.layout.button_view_holder, parent, false);
         return new MainMenuButtonViewHolder(linearLayout);
     }
 

@@ -58,8 +58,12 @@ public class ConfigParser implements Parser<ConfigSettingsData> {
 		Pattern valuePattern = Pattern.compile("[0-9]+");
 
 		for (String line = reader.readLine(); line != null; ) {
-
+			if (line.startsWith(";")) {
+				line = reader.readLine();
+				continue;
+			}
 			Matcher nameMatcher = namePattern.matcher(line);
+
 			if (nameMatcher.find()) {
 				String settingName = nameMatcher.group().replace(":", "");
 				line = line.replace(nameMatcher.group(), "");
