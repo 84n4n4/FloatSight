@@ -40,7 +40,8 @@ public final class MainMenuDialogs {
         if(mainActivity == null) {
             return;
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity)
+        AlertDialog dialog = new AlertDialog.Builder(mainActivity)
+                .setView(R.layout.save_dialog)
                 .setTitle(R.string.save_dialog_title)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
@@ -61,18 +62,14 @@ public final class MainMenuDialogs {
                         }
                     }
                 } )
-                .setNegativeButton(R.string.cancel, null);
-        final FrameLayout frameView = new FrameLayout(mainActivity);
-        builder.setView(frameView);
+                .setNegativeButton(R.string.cancel, null)
+                .create();
+        dialog.show();
 
-        final AlertDialog dialog = builder.create();
-        LayoutInflater inflater = dialog.getLayoutInflater();
-        View dialoglayout = inflater.inflate(R.layout.save_dialog, frameView);
-        TextInputLayout fileNameInputLayout = dialoglayout.findViewById(R.id.save_dialog_input_layout);
-        TextInputEditText fileNameEditText = dialoglayout.findViewById(R.id.save_dialog_edit_text);
+        TextInputLayout fileNameInputLayout = dialog.findViewById(R.id.save_dialog_input_layout);
+        TextInputEditText fileNameEditText = dialog.findViewById(R.id.save_dialog_edit_text);
         fileNameEditText.setText(flySightTrackData.getSourceFileName());
 
-        dialog.show();
         saveDialogValidateFileName(mainActivity, dialog, flySightTrackData.getSourceFileName(), fileNameInputLayout);
         fileNameEditText.addTextChangedListener(new TextWatcher() {
             @Override
