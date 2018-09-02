@@ -116,6 +116,7 @@ public class PlotFragment extends Fragment {
         menu.findItem(R.id.menu_item_y_axis).setEnabled(enabled);
         menu.findItem(R.id.menu_item_x_axis).setEnabled(enabled);
         menu.findItem(R.id.menu_item_cap_glide).setEnabled(enabled);
+        menu.findItem(R.id.menu_item_units).setEnabled(enabled);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
