@@ -55,7 +55,7 @@ public class PlotFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        xAxisValueProviderWrapper = new XAxisValueProviderWrapper();
+        xAxisValueProviderWrapper = new XAxisValueProviderWrapper(XAxisValueProviderWrapper.TIME, unitSystem);
         cappedGlideValueProvider = new CappedTrackPointValueProvider(TrackPointValueProvider.GLIDE_VALUE_PROVIDER, 5f);
         trackDataViewModel = ViewModelProviders.of(getActivity()).get(FlySightTrackDataViewModel.class);
 
@@ -245,11 +245,13 @@ public class PlotFragment extends Fragment {
                 ((CheckBox) view.getRootView().findViewById(R.id.checkbox_metric)).setChecked(!checked);
                 if(checked) {
                     unitSystem = ChartDataSetProperties.IMPERIAL;
+
                 } else {
                     unitSystem = ChartDataSetProperties.METRIC;
                 }
                 break;
         }
+        xAxisValueProviderWrapper.setUnitSystem(unitSystem);
         chart.resetUserChanges();
         triggerOnDataChanged();
     }
@@ -276,11 +278,12 @@ public class PlotFragment extends Fragment {
         chart.restoreState(savedInstanceState);
         chart.glideChart.restoreState(savedInstanceState);
         if(savedInstanceState != null) {
+            unitSystem = savedInstanceState.getString(ChartDataSetProperties.UNIT_BUNDLE_KEY);
+            unitSystem = unitSystem == null ? METRIC : unitSystem;
             xAxisValueProviderWrapper = new XAxisValueProviderWrapper(
-                    savedInstanceState.getString(XAxisValueProviderWrapper.BUNDLE_KEY));
+                    savedInstanceState.getString(XAxisValueProviderWrapper.BUNDLE_KEY), unitSystem);
             cappedGlideValueProvider = new CappedTrackPointValueProvider(TrackPointValueProvider.GLIDE_VALUE_PROVIDER,
                     savedInstanceState.getFloat(CappedTrackPointValueProvider.BUNDLE_KEY));
-            unitSystem = savedInstanceState.getString(ChartDataSetProperties.UNIT_BUNDLE_KEY);
         }
     }
 
