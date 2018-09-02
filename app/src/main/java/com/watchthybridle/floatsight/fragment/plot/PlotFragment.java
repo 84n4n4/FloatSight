@@ -35,13 +35,11 @@ import android.widget.FrameLayout;
 import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.data.FlySightTrackData;
 import com.watchthybridle.floatsight.mpandroidchart.customcharts.GlideOverlayChart;
-import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.CappedTrackPointValueProvider;
-import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetHolder;
-import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.TrackPointValueProvider;
-import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.XAxisValueProviderWrapper;
+import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.*;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
 
 import static com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetHolder.*;
+import static com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties.METRIC;
 
 public class PlotFragment extends Fragment {
 
@@ -49,6 +47,7 @@ public class PlotFragment extends Fragment {
     private XAxisValueProviderWrapper xAxisValueProviderWrapper;
     private CappedTrackPointValueProvider cappedGlideValueProvider;
     private FlySightTrackDataViewModel trackDataViewModel;
+    private String unitSystem = METRIC;
 
     public PlotFragment() {
     }
@@ -92,7 +91,7 @@ public class PlotFragment extends Fragment {
         }
         ChartDataSetHolder chartDataSetHolder =
                 new ChartDataSetHolder(getContext(), flySightTrackData, xAxisValueProviderWrapper.xAxisValueProvider,
-                        cappedGlideValueProvider);
+                        cappedGlideValueProvider, unitSystem);
 
         chart.setDataSetHolder(chartDataSetHolder);
         chart.invalidate();
@@ -131,6 +130,9 @@ public class PlotFragment extends Fragment {
                 return true;
             case R.id.menu_item_cap_glide:
                 PlotFragmentDialogs.showGlideCapDialog(this, cappedGlideValueProvider);
+                return true;
+            case R.id.menu_item_units:
+                showUnitsDialog();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -212,6 +214,45 @@ public class PlotFragment extends Fragment {
         triggerOnDataChanged();
     }
 
+    private void showUnitsDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
+                .setTitle(R.string.plot_units_dialog_title)
+                .setPositiveButton(R.string.ok, null);
+        final FrameLayout frameView = new FrameLayout(getContext());
+        builder.setView(frameView);
+
+        final AlertDialog dialog = builder.create();
+        LayoutInflater inflater = dialog.getLayoutInflater();
+        View dialoglayout = inflater.inflate(R.layout.units_dialog, frameView);
+        ((CheckBox) dialoglayout.findViewById(R.id.checkbox_metric)).setChecked(unitSystem.equals(ChartDataSetProperties.METRIC));
+        ((CheckBox) dialoglayout.findViewById(R.id.checkbox_imperial)).setChecked(unitSystem.equals(ChartDataSetProperties.IMPERIAL));
+        dialog.show();
+    }
+
+    public void onUnitsDialogCheckboxClicked(View view) {
+        boolean checked = ((CheckBox) view).isChecked();
+        switch(view.getId()) {
+            case R.id.checkbox_metric:
+                ((CheckBox) view.getRootView().findViewById(R.id.checkbox_imperial)).setChecked(!checked);
+                if(checked) {
+                    unitSystem = ChartDataSetProperties.METRIC;
+                } else {
+                    unitSystem = ChartDataSetProperties.IMPERIAL;
+                }
+                break;
+            case R.id.checkbox_imperial:
+                ((CheckBox) view.getRootView().findViewById(R.id.checkbox_metric)).setChecked(!checked);
+                if(checked) {
+                    unitSystem = ChartDataSetProperties.IMPERIAL;
+                } else {
+                    unitSystem = ChartDataSetProperties.METRIC;
+                }
+                break;
+        }
+        chart.resetUserChanges();
+        triggerOnDataChanged();
+    }
+
     public void setNewGlideCapValue(float glideCapValue) {
         cappedGlideValueProvider = new CappedTrackPointValueProvider(TrackPointValueProvider.GLIDE_VALUE_PROVIDER, glideCapValue);
         chart.resetUserChanges();
@@ -225,6 +266,7 @@ public class PlotFragment extends Fragment {
         chart.glideChart.saveState(outState);
         outState.putString(XAxisValueProviderWrapper.BUNDLE_KEY, xAxisValueProviderWrapper.getStringValue());
         outState.putFloat(CappedTrackPointValueProvider.BUNDLE_KEY, cappedGlideValueProvider.getCapYValueAt());
+        outState.putString(ChartDataSetProperties.UNIT_BUNDLE_KEY, unitSystem);
     }
 
     @Override
@@ -237,6 +279,7 @@ public class PlotFragment extends Fragment {
                     savedInstanceState.getString(XAxisValueProviderWrapper.BUNDLE_KEY));
             cappedGlideValueProvider = new CappedTrackPointValueProvider(TrackPointValueProvider.GLIDE_VALUE_PROVIDER,
                     savedInstanceState.getFloat(CappedTrackPointValueProvider.BUNDLE_KEY));
+            unitSystem = savedInstanceState.getString(ChartDataSetProperties.UNIT_BUNDLE_KEY);
         }
     }
 

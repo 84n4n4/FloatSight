@@ -41,7 +41,6 @@ import com.watchthybridle.floatsight.ConfigActivity;
 import com.watchthybridle.floatsight.MainActivity;
 import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.data.FlySightTrackData;
-import com.watchthybridle.floatsight.fragment.configeditor.ConfigEditorFragment;
 import com.watchthybridle.floatsight.fragment.plot.PlotFragment;
 import com.watchthybridle.floatsight.fragment.trackpicker.TrackPickerFragment;
 import com.watchthybridle.floatsight.recyclerview.DividerLineDecorator;

@@ -3,6 +3,7 @@ package com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation;
 import android.content.Context;
 import android.support.annotation.ColorRes;
 import android.support.annotation.IdRes;
+import android.support.annotation.StringDef;
 import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.util.Pair;
@@ -13,14 +14,24 @@ import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.csvparser.FlySightTrackPoint;
 import com.watchthybridle.floatsight.data.FlySightTrackData;
 
+import java.lang.annotation.Retention;
 import java.text.DecimalFormat;
 import java.util.List;
+
+import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 public abstract class ChartDataSetProperties {
     public static final DecimalFormat VELOCITY_FORMAT = new DecimalFormat("#0");
     public static final DecimalFormat DISTANCE_FORMAT = new DecimalFormat("###0");
     public static final DecimalFormat GLIDE_FORMAT = new DecimalFormat("#0.00");
     public static final DecimalFormat TIME_FORMAT = new DecimalFormat("00.00");
+
+    @Retention(SOURCE)
+    @StringDef({METRIC, IMPERIAL})
+    public @interface UnitSystem {}
+    public static final String METRIC = "METRIC";
+    public static final String IMPERIAL = "IMPERIAL";
+    public static final String UNIT_BUNDLE_KEY = "UNIT_SYSTEM";
 
     public @IdRes int markerTextView;
     public @StringRes int labelStringResource;
@@ -101,7 +112,7 @@ public abstract class ChartDataSetProperties {
     }
 
     public static class HorizontalVelocityDataSetProperties extends ChartDataSetProperties {
-        public HorizontalVelocityDataSetProperties(TrackPointValueProvider xValueProvider) {
+        public HorizontalVelocityDataSetProperties(TrackPointValueProvider xValueProvider, @UnitSystem String units) {
             super(R.string.hor_velocity_label,
                     R.color.horVelocity,
                     R.string.kmh,
@@ -110,12 +121,16 @@ public abstract class ChartDataSetProperties {
                     R.id.hor_velocity_marker_text_view,
                     RangeValueStrategy.RANGE_AVERAGE,
                     xValueProvider,
-                    TrackPointValueProvider.HOR_VELOCITY_VALUE_PROVIDER);
+                    TrackPointValueProvider.METRIC_HOR_VELOCITY_VALUE_PROVIDER);
+            if(units.equals(IMPERIAL)) {
+                this.yValueProvider = TrackPointValueProvider.IMPERIAL_HOR_VELOCITY_VALUE_PROVIDER;
+                this.unitStringResource = R.string.mph;
+            }
         }
     }
 
     public static class VerticalVelocityDataSetProperties extends ChartDataSetProperties {
-        public VerticalVelocityDataSetProperties(TrackPointValueProvider xValueProvider) {
+        public VerticalVelocityDataSetProperties(TrackPointValueProvider xValueProvider, @UnitSystem String units) {
             super(R.string.vert_velocity_label,
                     R.color.vertVelocity,
                     R.string.kmh,
@@ -124,12 +139,16 @@ public abstract class ChartDataSetProperties {
                     R.id.vert_velocity_marker_text_view,
                     RangeValueStrategy.RANGE_AVERAGE,
                     xValueProvider,
-                    TrackPointValueProvider.VERT_VELOCITY_VALUE_PROVIDER);
+                    TrackPointValueProvider.METRIC_VERT_VELOCITY_VALUE_PROVIDER);
+            if(units.equals(IMPERIAL)) {
+                this.yValueProvider = TrackPointValueProvider.IMPERIAL_VERT_VELOCITY_VALUE_PROVIDER;
+                this.unitStringResource = R.string.mph;
+            }
         }
     }
 
     public static class AltitudeDataSetProperties extends ChartDataSetProperties {
-        public AltitudeDataSetProperties(TrackPointValueProvider xValueProvider) {
+        public AltitudeDataSetProperties(TrackPointValueProvider xValueProvider, @UnitSystem String units) {
             super(R.string.altitude_label,
                     R.color.altitude,
                     R.string.m,
@@ -138,7 +157,11 @@ public abstract class ChartDataSetProperties {
                     R.id.altitude_marker_text_view,
                     RangeValueStrategy.RANGE_DIFFERENTIAL,
                     xValueProvider,
-                    TrackPointValueProvider.ALTITUDE_VALUE_PROVIDER);
+                    TrackPointValueProvider.METRIC_ALTITUDE_VALUE_PROVIDER);
+            if(units.equals(IMPERIAL)) {
+                this.yValueProvider = TrackPointValueProvider.IMPERIAL_ALTITUDE_VALUE_PROVIDER;
+                this.unitStringResource = R.string.ft;
+            }
         }
     }
 
@@ -177,7 +200,7 @@ public abstract class ChartDataSetProperties {
 
 
     public static class DistanceDataSetProperties extends ChartDataSetProperties {
-        public DistanceDataSetProperties(TrackPointValueProvider xValueProvider) {
+        public DistanceDataSetProperties(TrackPointValueProvider xValueProvider, @UnitSystem String units) {
             super(R.string.distance_label,
                     R.color.distance,
                     R.string.m,
@@ -186,7 +209,11 @@ public abstract class ChartDataSetProperties {
                     R.id.distance_marker_text_view,
                     RangeValueStrategy.RANGE_DIFFERENTIAL,
                     xValueProvider,
-                    TrackPointValueProvider.DISTANCE_VALUE_PROVIDER);
+                    TrackPointValueProvider.METRIC_DISTANCE_VALUE_PROVIDER);
+            if(units.equals(IMPERIAL)) {
+                this.yValueProvider = TrackPointValueProvider.IMPERIAL_DISTANCE_VALUE_PROVIDER;
+                this.unitStringResource = R.string.ft;
+            }
         }
 
         @Override

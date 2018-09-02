@@ -31,7 +31,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.configparser.ConfigSetting;
 import com.watchthybridle.floatsight.data.ConfigSettingsData;

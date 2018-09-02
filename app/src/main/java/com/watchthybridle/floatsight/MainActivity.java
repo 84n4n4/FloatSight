@@ -228,6 +228,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void onUnitsDialogCheckboxClicked(View view) {
+        PlotFragment plotFragment =
+                (PlotFragment) getSupportFragmentManager()
+                        .findFragmentByTag(MainActivity.TAG_PLOT_FRAGMENT);
+        if (plotFragment != null) {
+            plotFragment.onUnitsDialogCheckboxClicked(view);
+        }
+    }
+
     @VisibleForTesting
     public FlySightTrackDataViewModel getFlySightTrackDataViewModel() {
         return flySightTrackDataViewModel;

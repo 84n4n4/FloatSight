@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:fillViewport="true">
+    <LinearLayout android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical"
+                  android:layout_marginLeft="20dp"
+                  android:layout_marginTop="20dp">
+        <CheckBox android:id="@+id/checkbox_metric"
+                  style="@style/metricsCheckbox"
+                  android:text="@string/plot_units_metric"
+                  android:checked="true"
+                  android:textColor="@color/black"
+                  android:onClick="onUnitsDialogCheckboxClicked"/>
+        <CheckBox android:id="@+id/checkbox_imperial"
+                  style="@style/metricsCheckbox"
+                  android:text="@string/plot_units_imperial"
+                  android:checked="true"
+                  android:textColor="@color/black"
+                  android:onClick="onUnitsDialogCheckboxClicked"/>
+    </LinearLayout>
+</ScrollView>

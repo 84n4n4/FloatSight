@@ -59,6 +59,9 @@
     <string name="y_axis_dialog_title">Show values for</string>
     <string name="x_axis_dialog_title">Show values by</string>
     <string name="glide_cap_dialog_title">Cap glide at</string>
+    <string name="plot_units_dialog_title">Units</string>
+    <string name="plot_units_metric">Metric</string>
+    <string name="plot_units_imperial">Imperial</string>
 
     <!-- Main menu -->
     <string name="button_import_title">Import</string>
@@ -91,10 +94,13 @@
     <string name="menu_item_x_axis">X-axis</string>
     <string name="menu_item_y_axis">Y-axis</string>
     <string name="menu_item_cap_glide">Glide limit</string>
+    <string name="menu_item_units">Units</string>
 
-    <!-- Units -->
+    <!-- UnitSystem -->
     <string name="kmh">%1$s km/h</string>
+    <string name="mph">%1$s mph</string>
     <string name="m">%1$s m</string>
+    <string name="ft">%1$s ft</string>
     <string name="glide">%1$s</string>
     <string name="seconds">%1$s sec</string>
 

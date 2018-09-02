@@ -24,7 +24,7 @@ public class XAxisValueProviderWrapper {
         this();
         if(type != null) {
             xAxisValueProvider = type.equals(TIME) ?
-                    TrackPointValueProvider.TIME_VALUE_PROVIDER : TrackPointValueProvider.DISTANCE_VALUE_PROVIDER;
+                    TrackPointValueProvider.TIME_VALUE_PROVIDER : TrackPointValueProvider.METRIC_DISTANCE_VALUE_PROVIDER;
         }
     }
 
@@ -33,7 +33,7 @@ public class XAxisValueProviderWrapper {
     }
 
     public boolean isDistance() {
-        return xAxisValueProvider == TrackPointValueProvider.DISTANCE_VALUE_PROVIDER;
+        return xAxisValueProvider == TrackPointValueProvider.METRIC_DISTANCE_VALUE_PROVIDER;
     }
 
     public void setTime() {
@@ -41,7 +41,7 @@ public class XAxisValueProviderWrapper {
     }
 
     public void setDistance() {
-        xAxisValueProvider = TrackPointValueProvider.DISTANCE_VALUE_PROVIDER;
+        xAxisValueProvider = TrackPointValueProvider.METRIC_DISTANCE_VALUE_PROVIDER;
     }
 
     public String getStringValue() {

@@ -3,7 +3,6 @@ package com.watchthybridle.floatsight.viewmodel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import com.watchthybridle.floatsight.data.ConfigSettingsData;
-import com.watchthybridle.floatsight.data.FlySightTrackData;
 
 public class ConfigSettingsDataViewModel extends DataViewModel<ConfigSettingsData> {
 

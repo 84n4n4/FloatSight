@@ -23,15 +23,18 @@ public class ChartDataSetHolder {
     private List<ChartDataSetProperties> dataSetPropertiesList;
     private FlySightTrackData flySightTrackData;
 
-    public ChartDataSetHolder(Context context, FlySightTrackData flySightTrackData,
-                              TrackPointValueProvider xAxisValueProvider, CappedTrackPointValueProvider glideYValueProvider) {
+    public ChartDataSetHolder(Context context,
+                              FlySightTrackData flySightTrackData,
+                              TrackPointValueProvider xAxisValueProvider,
+                              CappedTrackPointValueProvider glideYValueProvider,
+                              @ChartDataSetProperties.UnitSystem String unitSystem) {
         this.flySightTrackData = flySightTrackData;
         dataSetPropertiesList = new ArrayList<>();
-        dataSetPropertiesList.add(new ChartDataSetProperties.VerticalVelocityDataSetProperties(xAxisValueProvider));
-        dataSetPropertiesList.add(new ChartDataSetProperties.HorizontalVelocityDataSetProperties(xAxisValueProvider));
-        dataSetPropertiesList.add(new ChartDataSetProperties.AltitudeDataSetProperties(xAxisValueProvider));
+        dataSetPropertiesList.add(new ChartDataSetProperties.VerticalVelocityDataSetProperties(xAxisValueProvider, unitSystem));
+        dataSetPropertiesList.add(new ChartDataSetProperties.HorizontalVelocityDataSetProperties(xAxisValueProvider, unitSystem));
+        dataSetPropertiesList.add(new ChartDataSetProperties.AltitudeDataSetProperties(xAxisValueProvider, unitSystem));
         dataSetPropertiesList.add(new ChartDataSetProperties.GlideDataSetProperties(xAxisValueProvider, glideYValueProvider));
-        dataSetPropertiesList.add(new ChartDataSetProperties.DistanceDataSetProperties(xAxisValueProvider));
+        dataSetPropertiesList.add(new ChartDataSetProperties.DistanceDataSetProperties(xAxisValueProvider, unitSystem));
         dataSetPropertiesList.add(new ChartDataSetProperties.TimeDataSetProperties(xAxisValueProvider));
         for(ChartDataSetProperties dataSetProperties : dataSetPropertiesList) {
             dataSetProperties.initLineData(context, flySightTrackData);
