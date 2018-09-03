@@ -5,11 +5,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -27,12 +30,15 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.watchthybridle.floatsight.MainActivity.TAG_FILE_PICKER_FRAGMENT;
+import static com.watchthybridle.floatsight.MainActivity.TAG_MAIN_MENU_FRAGMENT;
+
 public class TrackPickerFragment extends Fragment implements ItemClickListener<FileAdapterItem> {
 
     private static final int OPEN = 0;
     private static final int RENAME = 1;
     private static final int DELETE = 2;
-
+    public static final String PATH_BUNDLE_TAG = "PATH_BUNDLE_TAG";
     FileAdapter fileAdapter;
 
     public TrackPickerFragment() {
@@ -59,9 +65,22 @@ public class TrackPickerFragment extends Fragment implements ItemClickListener<F
     @Override
     public void onItemClick(FileAdapterItem fileAdapterItem) {
         if (fileAdapterItem.isEnabled) {
-            Uri uri = Uri.fromFile(fileAdapterItem.file);
-            ((MainActivity) getActivity()).loadFlySightTrackData(uri);
-            getFragmentManager().popBackStackImmediate();
+            if (fileAdapterItem.file.isDirectory()) {
+                Bundle pathBundle = new Bundle();
+                pathBundle.putString(PATH_BUNDLE_TAG, fileAdapterItem.file.getAbsolutePath());
+                TrackPickerFragment fileTrackPickerFragment = new TrackPickerFragment();
+                fileTrackPickerFragment.setArguments(pathBundle);
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction
+                        .replace(R.id.fragment_container, fileTrackPickerFragment,
+                                TAG_FILE_PICKER_FRAGMENT)
+                        .addToBackStack(TAG_FILE_PICKER_FRAGMENT)
+                        .commit();
+            } else {
+                Uri uri = Uri.fromFile(fileAdapterItem.file);
+                ((MainActivity) getActivity()).loadFlySightTrackData(uri);
+                getFragmentManager().popBackStackImmediate(TAG_FILE_PICKER_FRAGMENT, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            }
         }
     }
 
@@ -74,10 +93,17 @@ public class TrackPickerFragment extends Fragment implements ItemClickListener<F
     }
 
     private List<FileAdapterItem> getFiles() {
+
         List<FileAdapterItem> files = new ArrayList<>();
         try {
-            File tracksFolder = ((MainActivity) getActivity()).getTracksFolder();
-            for (File file : tracksFolder.listFiles()) {
+            File folder;
+            if(getArguments() == null || getArguments().getString(PATH_BUNDLE_TAG) == null) {
+                folder = ((MainActivity) getActivity()).getTracksFolder();
+            } else {
+                String pathString = getArguments().getString(PATH_BUNDLE_TAG);
+                folder = new File(pathString);
+            }
+            for (File file : folder.listFiles()) {
                 files.add(new FileAdapterItem(file));
             }
         } catch (FileNotFoundException e) {

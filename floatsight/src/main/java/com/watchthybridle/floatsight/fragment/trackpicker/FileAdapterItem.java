@@ -33,7 +33,7 @@ public class FileAdapterItem {
 	public FileAdapterItem(File file) {
 		this.file = file;
 		this.fileName = file.getName();
-		this.isEnabled = fileName.endsWith(".CSV") || fileName.endsWith(".csv");
+		this.isEnabled = fileName.endsWith(".CSV") || fileName.endsWith(".csv") || file.isDirectory();
 	}
 
 	public void setEnabled(boolean enabled) {

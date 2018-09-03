@@ -86,7 +86,7 @@ public class MainMenuFragment extends Fragment implements MainMenuButtonAdapter.
 		} else if (flySightTrackData.getParsingStatus() == FlySightTrackData.PARSING_ERRORS) {
 			MainMenuDialogs.showErrorMessage(getContext(), R.string.some_errors_parsing_file);
 		} else {
-			Snackbar mySnackbar = Snackbar.make(getView(), R.string.file_import_success, Snackbar.LENGTH_SHORT);
+			Snackbar mySnackbar = Snackbar.make(getView(), R.string.file_open_success, Snackbar.LENGTH_SHORT);
 			mySnackbar.show();
 		}
 		updateButtonVisiblity();
@@ -136,12 +136,6 @@ public class MainMenuFragment extends Fragment implements MainMenuButtonAdapter.
 				case BUTTON_IMPORT:
 					startImportFile();
 					break;
-				case BUTTON_PLOT:
-					showPlotFragment();
-					break;
-				case BUTTON_SAVE:
-					showSaveDialog();
-					break;
 				case BUTTON_LOAD:
 					showFilePickerFragment();
 					break;
@@ -174,7 +168,7 @@ public class MainMenuFragment extends Fragment implements MainMenuButtonAdapter.
 			transaction
 					.replace(R.id.fragment_container, plotFragment,
 							TAG_PLOT_FRAGMENT)
-					.addToBackStack(TAG_MAIN_MENU_FRAGMENT)
+					.addToBackStack(TAG_PLOT_FRAGMENT)
 					.commit();
 		}
 	}
@@ -206,7 +200,7 @@ public class MainMenuFragment extends Fragment implements MainMenuButtonAdapter.
 			transaction
 					.replace(R.id.fragment_container, fileTrackPickerFragment,
 							TAG_FILE_PICKER_FRAGMENT)
-					.addToBackStack(TAG_MAIN_MENU_FRAGMENT)
+					.addToBackStack(TAG_FILE_PICKER_FRAGMENT)
 					.commit();
 		}
 	}

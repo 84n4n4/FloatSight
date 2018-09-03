@@ -23,13 +23,17 @@
 package com.watchthybridle.floatsight;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.ClipData;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.ActivityCompat;
@@ -38,6 +42,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,9 +53,16 @@ import com.watchthybridle.floatsight.datarepository.DataRepository;
 import com.watchthybridle.floatsight.fragment.mainmenu.MainMenuFragment;
 import com.watchthybridle.floatsight.fragment.plot.PlotFragment;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
+import org.apache.commons.lang3.time.DateParser;
+import org.apache.commons.lang3.time.DatePrinter;
+import org.apache.commons.lang3.time.FastDateFormat;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -63,6 +75,9 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int REQUEST_FILE = 666;
     private static final int PERMISSION_REQUEST_CODE = 200;
+
+    private static final DatePrinter DATE_PRINTER = FastDateFormat.getInstance("yyyy-MM-dd'T'HH_mm_ss");
+
 
     private FlySightTrackDataViewModel flySightTrackDataViewModel;
 
@@ -106,14 +121,15 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent()
                     .setType("text/*")
                     .addCategory(Intent.CATEGORY_OPENABLE)
-                    .setAction(Intent.ACTION_OPEN_DOCUMENT);
+                    .setAction(Intent.ACTION_OPEN_DOCUMENT)
+                    .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
             startActivityForResult(Intent.createChooser(intent, "Select a file"), REQUEST_FILE);
         }
     }
 
     public File getTracksFolder() throws FileNotFoundException {
         File folder = new File(Environment.getExternalStorageDirectory() + File.separator
-                + "FloatSight" + File.separator + "tracks");
+                + "FloatSight" + File.separator + "tracks" + File.separator);
         if(!folder.exists()) {
             folder.mkdirs();
         }
@@ -139,11 +155,83 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQUEST_FILE) {
             if(resultCode == RESULT_OK) {
-                loadFlySightTrackData(data.getData());
+                try {
+                    importData(data);
+                    //todo when done open filepicker at that location
+                    //TODO show toast files imported
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    //todo show error message
+                }
             } else {
                 findViewById(R.id.toolbar_progress_bar).setVisibility(View.GONE);
             }
         }
+    }
+
+    //todo move to files importer class
+    //todo make async task
+    private void importData(Intent data) throws IOException {
+        if (data == null) {
+            return;
+        }
+        List<Uri> uriList = new ArrayList<>();
+        ClipData clipData = data.getClipData();
+        if (clipData != null) {
+            for (int index = 0; index < clipData.getItemCount(); index ++) {
+                uriList.add(clipData.getItemAt(index).getUri());
+            }
+        } else {
+            uriList.add(data.getData());
+        }
+        for (Uri uri : uriList) {
+            copyFromUri(uri);
+        }
+    }
+
+    //todo move to files importer class
+    private void copyFromUri(Uri uri) throws IOException {
+        File folder = new File(getTracksFolder(), DATE_PRINTER.format(Calendar.getInstance().getTime()));
+        if(!folder.exists()) {
+            folder.mkdirs();
+        }
+        if(!folder.exists() || !folder.isDirectory()) {
+            throw new FileNotFoundException("Could not access folder on local storage");
+        }
+        String fileName = File.separator + resolveFileName(uri);
+        File outFile = new File(folder, fileName);
+
+        byte[] buffer = new byte[8 * 1024];
+        int length;
+        try (InputStream inputStream = getContentResolver().openInputStream(uri);
+             OutputStream outputStream = new FileOutputStream(outFile)) {
+            while ((length = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, length);
+            }
+        }
+    }
+
+    //todo move to files importer class
+    private String resolveFileName(Uri uri) {
+        String result = null;
+
+        if (uri.getScheme().equals("content")) {
+            try (Cursor cursor = getContentResolver().query(uri, null, null, null, null)) {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
+            }
+        }
+
+        if (result == null) {
+            result = uri.getPath();
+            int cut = result.lastIndexOf('/');
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+            }
+        }
+
+        return result;
     }
 
     public void loadFlySightTrackData(Uri uri) {

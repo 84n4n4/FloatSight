@@ -32,10 +32,10 @@
     <string name="distance_label">Distance</string>
     <string name="time_label">time</string>
 
-    <!-- File import -->
+    <!-- File open and parsing -->
     <string name="some_errors_parsing_file">Had some problems parsing CSV file, liveData may be incomplete or incorrect.</string>
-    <string name="fail_parsing_file">Could not parse CSV file, probably wrong filetype?</string>
-    <string name="file_import_success">Track imported</string>
+    <string name="fail_parsing_file">Could not read CSV file, probably wrong filetype?</string>
+    <string name="file_open_success">Track opened</string>
     <string name="permissions_rationale">Storage access is required to read and save FlySight track liveData.</string>
 
     <!-- General dialog stuff -->
@@ -64,14 +64,16 @@
     <string name="plot_units_imperial">Imperial</string>
 
     <!-- Main menu -->
-    <string name="button_import_title">Import</string>
-    <string name="button_import_description">Import FlySight track file</string>
+    <string name="button_import_title">Import tracks</string>
+    <string name="button_import_description">Import FlySight tracks</string>
+    <string name="button_open_from_location_title">Open track from location</string>
+    <string name="button_open_from_locationt_description">Open track from location</string>
     <string name="button_plot_title">Plot</string>
     <string name="button_plot_description">Show track plot</string>
-    <string name="button_save_title">Save</string>
-    <string name="button_save_description">Save track on local storage</string>
-    <string name="button_load_title">Load</string>
-    <string name="button_load_description">Load track from local storage</string>
+    <string name="button_save_title">Import track</string>
+    <string name="button_save_description">Import %1$s on local storage</string>
+    <string name="button_load_title">Imported tracks</string>
+    <string name="button_load_description">Browse imported tracks</string>
     <string name="button_config_title">Config editor</string>
     <string name="button_config_description">Flysight config editor</string>
     <string name="button_about_title">About</string>
