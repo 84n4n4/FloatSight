@@ -153,14 +153,14 @@ public class MainActivity extends AppCompatActivity {
         repository.load(uri, flySightTrackDataViewModel);
     }
 
-    private boolean checkPermission() {
+    public boolean checkPermission() {
         int result = ContextCompat.checkSelfPermission(getApplicationContext(), READ_EXTERNAL_STORAGE);
         int result1 = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE);
 
         return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED;
     }
 
-    private void requestPermission() {
+    public void requestPermission() {
         ActivityCompat.requestPermissions(this, new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
     }
 

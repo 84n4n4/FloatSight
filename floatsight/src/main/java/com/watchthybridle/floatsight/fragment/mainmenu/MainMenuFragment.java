@@ -140,7 +140,7 @@ public class MainMenuFragment extends Fragment implements MainMenuButtonAdapter.
 					showPlotFragment();
 					break;
 				case BUTTON_SAVE:
-					MainMenuDialogs.showSaveDialog(this, trackDataViewModel.getLiveData().getValue());
+					showSaveDialog();
 					break;
 				case BUTTON_LOAD:
 					showFilePickerFragment();
@@ -165,6 +165,7 @@ public class MainMenuFragment extends Fragment implements MainMenuButtonAdapter.
 		}
 	}
 
+
 	private void showPlotFragment() {
 		FragmentActivity activity = getActivity();
 		if (activity != null) {
@@ -178,9 +179,28 @@ public class MainMenuFragment extends Fragment implements MainMenuButtonAdapter.
 		}
 	}
 
+	private void showSaveDialog() {
+		MainActivity activity = (MainActivity) getActivity();
+		if (activity == null) {
+			return;
+		}
+
+		if (!activity.checkPermission()) {
+			activity.requestPermission();
+		} else {
+			MainMenuDialogs.showSaveDialog(this, trackDataViewModel.getLiveData().getValue());
+		}
+	}
+
 	private void showFilePickerFragment() {
-		FragmentActivity activity = getActivity();
-		if (activity != null) {
+		MainActivity activity = (MainActivity) getActivity();
+		if (activity == null) {
+			return;
+		}
+
+		if (!activity.checkPermission()) {
+			activity.requestPermission();
+		} else {
 			TrackPickerFragment fileTrackPickerFragment = new TrackPickerFragment();
 			FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
 			transaction

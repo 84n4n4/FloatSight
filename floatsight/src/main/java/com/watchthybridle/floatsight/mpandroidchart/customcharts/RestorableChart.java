@@ -37,6 +37,7 @@ public class RestorableChart extends LineChart {
             int index = 0;
             for (ParcelableLineDataSetVisibility parcelableLineDataSetVisibility : restoredLineDataVisibility) {
                 parcelableLineDataSetVisibility.setLineDataSetVisibily(getLineData().getDataSetByIndex(index));
+                index++;
             }
             for (ParcelableHighlight parcelableHighlight : restoredHighlights) {
                 highlightValue(parcelableHighlight.getHighLight());
