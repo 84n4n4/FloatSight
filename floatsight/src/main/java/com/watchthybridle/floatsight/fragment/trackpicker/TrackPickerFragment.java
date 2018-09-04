@@ -79,9 +79,12 @@ public class TrackPickerFragment extends Fragment implements ItemClickListener<F
                         .addToBackStack(TAG_FILE_PICKER_FRAGMENT)
                         .commit();
             } else {
-                Uri uri = Uri.fromFile(fileAdapterItem.file);
-                ((MainActivity) getActivity()).loadFlySightTrackData(uri);
-                showTrackMenuFragment();
+                MainActivity mainActivity = ((MainActivity) getActivity());
+                if(mainActivity != null) {
+                    Uri uri = Uri.fromFile(fileAdapterItem.file);
+                    mainActivity.loadFlySightTrackData(uri);
+                    showTrackMenuFragment();
+                }
             }
         }
     }
@@ -108,7 +111,6 @@ public class TrackPickerFragment extends Fragment implements ItemClickListener<F
     }
 
     private List<FileAdapterItem> getFiles() {
-
         List<FileAdapterItem> files = new ArrayList<>();
         try {
             File folder;

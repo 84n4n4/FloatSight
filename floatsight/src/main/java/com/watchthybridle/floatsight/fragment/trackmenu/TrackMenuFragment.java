@@ -27,7 +27,6 @@ import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -36,7 +35,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.watchthybridle.floatsight.MainActivity;
 import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.data.FlySightTrackData;
 import com.watchthybridle.floatsight.fragment.ButtonAdapter;
@@ -45,6 +43,8 @@ import com.watchthybridle.floatsight.fragment.Dialogs;
 import com.watchthybridle.floatsight.fragment.plot.PlotFragment;
 import com.watchthybridle.floatsight.recyclerview.DividerLineDecorator;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
+import org.apache.commons.lang3.time.DatePrinter;
+import org.apache.commons.lang3.time.FastDateFormat;
 
 import java.lang.annotation.Retention;
 import java.util.ArrayList;
@@ -57,11 +57,14 @@ public class TrackMenuFragment extends Fragment implements ButtonAdapter.ButtonI
 	@Retention(SOURCE)
 	@IntDef({BUTTON_PLOT, BUTTON_STATS})
 	private @interface TrackButtonId {}
-	private static final int BUTTON_PLOT = 0;
-	private static final int BUTTON_STATS = 1;
+	private static final int BUTTON_LABEL = 0;
+	private static final int BUTTON_PLOT = 1;
+	private static final int BUTTON_STATS = 2;
 
 	private FlySightTrackDataViewModel trackDataViewModel;
 	private ButtonAdapter buttonAdapter;
+
+	private static final DatePrinter PRETTY_DATE_PRINTER = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
 
 	public TrackMenuFragment() {
 	}
@@ -76,27 +79,37 @@ public class TrackMenuFragment extends Fragment implements ButtonAdapter.ButtonI
 	}
 
 	protected void actOnDataChanged(FlySightTrackData flySightTrackData) {
+		updateButtons();
 		if (flySightTrackData.getFlySightTrackPoints().isEmpty()
 				|| flySightTrackData.getParsingStatus() == FlySightTrackData.PARSING_FAIL) {
 			Dialogs.showErrorMessage(getContext(), R.string.fail_parsing_file);
-			buttonAdapter.buttonItems.get(BUTTON_PLOT).setEnabled(false);
-			buttonAdapter.buttonItems.get(BUTTON_STATS).setEnabled(false);
-		} else {
-			if (flySightTrackData.getParsingStatus() == FlySightTrackData.PARSING_ERRORS) {
+			ButtonItem labelButton = buttonAdapter.buttonItems.get(BUTTON_LABEL);
+			labelButton.overrideTitle = getString(R.string.button_label_parsing_error);
+			labelButton.overrideDescription = getString(R.string.fail_parsing_file);
+		} else if (flySightTrackData.getParsingStatus() == FlySightTrackData.PARSING_ERRORS) {
 				Dialogs.showErrorMessage(getContext(), R.string.some_errors_parsing_file);
-			}
-			buttonAdapter.buttonItems.get(BUTTON_PLOT).setEnabled(true);
-			buttonAdapter.buttonItems.get(BUTTON_STATS).setEnabled(true);
 		}
-		buttonAdapter.notifyDataSetChanged();
 	}
 
-	public void setToolbarInfoText(FlySightTrackData flySightTrackData) {
-		MainActivity mainActivity = (MainActivity) getActivity();
-		if(mainActivity != null) {
-			mainActivity.getSupportActionBar().setSubtitle(flySightTrackData.getSourceFileName());
-			mainActivity.findViewById(R.id.toolbar_progress_bar).setVisibility(View.GONE);
+	public void updateButtons() {
+		ButtonItem labelButton = buttonAdapter.buttonItems.get(BUTTON_LABEL);
+		ButtonItem plotButton = buttonAdapter.buttonItems.get(BUTTON_PLOT);
+		ButtonItem statsButton = buttonAdapter.buttonItems.get(BUTTON_STATS);
+		if (trackDataViewModel.containsValidData()) {
+			FlySightTrackData flySightTrackData = trackDataViewModel.getLiveData().getValue();
+			labelButton.overrideTitle = getString(R.string.button_label_filename, flySightTrackData.getSourceFileName());
+			long unixStartTime = flySightTrackData.getFlySightTrackPoints().get(0).unixTimeStamp;
+			String formattedTime = PRETTY_DATE_PRINTER.format(unixStartTime);
+			labelButton.overrideDescription = getString(R.string.button_label_start_time, formattedTime);
+			plotButton.setEnabled(true);
+			statsButton.setEnabled(true);
+		} else {
+			labelButton.overrideTitle = getString(R.string.button_label_empty);
+			labelButton.overrideDescription = getString(R.string.button_label_empty);
+			plotButton.setEnabled(false);
+			statsButton.setEnabled(false);
 		}
+		buttonAdapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -108,20 +121,20 @@ public class TrackMenuFragment extends Fragment implements ButtonAdapter.ButtonI
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.main_menu_button_list_view);
+		RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.button_list_view);
 		recyclerView.setHasFixedSize(true);
 		RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
 		recyclerView.setLayoutManager(layoutManager);
         buttonAdapter = new ButtonAdapter(getButtons());
         buttonAdapter.setButtonItemClickListener(this);
-		buttonAdapter.buttonItems.get(BUTTON_PLOT).setEnabled(false);
-		buttonAdapter.buttonItems.get(BUTTON_STATS).setEnabled(false);
 		recyclerView.setAdapter(buttonAdapter);
 		recyclerView.addItemDecoration(new DividerLineDecorator(view.getContext()));
+		updateButtons();
 	}
 
 	private List<ButtonItem> getButtons() {
 		List<ButtonItem> trackMenuButtonList = new ArrayList<>();
+		trackMenuButtonList.add(new ButtonItem(BUTTON_LABEL, R.string.button_label_empty, R.string.button_label_empty, R.drawable.plot));
 		trackMenuButtonList.add(new ButtonItem(BUTTON_PLOT, R.string.button_plot_title, R.string.button_plot_description, R.drawable.plot));
 		trackMenuButtonList.add(new ButtonItem(BUTTON_STATS, R.string.button_stats_title, R.string.button_stats_description, R.drawable.plot));
 		return trackMenuButtonList;

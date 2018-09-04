@@ -24,7 +24,6 @@ package com.watchthybridle.floatsight;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ClipData;
-import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -42,7 +41,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -53,15 +51,12 @@ import com.watchthybridle.floatsight.datarepository.DataRepository;
 import com.watchthybridle.floatsight.fragment.mainmenu.MainMenuFragment;
 import com.watchthybridle.floatsight.fragment.plot.PlotFragment;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
-import org.apache.commons.lang3.time.DateParser;
 import org.apache.commons.lang3.time.DatePrinter;
 import org.apache.commons.lang3.time.FastDateFormat;
 
 import java.io.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -98,6 +93,13 @@ public class MainActivity extends AppCompatActivity {
 		}
 
         flySightTrackDataViewModel = ViewModelProviders.of(this).get(FlySightTrackDataViewModel.class);
+        flySightTrackDataViewModel.getLiveData()
+                .observe(this, flySightTrackData -> actOnDataChanged(flySightTrackData));
+        FlySightTrackData flySightTrackData = flySightTrackDataViewModel.getLiveData().getValue();
+    }
+
+    public void actOnDataChanged(FlySightTrackData flySightTrackData) {
+        findViewById(R.id.toolbar_progress_bar).setVisibility(View.GONE);
     }
 
     private void showMainMenuFragment() {

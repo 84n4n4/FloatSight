@@ -35,6 +35,8 @@ import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.recyclerview.ItemClickListener;
 
 import java.io.File;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileAdapterViewHolder> {
@@ -44,10 +46,21 @@ class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileAdapterViewHolder
 
     FileAdapter(List<FileAdapterItem> fileAdapterItems) {
         this.fileAdapterItems = fileAdapterItems;
+        sort();
     }
 
     public void setItemClickListener(ItemClickListener<FileAdapterItem> itemClickListener) {
         this.itemClickListener = itemClickListener;
+    }
+
+    private void sort() {
+        Collections.sort(fileAdapterItems, new Comparator<FileAdapterItem>() {
+            @Override
+            public int compare(FileAdapterItem fileItem1, FileAdapterItem fileItem2)
+            {
+                return fileItem1.fileName.compareTo(fileItem2.fileName);
+            }
+        });
     }
 
     @Override
@@ -97,6 +110,7 @@ class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileAdapterViewHolder
         if (item.file.renameTo(renamedFile)) {
             item.file = renamedFile;
             item.fileName = newFileName;
+            sort();
             notifyItemChanged(fileAdapterItems.indexOf(item));
         }
     }

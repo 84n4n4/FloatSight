@@ -38,6 +38,7 @@
     <string name="file_open_success">Track opened</string>
     <string name="permissions_rationale">Storage access is required to read and save FlySight track liveData.</string>
 
+
     <!-- General dialog stuff -->
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
@@ -74,6 +75,10 @@
     <string name="button_about_description">About this app</string>
 
     <!-- Track menu -->
+    <string name="button_label_filename">File: %1$s</string>
+    <string name="button_label_empty"> </string>
+    <string name="button_label_parsing_error">Could not read file.</string>
+    <string name="button_label_start_time">Time: %1$s</string>
     <string name="button_plot_title">Plot</string>
     <string name="button_plot_description">Show track plot</string>
     <string name="button_stats_title">Stats</string>

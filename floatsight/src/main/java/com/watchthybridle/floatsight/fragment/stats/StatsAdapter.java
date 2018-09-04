@@ -21,7 +21,7 @@
  *
  */
 
-package com.watchthybridle.floatsight.fragment;
+package com.watchthybridle.floatsight.fragment.stats;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -35,17 +35,12 @@ import com.watchthybridle.floatsight.R;
 
 import java.util.List;
 
-public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.ButtonViewHolder> {
-    public List<ButtonItem> buttonItems;
-    private ButtonItemClickListener buttonItemClickListener;
+public class StatsAdapter extends RecyclerView.Adapter<StatsAdapter.ButtonViewHolder> {
+    public List<StatsItem> statsItems;
 
-	public ButtonAdapter(List<ButtonItem> buttonItem) {
-        this.buttonItems = buttonItem;
+	public StatsAdapter(List<StatsItem> statsItem) {
+        this.statsItems = statsItem;
 	}
-
-    public void setButtonItemClickListener(ButtonItemClickListener buttonItemClickListener) {
-        this.buttonItemClickListener = buttonItemClickListener;
-    }
 
     @Override
     @NonNull
@@ -57,41 +52,23 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.ButtonView
 
     @Override
     public void onBindViewHolder(@NonNull ButtonViewHolder holder, int position) {
-	    ButtonItem buttonItem = buttonItems.get(position);
-	    if(buttonItem.overrideTitle == null) {
-            holder.title.setText(buttonItem.title);
+	    StatsItem statsItem = statsItems.get(position);
+	    if(statsItem.overrideTitle == null) {
+            holder.title.setText(statsItem.title);
         } else {
-            holder.title.setText(buttonItem.overrideTitle);
+            holder.title.setText(statsItem.overrideTitle);
         }
-        if(buttonItem.overrideDescription == null) {
-            holder.description.setText(buttonItem.description);
+        if(statsItem.overrideDescription == null) {
+            holder.description.setText(statsItem.description);
         } else {
-            holder.description.setText(buttonItem.overrideDescription);
+            holder.description.setText(statsItem.overrideDescription);
         }
-        holder.icon.setImageResource(buttonItem.icon);
-        holder.title.setEnabled(buttonItem.isEnabled);
-        holder.description.setEnabled(buttonItem.isEnabled);
-        holder.icon.setEnabled(buttonItem.isEnabled);
-        holder.itemView.setOnClickListener(new ViewOnClickListener(buttonItems.get(position)));
-
+        holder.icon.setImageResource(statsItem.icon);
     }
 
     @Override
     public int getItemCount() {
-        return buttonItems.size();
-    }
-
-    private class ViewOnClickListener implements View.OnClickListener {
-	    ButtonItem buttonItem;
-
-	    ViewOnClickListener(ButtonItem buttonItem) {
-	        this.buttonItem = buttonItem;
-        }
-
-        @Override
-        public void onClick(View v) {
-            buttonItemClickListener.onItemClick(buttonItem);
-        }
+        return statsItems.size();
     }
 
     public class ButtonViewHolder extends RecyclerView.ViewHolder {
@@ -105,8 +82,4 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.ButtonView
             icon = itemView.findViewById(R.id.button_icon);
         }
 	}
-
-    public interface ButtonItemClickListener {
-        void onItemClick(ButtonItem buttonItem);
-    }
 }

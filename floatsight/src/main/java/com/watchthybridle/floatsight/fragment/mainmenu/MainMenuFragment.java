@@ -22,13 +22,11 @@
 
 package com.watchthybridle.floatsight.fragment.mainmenu;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -39,13 +37,11 @@ import android.view.ViewGroup;
 import com.watchthybridle.floatsight.ConfigActivity;
 import com.watchthybridle.floatsight.MainActivity;
 import com.watchthybridle.floatsight.R;
-import com.watchthybridle.floatsight.data.FlySightTrackData;
 import com.watchthybridle.floatsight.fragment.ButtonAdapter;
 import com.watchthybridle.floatsight.fragment.ButtonItem;
 import com.watchthybridle.floatsight.fragment.Dialogs;
 import com.watchthybridle.floatsight.fragment.trackpicker.TrackPickerFragment;
 import com.watchthybridle.floatsight.recyclerview.DividerLineDecorator;
-import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
 
 import java.lang.annotation.Retention;
 import java.util.ArrayList;
@@ -83,7 +79,7 @@ public class MainMenuFragment extends Fragment implements ButtonAdapter.ButtonIt
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.main_menu_button_list_view);
+		RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.button_list_view);
 		recyclerView.setHasFixedSize(true);
 		RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
 		recyclerView.setLayoutManager(layoutManager);

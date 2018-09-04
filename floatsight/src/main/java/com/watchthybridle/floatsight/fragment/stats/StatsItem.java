@@ -20,28 +20,21 @@
  *
  */
 
-package com.watchthybridle.floatsight.fragment;
+package com.watchthybridle.floatsight.fragment.stats;
 
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 
-public class ButtonItem {
+public class StatsItem {
 	public @StringRes int title;
 	public @StringRes int description;
 	public @DrawableRes int icon;
-	public boolean isEnabled = true;
-	public int id;
 	public String overrideTitle = null;
 	public String overrideDescription = null;
 
-	public ButtonItem(int id, @StringRes int title, @StringRes int description, @DrawableRes int icon) {
+	public StatsItem(@StringRes int title, @StringRes int description, @DrawableRes int icon) {
 		this.title = title;
 		this.description = description;
-		this.id = id;
 		this.icon = icon;
-	}
-
-	public void setEnabled(boolean enabled) {
-		isEnabled = enabled;
 	}
 }

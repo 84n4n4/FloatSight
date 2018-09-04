@@ -89,6 +89,9 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
         this.getAxisRight().setYOffset(5);
         glideChart.getAxisLeft().setYOffset(-5);
         glideChart.getAxisRight().setYOffset(-5);
+
+        glideChart.getAxisLeft().setDrawTopYLabelEntry(false);
+        glideChart.getAxisRight().setDrawTopYLabelEntry(false);
     }
 
     private void setAxisLabelCount() {
