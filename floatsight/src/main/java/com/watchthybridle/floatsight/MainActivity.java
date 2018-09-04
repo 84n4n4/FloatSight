@@ -22,7 +22,6 @@
 
 package com.watchthybridle.floatsight;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -34,7 +33,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -45,12 +44,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import com.watchthybridle.floatsight.csvparser.FlySightCsvParser;
-import com.watchthybridle.floatsight.data.FlySightTrackData;
-import com.watchthybridle.floatsight.datarepository.DataRepository;
 import com.watchthybridle.floatsight.fragment.mainmenu.MainMenuFragment;
-import com.watchthybridle.floatsight.fragment.plot.PlotFragment;
-import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
 import org.apache.commons.lang3.time.DatePrinter;
 import org.apache.commons.lang3.time.FastDateFormat;
 
@@ -64,18 +58,13 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String TAG_PLOT_FRAGMENT = "TAG_PLOT_FRAGMENT";
     public static final String TAG_FILE_PICKER_FRAGMENT = "TAG_FILE_PICKER_FRAGMENT";
     public static final String TAG_MAIN_MENU_FRAGMENT = "TAG_MAIN_MENU_FRAGMENT";
-    public static final String TAG_TRACK_MENU_FRAGMENT = "TAG_TRACK_MENU_FRAGMENT";
 
     public static final int REQUEST_FILE = 666;
     private static final int PERMISSION_REQUEST_CODE = 200;
 
     private static final DatePrinter DATE_PRINTER = FastDateFormat.getInstance("yyyy-MM-dd'T'HH_mm_ss");
-
-
-    private FlySightTrackDataViewModel flySightTrackDataViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,15 +80,6 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             showMainMenuFragment();
 		}
-
-        flySightTrackDataViewModel = ViewModelProviders.of(this).get(FlySightTrackDataViewModel.class);
-        flySightTrackDataViewModel.getLiveData()
-                .observe(this, flySightTrackData -> actOnDataChanged(flySightTrackData));
-        FlySightTrackData flySightTrackData = flySightTrackDataViewModel.getLiveData().getValue();
-    }
-
-    public void actOnDataChanged(FlySightTrackData flySightTrackData) {
-        findViewById(R.id.toolbar_progress_bar).setVisibility(View.GONE);
     }
 
     private void showMainMenuFragment() {
@@ -154,7 +134,8 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     importData(data);
                     //todo when done open filepicker at that location
-                    //TODO show toast files imported
+                    Snackbar mySnackbar = Snackbar.make(findViewById(R.id.fragment_container), R.string.file_import_success, Snackbar.LENGTH_SHORT);
+                    mySnackbar.show();
                 } catch (IOException e) {
                     e.printStackTrace();
                     //todo show error message
@@ -230,13 +211,6 @@ public class MainActivity extends AppCompatActivity {
         return result;
     }
 
-    public void loadFlySightTrackData(Uri uri) {
-        findViewById(R.id.toolbar_progress_bar).setVisibility(View.VISIBLE);
-        DataRepository<FlySightTrackData> repository =
-                new DataRepository<>(FlySightTrackData.class, getContentResolver(), new FlySightCsvParser());
-        repository.load(uri, flySightTrackDataViewModel);
-    }
-
     public boolean checkPermission() {
         int result = ContextCompat.checkSelfPermission(getApplicationContext(), READ_EXTERNAL_STORAGE);
         int result1 = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE);
@@ -292,37 +266,5 @@ public class MainActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
-    }
-
-    public void onYAxisDialogCheckboxClicked(View view) {
-        PlotFragment plotFragment =
-                (PlotFragment) getSupportFragmentManager()
-                        .findFragmentByTag(MainActivity.TAG_PLOT_FRAGMENT);
-        if (plotFragment != null) {
-            plotFragment.onYAxisDialogCheckboxClicked(view);
-        }
-    }
-
-    public void onXAxisDialogCheckboxClicked(View view) {
-        PlotFragment plotFragment =
-                (PlotFragment) getSupportFragmentManager()
-                        .findFragmentByTag(MainActivity.TAG_PLOT_FRAGMENT);
-        if (plotFragment != null) {
-            plotFragment.onXAxisDialogCheckboxClicked(view);
-        }
-    }
-
-    public void onUnitsDialogCheckboxClicked(View view) {
-        PlotFragment plotFragment =
-                (PlotFragment) getSupportFragmentManager()
-                        .findFragmentByTag(MainActivity.TAG_PLOT_FRAGMENT);
-        if (plotFragment != null) {
-            plotFragment.onUnitsDialogCheckboxClicked(view);
-        }
-    }
-
-    @VisibleForTesting
-    public FlySightTrackDataViewModel getFlySightTrackDataViewModel() {
-        return flySightTrackDataViewModel;
     }
 }

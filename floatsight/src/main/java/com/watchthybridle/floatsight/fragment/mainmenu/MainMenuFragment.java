@@ -47,7 +47,7 @@ import java.lang.annotation.Retention;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.watchthybridle.floatsight.MainActivity.*;
+import static com.watchthybridle.floatsight.MainActivity.TAG_FILE_PICKER_FRAGMENT;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 public class MainMenuFragment extends Fragment implements ButtonAdapter.ButtonItemClickListener {
@@ -92,7 +92,7 @@ public class MainMenuFragment extends Fragment implements ButtonAdapter.ButtonIt
 	private List<ButtonItem> getButtons() {
 		List<ButtonItem> mainMenuButtonList = new ArrayList<>();
 		mainMenuButtonList.add(new ButtonItem(BUTTON_IMPORT, R.string.button_import_title, R.string.button_import_description, R.drawable.import_grey));
-        mainMenuButtonList.add(new ButtonItem(BUTTON_LOAD, R.string.button_load_title, R.string.button_load_description, R.drawable.load));
+        mainMenuButtonList.add(new ButtonItem(BUTTON_LOAD, R.string.button_load_title, R.string.button_load_description, R.drawable.folder));
 		mainMenuButtonList.add(new ButtonItem(BUTTON_CONFIG, R.string.button_config_title, R.string.button_config_description, R.drawable.config));
 		mainMenuButtonList.add(new ButtonItem(BUTTON_ABOUT, R.string.button_about_title, R.string.button_about_description, R.drawable.info));
 		return mainMenuButtonList;

@@ -30,6 +30,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -40,109 +41,67 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.TextView;
-import com.watchthybridle.floatsight.configparser.ConfigParser;
-import com.watchthybridle.floatsight.data.ConfigSettingsData;
+import com.watchthybridle.floatsight.csvparser.FlySightCsvParser;
+import com.watchthybridle.floatsight.data.FlySightTrackData;
 import com.watchthybridle.floatsight.datarepository.DataRepository;
-import com.watchthybridle.floatsight.fragment.configeditor.ConfigEditorFragment;
-import com.watchthybridle.floatsight.viewmodel.ConfigSettingsDataViewModel;
+import com.watchthybridle.floatsight.fragment.plot.PlotFragment;
+import com.watchthybridle.floatsight.fragment.trackmenu.TrackMenuFragment;
+import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 
-public class ConfigActivity extends AppCompatActivity {
+public class TrackActivity extends AppCompatActivity {
 
-    public static final String TAG_CONFIG_FRAGMENT = "TAG_CONFIG_FRAGMENT";
+    public static final String TAG_PLOT_FRAGMENT = "TAG_PLOT_FRAGMENT";
+    public static final String TAG_TRACK_MENU_FRAGMENT = "TAG_TRACK_MENU_FRAGMENT";
+    public static final String TRACK_FILE_URI = "TRACK_FILE_URI";
 
-    public static final int REQUEST_CONFIG_FILE = 777;
     private static final int PERMISSION_REQUEST_CODE = 200;
-    private View importButton;
-    private View saveButton;
 
-    private ConfigSettingsDataViewModel configSettingsDataViewModel;
+    private FlySightTrackDataViewModel flySightTrackDataViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_config);
+        setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        importButton = findViewById(R.id.load_button_linear_layout);
-        ((TextView) importButton.findViewById(R.id.button_title)).setText(R.string.button_config_import_title);
-        ((TextView) importButton.findViewById(R.id.button_description)).setText(R.string.button_config_import_description);
-        ((ImageView) importButton.findViewById(R.id.button_icon)).setImageResource(R.drawable.import_grey);
-        importButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startImportFile();
-            }
-        });
+        if (savedInstanceState == null) {
+            showTrackMenuFragment();
+		}
 
-        saveButton = findViewById(R.id.save_button_linear_layout);
-        ((TextView) saveButton.findViewById(R.id.button_title)).setText(R.string.button_config_save_title);
-        ((TextView) saveButton.findViewById(R.id.button_description)).setText(R.string.button_config_save_description);
-        ((ImageView) saveButton.findViewById(R.id.button_icon)).setImageResource(R.drawable.disk);
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO save file
-                finish();
-            }
-        });
-
-        configSettingsDataViewModel = ViewModelProviders.of(this).get(ConfigSettingsDataViewModel.class);
-        configSettingsDataViewModel.getLiveData()
-                .observe(this, settingsData -> actOnDataChanged(settingsData));
-
-        updateButtonVisibility();
+        flySightTrackDataViewModel = ViewModelProviders.of(this).get(FlySightTrackDataViewModel.class);
+        flySightTrackDataViewModel.getLiveData()
+                .observe(this, flySightTrackData -> actOnDataChanged(flySightTrackData));
     }
 
-    public void actOnDataChanged(ConfigSettingsData configData) {
-        getSupportActionBar().setSubtitle(configData.getSourceFileName());
-        findViewById(R.id.toolbar_progress_bar).setVisibility(GONE);
-
-        if(configSettingsDataViewModel.containsValidData()) {
-            showConfigEditorFragment();
-        }
-        updateButtonVisibility();
-    }
-
-    private void updateButtonVisibility() {
-        if(configSettingsDataViewModel.containsValidData()) {
-            importButton.setVisibility(GONE);
-            saveButton.setVisibility(VISIBLE);
-        } else {
-            importButton.setVisibility(VISIBLE);
-            saveButton.setVisibility(GONE);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(flySightTrackDataViewModel.getLiveData().getValue() == null) {
+            Bundle extras = getIntent().getExtras();
+            Uri trackFileUri = Uri.parse(extras.getString(TRACK_FILE_URI));
+            loadFlySightTrackData(trackFileUri);
         }
     }
 
-    private void showConfigEditorFragment() {
-        ConfigEditorFragment configEditorFragment = new ConfigEditorFragment();
+    public void actOnDataChanged(FlySightTrackData flySightTrackData) {
+        findViewById(R.id.toolbar_progress_bar).setVisibility(View.GONE);
+    }
+
+    private void showTrackMenuFragment() {
+        TrackMenuFragment trackMenuFragment = new TrackMenuFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, configEditorFragment,
-                TAG_CONFIG_FRAGMENT);
-        transaction.commit();
-    }
-
-    public void startImportFile() {
-        if (!checkPermission()) {
-            requestPermission();
-        } else {
-            Intent intent = new Intent()
-                    .setType("text/*")
-                    .addCategory(Intent.CATEGORY_OPENABLE)
-                    .setAction(Intent.ACTION_OPEN_DOCUMENT);
-            startActivityForResult(Intent.createChooser(intent, "Select a file"), REQUEST_CONFIG_FILE);
-        }
+        transaction
+                .replace(R.id.fragment_container, trackMenuFragment,
+                        TAG_TRACK_MENU_FRAGMENT)
+                .commit();
     }
 
     @Override
@@ -159,30 +118,23 @@ public class ConfigActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_CONFIG_FILE) {
-            if(resultCode == RESULT_OK) {
-                loadFlySightConfigData(data.getData());
-            } else {
-                findViewById(R.id.toolbar_progress_bar).setVisibility(GONE);
-            }
-        }
     }
 
-    public void loadFlySightConfigData(Uri uri) {
-        findViewById(R.id.toolbar_progress_bar).setVisibility(VISIBLE);
-        DataRepository<ConfigSettingsData> repository =
-                new DataRepository<>(ConfigSettingsData.class, getContentResolver(), new ConfigParser());
-        repository.load(uri, configSettingsDataViewModel);
+    public void loadFlySightTrackData(Uri uri) {
+        findViewById(R.id.toolbar_progress_bar).setVisibility(View.VISIBLE);
+        DataRepository<FlySightTrackData> repository =
+                new DataRepository<>(FlySightTrackData.class, getContentResolver(), new FlySightCsvParser());
+        repository.load(uri, flySightTrackDataViewModel);
     }
 
-    private boolean checkPermission() {
+    public boolean checkPermission() {
         int result = ContextCompat.checkSelfPermission(getApplicationContext(), READ_EXTERNAL_STORAGE);
         int result1 = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE);
 
         return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED;
     }
 
-    private void requestPermission() {
+    public void requestPermission() {
         ActivityCompat.requestPermissions(this, new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
     }
 
@@ -218,7 +170,7 @@ public class ConfigActivity extends AppCompatActivity {
         }
 
     private void showAlertOKCancel(String message, DialogInterface.OnClickListener okListener) {
-        new AlertDialog.Builder(ConfigActivity.this)
+        new AlertDialog.Builder(TrackActivity.this)
                 .setMessage(message)
                 .setPositiveButton(R.string.ok, okListener)
                 .setNegativeButton(R.string.cancel, null)
@@ -230,5 +182,37 @@ public class ConfigActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    public void onYAxisDialogCheckboxClicked(View view) {
+        PlotFragment plotFragment =
+                (PlotFragment) getSupportFragmentManager()
+                        .findFragmentByTag(TrackActivity.TAG_PLOT_FRAGMENT);
+        if (plotFragment != null) {
+            plotFragment.onYAxisDialogCheckboxClicked(view);
+        }
+    }
+
+    public void onXAxisDialogCheckboxClicked(View view) {
+        PlotFragment plotFragment =
+                (PlotFragment) getSupportFragmentManager()
+                        .findFragmentByTag(TrackActivity.TAG_PLOT_FRAGMENT);
+        if (plotFragment != null) {
+            plotFragment.onXAxisDialogCheckboxClicked(view);
+        }
+    }
+
+    public void onUnitsDialogCheckboxClicked(View view) {
+        PlotFragment plotFragment =
+                (PlotFragment) getSupportFragmentManager()
+                        .findFragmentByTag(TrackActivity.TAG_PLOT_FRAGMENT);
+        if (plotFragment != null) {
+            plotFragment.onUnitsDialogCheckboxClicked(view);
+        }
+    }
+
+    @VisibleForTesting
+    public FlySightTrackDataViewModel getFlySightTrackDataViewModel() {
+        return flySightTrackDataViewModel;
     }
 }

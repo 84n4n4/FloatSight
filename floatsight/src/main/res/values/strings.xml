@@ -35,6 +35,7 @@
     <!-- File open and parsing -->
     <string name="some_errors_parsing_file">Had some problems parsing CSV file, liveData may be incomplete or incorrect.</string>
     <string name="fail_parsing_file">Could not read CSV file, probably wrong filetype?</string>
+    <string name="file_import_success">Tracks imported!</string>
     <string name="file_open_success">Track opened</string>
     <string name="permissions_rationale">Storage access is required to read and save FlySight track liveData.</string>
 
@@ -78,7 +79,7 @@
     <string name="button_label_filename">File: %1$s</string>
     <string name="button_label_empty"> </string>
     <string name="button_label_parsing_error">Could not read file.</string>
-    <string name="button_label_start_time">Time: %1$s</string>
+    <string name="button_label_start_time">Date: %1$s</string>
     <string name="button_plot_title">Plot</string>
     <string name="button_plot_description">Show track plot</string>
     <string name="button_stats_title">Stats</string>

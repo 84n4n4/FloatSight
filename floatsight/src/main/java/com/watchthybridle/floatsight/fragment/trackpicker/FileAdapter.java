@@ -78,9 +78,9 @@ class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileAdapterViewHolder
 
         if (fileAdapterItems.get(position).isEnabled) {
             if(fileAdapterItems.get(position).file.isDirectory()) {
-                holder.fileIcon.setImageResource(R.drawable.load);
+                holder.fileIcon.setImageResource(R.drawable.folder_file_picker);
             } else {
-                holder.fileIcon.setImageResource(R.drawable.ic_flysight_tile);
+                holder.fileIcon.setImageResource(R.drawable.disk_file_picker);
             }
         } else {
             holder.fileIcon.setImageResource(R.drawable.ic_flysight_tile_greyed);

@@ -3,16 +3,14 @@ package com.watchthybridle.floatsight.fragment.trackpicker;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
@@ -23,8 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.watchthybridle.floatsight.MainActivity;
 import com.watchthybridle.floatsight.R;
-import com.watchthybridle.floatsight.fragment.plot.PlotFragment;
-import com.watchthybridle.floatsight.fragment.trackmenu.TrackMenuFragment;
+import com.watchthybridle.floatsight.TrackActivity;
 import com.watchthybridle.floatsight.recyclerview.DividerLineDecorator;
 import com.watchthybridle.floatsight.recyclerview.ItemClickListener;
 
@@ -33,7 +30,8 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.watchthybridle.floatsight.MainActivity.*;
+import static com.watchthybridle.floatsight.MainActivity.TAG_FILE_PICKER_FRAGMENT;
+import static com.watchthybridle.floatsight.TrackActivity.TRACK_FILE_URI;
 
 public class TrackPickerFragment extends Fragment implements ItemClickListener<FileAdapterItem> {
 
@@ -79,28 +77,13 @@ public class TrackPickerFragment extends Fragment implements ItemClickListener<F
                         .addToBackStack(TAG_FILE_PICKER_FRAGMENT)
                         .commit();
             } else {
-                MainActivity mainActivity = ((MainActivity) getActivity());
-                if(mainActivity != null) {
-                    Uri uri = Uri.fromFile(fileAdapterItem.file);
-                    mainActivity.loadFlySightTrackData(uri);
-                    showTrackMenuFragment();
-                }
+                Intent showTrackIntent = new Intent(getActivity(), TrackActivity.class);
+                showTrackIntent.putExtra(TRACK_FILE_URI, Uri.fromFile(fileAdapterItem.file).toString());
+                startActivity(showTrackIntent);
             }
         }
     }
 
-    private void showTrackMenuFragment() {
-        FragmentActivity activity = getActivity();
-        if (activity != null) {
-            TrackMenuFragment trackMenuFragment = new TrackMenuFragment();
-            FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
-            transaction
-                    .replace(R.id.fragment_container, trackMenuFragment,
-                            TAG_TRACK_MENU_FRAGMENT)
-                    .addToBackStack(TAG_TRACK_MENU_FRAGMENT)
-                    .commit();
-        }
-    }
 
     @Override
     public void onItemLongClick(FileAdapterItem fileAdapterItem) {

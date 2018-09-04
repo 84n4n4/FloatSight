@@ -50,7 +50,7 @@ import java.lang.annotation.Retention;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.watchthybridle.floatsight.MainActivity.TAG_PLOT_FRAGMENT;
+import static com.watchthybridle.floatsight.TrackActivity.TAG_PLOT_FRAGMENT;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 public class TrackMenuFragment extends Fragment implements ButtonAdapter.ButtonItemClickListener {
@@ -134,9 +134,9 @@ public class TrackMenuFragment extends Fragment implements ButtonAdapter.ButtonI
 
 	private List<ButtonItem> getButtons() {
 		List<ButtonItem> trackMenuButtonList = new ArrayList<>();
-		trackMenuButtonList.add(new ButtonItem(BUTTON_LABEL, R.string.button_label_empty, R.string.button_label_empty, R.drawable.plot));
+		trackMenuButtonList.add(new ButtonItem(BUTTON_LABEL, R.string.button_label_empty, R.string.button_label_empty, R.drawable.disk));
 		trackMenuButtonList.add(new ButtonItem(BUTTON_PLOT, R.string.button_plot_title, R.string.button_plot_description, R.drawable.plot));
-		trackMenuButtonList.add(new ButtonItem(BUTTON_STATS, R.string.button_stats_title, R.string.button_stats_description, R.drawable.plot));
+		trackMenuButtonList.add(new ButtonItem(BUTTON_STATS, R.string.button_stats_title, R.string.button_stats_description, R.drawable.stats));
 		return trackMenuButtonList;
 	}
 

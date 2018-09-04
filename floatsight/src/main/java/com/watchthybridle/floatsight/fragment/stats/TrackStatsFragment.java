@@ -27,8 +27,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -37,7 +35,6 @@ import android.view.ViewGroup;
 import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.data.FlySightTrackData;
 import com.watchthybridle.floatsight.fragment.Dialogs;
-import com.watchthybridle.floatsight.fragment.plot.PlotFragment;
 import com.watchthybridle.floatsight.recyclerview.DividerLineDecorator;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
 import org.apache.commons.lang3.time.DatePrinter;
@@ -45,8 +42,6 @@ import org.apache.commons.lang3.time.FastDateFormat;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.watchthybridle.floatsight.MainActivity.TAG_PLOT_FRAGMENT;
 
 public class TrackStatsFragment extends Fragment {
 
