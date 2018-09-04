@@ -21,7 +21,7 @@
  *
  */
 
-package com.watchthybridle.floatsight.fragment.mainmenu;
+package com.watchthybridle.floatsight.fragment;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -35,61 +35,61 @@ import com.watchthybridle.floatsight.R;
 
 import java.util.List;
 
-class MainMenuButtonAdapter extends RecyclerView.Adapter<MainMenuButtonAdapter.MainMenuButtonViewHolder> {
-    List<MainMenuButtonItem> mainMenuButtonItems;
-    private MainMenuItemClickListener mainMenuItemClickListener;
+public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.ButtonViewHolder> {
+    public List<ButtonItem> buttonItems;
+    private ButtonItemClickListener buttonItemClickListener;
 
-	MainMenuButtonAdapter(List<MainMenuButtonItem> mainMenuButtonItem) {
-        this.mainMenuButtonItems = mainMenuButtonItem;
+	public ButtonAdapter(List<ButtonItem> buttonItem) {
+        this.buttonItems = buttonItem;
 	}
 
-    public void setMainMenuItemClickListener(MainMenuItemClickListener mainMenuItemClickListener) {
-        this.mainMenuItemClickListener = mainMenuItemClickListener;
+    public void setButtonItemClickListener(ButtonItemClickListener buttonItemClickListener) {
+        this.buttonItemClickListener = buttonItemClickListener;
     }
 
     @Override
     @NonNull
-    public MainMenuButtonViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ButtonViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.button_view_holder, parent, false);
-        return new MainMenuButtonViewHolder(linearLayout);
+        return new ButtonViewHolder(linearLayout);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MainMenuButtonViewHolder holder, int position) {
-        holder.title.setText(mainMenuButtonItems.get(position).title);
-        holder.description.setText(mainMenuButtonItems.get(position).description);
-        holder.icon.setImageResource(mainMenuButtonItems.get(position).icon);
-        holder.title.setEnabled(mainMenuButtonItems.get(position).isEnabled);
-        holder.description.setEnabled(mainMenuButtonItems.get(position).isEnabled);
-        holder.icon.setEnabled(mainMenuButtonItems.get(position).isEnabled);
-        holder.itemView.setOnClickListener(new ViewOnClickListener(mainMenuButtonItems.get(position)));
+    public void onBindViewHolder(@NonNull ButtonViewHolder holder, int position) {
+        holder.title.setText(buttonItems.get(position).title);
+        holder.description.setText(buttonItems.get(position).description);
+        holder.icon.setImageResource(buttonItems.get(position).icon);
+        holder.title.setEnabled(buttonItems.get(position).isEnabled);
+        holder.description.setEnabled(buttonItems.get(position).isEnabled);
+        holder.icon.setEnabled(buttonItems.get(position).isEnabled);
+        holder.itemView.setOnClickListener(new ViewOnClickListener(buttonItems.get(position)));
 
     }
 
     @Override
     public int getItemCount() {
-        return mainMenuButtonItems.size();
+        return buttonItems.size();
     }
 
     private class ViewOnClickListener implements View.OnClickListener {
-	    MainMenuButtonItem mainMenuButtonItem;
+	    ButtonItem buttonItem;
 
-	    ViewOnClickListener(MainMenuButtonItem mainMenuButtonItem) {
-	        this.mainMenuButtonItem = mainMenuButtonItem;
+	    ViewOnClickListener(ButtonItem buttonItem) {
+	        this.buttonItem = buttonItem;
         }
 
         @Override
         public void onClick(View v) {
-            mainMenuItemClickListener.onItemClick(mainMenuButtonItem);
+            buttonItemClickListener.onItemClick(buttonItem);
         }
     }
 
-    public class MainMenuButtonViewHolder extends RecyclerView.ViewHolder {
+    public class ButtonViewHolder extends RecyclerView.ViewHolder {
 		public TextView title;
 		public TextView description;
 		public ImageView icon;
-        MainMenuButtonViewHolder(View itemView) {
+        ButtonViewHolder(View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.button_title);
             description = itemView.findViewById(R.id.button_description);
@@ -97,7 +97,7 @@ class MainMenuButtonAdapter extends RecyclerView.Adapter<MainMenuButtonAdapter.M
         }
 	}
 
-    public interface MainMenuItemClickListener {
-        void onItemClick(MainMenuButtonItem buttonItem);
+    public interface ButtonItemClickListener {
+        void onItemClick(ButtonItem buttonItem);
     }
 }

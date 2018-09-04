@@ -34,6 +34,10 @@ public class FlySightTrackDataViewModel extends DataViewModel<FlySightTrackData>
         flySightTrackDataLiveData = new MutableLiveData<>();
     }
 
+    public void clear() {
+        flySightTrackDataLiveData = new MutableLiveData<>();
+    }
+
     @Override
     public LiveData<FlySightTrackData> getLiveData() {
         return flySightTrackDataLiveData;

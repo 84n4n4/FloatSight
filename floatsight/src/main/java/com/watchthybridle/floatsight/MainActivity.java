@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG_PLOT_FRAGMENT = "TAG_PLOT_FRAGMENT";
     public static final String TAG_FILE_PICKER_FRAGMENT = "TAG_FILE_PICKER_FRAGMENT";
     public static final String TAG_MAIN_MENU_FRAGMENT = "TAG_MAIN_MENU_FRAGMENT";
+    public static final String TAG_TRACK_MENU_FRAGMENT = "TAG_TRACK_MENU_FRAGMENT";
 
     public static final int REQUEST_FILE = 666;
     private static final int PERMISSION_REQUEST_CODE = 200;
@@ -97,13 +98,6 @@ public class MainActivity extends AppCompatActivity {
 		}
 
         flySightTrackDataViewModel = ViewModelProviders.of(this).get(FlySightTrackDataViewModel.class);
-        flySightTrackDataViewModel.getLiveData()
-                .observe(this, flySightTrackData -> setToolbarInfoText(flySightTrackData));
-    }
-
-    public void setToolbarInfoText(FlySightTrackData flySightTrackData) {
-        getSupportActionBar().setSubtitle(flySightTrackData.getSourceFileName());
-        findViewById(R.id.toolbar_progress_bar).setVisibility(View.GONE);
     }
 
     private void showMainMenuFragment() {

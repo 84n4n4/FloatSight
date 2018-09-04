@@ -66,18 +66,18 @@
     <!-- Main menu -->
     <string name="button_import_title">Import tracks</string>
     <string name="button_import_description">Import FlySight tracks</string>
-    <string name="button_open_from_location_title">Open track from location</string>
-    <string name="button_open_from_locationt_description">Open track from location</string>
-    <string name="button_plot_title">Plot</string>
-    <string name="button_plot_description">Show track plot</string>
-    <string name="button_save_title">Import track</string>
-    <string name="button_save_description">Import %1$s on local storage</string>
-    <string name="button_load_title">Imported tracks</string>
+    <string name="button_load_title">Browse tracks</string>
     <string name="button_load_description">Browse imported tracks</string>
     <string name="button_config_title">Config editor</string>
     <string name="button_config_description">Flysight config editor</string>
     <string name="button_about_title">About</string>
     <string name="button_about_description">About this app</string>
+
+    <!-- Track menu -->
+    <string name="button_plot_title">Plot</string>
+    <string name="button_plot_description">Show track plot</string>
+    <string name="button_stats_title">Stats</string>
+    <string name="button_stats_description">Show track stats</string>
 
     <!-- Config menu -->
     <string name="button_config_import_title">Import</string>
@@ -105,5 +105,4 @@
     <string name="ft">%1$s ft</string>
     <string name="glide">%1$s</string>
     <string name="seconds">%1$s sec</string>
-
 </resources>
