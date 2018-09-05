@@ -26,15 +26,14 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 
 public class StatsItem {
+	public int id;
 	public @StringRes int title;
-	public @StringRes int description;
+	public String value;
 	public @DrawableRes int icon;
-	public String overrideTitle = null;
-	public String overrideDescription = null;
 
-	public StatsItem(@StringRes int title, @StringRes int description, @DrawableRes int icon) {
+	public StatsItem(@StringRes int title, String value, @DrawableRes int icon) {
 		this.title = title;
-		this.description = description;
+		this.value = value;
 		this.icon = icon;
 	}
 }

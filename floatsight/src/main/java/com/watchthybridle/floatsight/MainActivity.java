@@ -55,6 +55,7 @@ import java.util.List;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static com.watchthybridle.floatsight.fragment.trackpicker.TrackPickerFragment.TRACK_PICKER_PERMISSION_REQUEST_CODE;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -62,7 +63,8 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG_MAIN_MENU_FRAGMENT = "TAG_MAIN_MENU_FRAGMENT";
 
     public static final int REQUEST_FILE = 666;
-    private static final int PERMISSION_REQUEST_CODE = 200;
+    private static final int IMPORT_PERMISSION_REQUEST_CODE = 200;
+    public static final int LOAD_PERMISSION_REQUEST_CODE = 100;
 
     private static final DatePrinter DATE_PRINTER = FastDateFormat.getInstance("yyyy-MM-dd'T'HH_mm_ss");
 
@@ -92,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void startImportFile() {
         if (!checkPermission()) {
-            requestPermission();
+            ActivityCompat.requestPermissions(this, new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, IMPORT_PERMISSION_REQUEST_CODE);
         } else {
             Intent intent = new Intent()
                     .setType("text/*")
@@ -219,39 +221,62 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void requestPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+        ActivityCompat.requestPermissions(this, new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, IMPORT_PERMISSION_REQUEST_CODE);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        boolean readAccepted = false;
+        boolean writeAccepted = false;
+        if (grantResults.length > 0) {
+            readAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+            writeAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+        }
+
         switch (requestCode) {
-            case PERMISSION_REQUEST_CODE:
-                if (grantResults.length > 0) {
-
-                    boolean readAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                    boolean writeAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
-
-                    if (readAccepted && writeAccepted) {
+            case LOAD_PERMISSION_REQUEST_CODE:
+                if (readAccepted && writeAccepted) {
+                    MainMenuFragment mainMenuFragment =
+                            (MainMenuFragment) getSupportFragmentManager()
+                                    .findFragmentByTag(TAG_MAIN_MENU_FRAGMENT);
+                    if(mainMenuFragment != null) {
+                        mainMenuFragment.showTrackPickerFragment();
                     }
-                    else {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            if (shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE)) {
-                                showAlertOKCancel(getResources().getString(R.string.permissions_rationale),
-                                        (dialog, which) -> {
-                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                                requestPermissions(new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE},
-                                                        PERMISSION_REQUEST_CODE);
-                                            }
-                                        });
-                                return;
-                            }
-                        }
-
-                    }
+                } else {
+                    showPermissionRationale(LOAD_PERMISSION_REQUEST_CODE);
                 }
                 break;
+            case IMPORT_PERMISSION_REQUEST_CODE:
+                if (readAccepted && writeAccepted) {
+                    startImportFile();
+                } else {
+                    showPermissionRationale(IMPORT_PERMISSION_REQUEST_CODE);
+                }
+                break;
+            case TRACK_PICKER_PERMISSION_REQUEST_CODE:
+                if (readAccepted && writeAccepted) {
+                    //todo
+                } else {
+                    showPermissionRationale(TRACK_PICKER_PERMISSION_REQUEST_CODE);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void showPermissionRationale(int permissionRequestId) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE)) {
+                showAlertOKCancel(getResources().getString(R.string.permissions_rationale), (dialog, which) -> {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        requestPermissions(new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, permissionRequestId);
+                    }
+                });
             }
         }
+    }
+
 
     private void showAlertOKCancel(String message, DialogInterface.OnClickListener okListener) {
         new AlertDialog.Builder(MainActivity.this)

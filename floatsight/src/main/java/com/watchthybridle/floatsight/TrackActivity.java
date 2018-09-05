@@ -54,10 +54,11 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 public class TrackActivity extends AppCompatActivity {
 
     public static final String TAG_PLOT_FRAGMENT = "TAG_PLOT_FRAGMENT";
+    public static final String TAG_STATS_FRAGMENT = "TAG_STATS_FRAGMENT";
     public static final String TAG_TRACK_MENU_FRAGMENT = "TAG_TRACK_MENU_FRAGMENT";
     public static final String TRACK_FILE_URI = "TRACK_FILE_URI";
 
-    private static final int PERMISSION_REQUEST_CODE = 200;
+    private static final int TRACK_PERMISSION_REQUEST_CODE = 300;
 
     private FlySightTrackDataViewModel flySightTrackDataViewModel;
 
@@ -79,15 +80,8 @@ public class TrackActivity extends AppCompatActivity {
         flySightTrackDataViewModel = ViewModelProviders.of(this).get(FlySightTrackDataViewModel.class);
         flySightTrackDataViewModel.getLiveData()
                 .observe(this, flySightTrackData -> actOnDataChanged(flySightTrackData));
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         if(flySightTrackDataViewModel.getLiveData().getValue() == null) {
-            Bundle extras = getIntent().getExtras();
-            Uri trackFileUri = Uri.parse(extras.getString(TRACK_FILE_URI));
-            loadFlySightTrackData(trackFileUri);
+            loadFlySightTrackData();
         }
     }
 
@@ -120,11 +114,23 @@ public class TrackActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void loadFlySightTrackData(Uri uri) {
-        findViewById(R.id.toolbar_progress_bar).setVisibility(View.VISIBLE);
-        DataRepository<FlySightTrackData> repository =
-                new DataRepository<>(FlySightTrackData.class, getContentResolver(), new FlySightCsvParser());
-        repository.load(uri, flySightTrackDataViewModel);
+    public void loadFlySightTrackData() {
+        if (!checkPermission()) {
+            requestPermission();
+        } else {
+            Bundle extras = getIntent().getExtras();
+            if(extras != null) {
+                String trackPath = extras.getString(TRACK_FILE_URI);
+                if(trackPath != null) {
+                    Uri trackFileUri = Uri.parse(extras.getString(TRACK_FILE_URI));
+
+                    findViewById(R.id.toolbar_progress_bar).setVisibility(View.VISIBLE);
+                    DataRepository<FlySightTrackData> repository =
+                            new DataRepository<>(FlySightTrackData.class, getContentResolver(), new FlySightCsvParser());
+                    repository.load(trackFileUri, flySightTrackDataViewModel);
+                }
+            }
+        }
     }
 
     public boolean checkPermission() {
@@ -135,19 +141,20 @@ public class TrackActivity extends AppCompatActivity {
     }
 
     public void requestPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+        ActivityCompat.requestPermissions(this, new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, TRACK_PERMISSION_REQUEST_CODE);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
-            case PERMISSION_REQUEST_CODE:
+            case TRACK_PERMISSION_REQUEST_CODE:
                 if (grantResults.length > 0) {
 
                     boolean readAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                     boolean writeAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
 
                     if (readAccepted && writeAccepted) {
+                        loadFlySightTrackData();
                     }
                     else {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -156,7 +163,7 @@ public class TrackActivity extends AppCompatActivity {
                                         (dialog, which) -> {
                                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                                 requestPermissions(new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE},
-                                                        PERMISSION_REQUEST_CODE);
+                                                        TRACK_PERMISSION_REQUEST_CODE);
                                             }
                                         });
                                 return;

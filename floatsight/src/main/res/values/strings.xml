@@ -85,6 +85,21 @@
     <string name="button_stats_title">Stats</string>
     <string name="button_stats_description">Show track stats</string>
 
+    <!-- Stats fragment -->
+    <string name="stats_filename">File</string>
+    <string name="stats_label_empty"> </string>
+    <string name="stats_parsing_error">Could not read file.</string>
+    <string name="stats_start_time">Start time</string>
+    <string name="stats_duration">Duration</string>
+    <string name="stats_max_altitude">Max altitude</string>
+    <string name="stats_min_altitude">Min altitude</string>
+    <string name="stats_distance">Distance</string>
+    <string name="stats_max_horizontal_velocity">Max horizontal velocity</string>
+    <string name="stats_min_horizontal_velocity">Min horizontal velocity</string>
+    <string name="stats_max_vertical_velocity">Max vertical velocity</string>
+    <string name="stats_min_vertical_velocity">Min velocity velocity</string>
+
+
     <!-- Config menu -->
     <string name="button_config_import_title">Import</string>
     <string name="button_config_import_description">Import FlySight config file</string>

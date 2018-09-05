@@ -90,6 +90,30 @@ public abstract class ChartDataSetProperties {
         return context.getString(unitStringResource, decimalFormat.format(value));
     }
 
+    public String getFormattedValue(Context context, float value) {
+        return context.getString(unitStringResource, decimalFormat.format(value));
+    }
+
+    public String getFormattedYMax(Context context, FlySightTrackData flySightTrackData) {
+        float max = 0;
+        for(FlySightTrackPoint point : flySightTrackData.getFlySightTrackPoints()) {
+            if(yValueProvider.getValue(point) > max) {
+                max = yValueProvider.getValue(point);
+            }
+        }
+        return getFormattedValue(context, max);
+    }
+
+    public String getFormattedYMin(Context context, FlySightTrackData flySightTrackData) {
+        float min = Float.MAX_VALUE;
+        for(FlySightTrackPoint point : flySightTrackData.getFlySightTrackPoints()) {
+            if(yValueProvider.getValue(point) < min) {
+                min = yValueProvider.getValue(point);
+            }
+        }
+        return getFormattedValue(context, min);
+    }
+
     public String getFormattedValueForRange(Context context, float start, float end, FlySightTrackData flySightTrackData) {
         float value = rangeValueStrategy.getRangeValue(start, end, xValueProvider, yValueProvider, flySightTrackData);
         return context.getString(unitStringResource, decimalFormat.format(value));

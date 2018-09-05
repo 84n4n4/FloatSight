@@ -53,16 +53,8 @@ public class StatsAdapter extends RecyclerView.Adapter<StatsAdapter.ButtonViewHo
     @Override
     public void onBindViewHolder(@NonNull ButtonViewHolder holder, int position) {
 	    StatsItem statsItem = statsItems.get(position);
-	    if(statsItem.overrideTitle == null) {
-            holder.title.setText(statsItem.title);
-        } else {
-            holder.title.setText(statsItem.overrideTitle);
-        }
-        if(statsItem.overrideDescription == null) {
-            holder.description.setText(statsItem.description);
-        } else {
-            holder.description.setText(statsItem.overrideDescription);
-        }
+        holder.title.setText(statsItem.title);
+        holder.description.setText(statsItem.value);
         holder.icon.setImageResource(statsItem.icon);
     }
 

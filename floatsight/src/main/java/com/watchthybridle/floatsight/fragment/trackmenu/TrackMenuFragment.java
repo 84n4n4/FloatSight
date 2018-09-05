@@ -41,6 +41,7 @@ import com.watchthybridle.floatsight.fragment.ButtonAdapter;
 import com.watchthybridle.floatsight.fragment.ButtonItem;
 import com.watchthybridle.floatsight.fragment.Dialogs;
 import com.watchthybridle.floatsight.fragment.plot.PlotFragment;
+import com.watchthybridle.floatsight.fragment.stats.TrackStatsFragment;
 import com.watchthybridle.floatsight.recyclerview.DividerLineDecorator;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
 import org.apache.commons.lang3.time.DatePrinter;
@@ -51,6 +52,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.watchthybridle.floatsight.TrackActivity.TAG_PLOT_FRAGMENT;
+import static com.watchthybridle.floatsight.TrackActivity.TAG_STATS_FRAGMENT;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 public class TrackMenuFragment extends Fragment implements ButtonAdapter.ButtonItemClickListener {
@@ -148,7 +150,7 @@ public class TrackMenuFragment extends Fragment implements ButtonAdapter.ButtonI
 					showPlotFragment();
 					break;
 				case BUTTON_STATS:
-					showPlotFragment();
+					showStatsFragment();
 					break;
 				default:
 					break;
@@ -165,6 +167,19 @@ public class TrackMenuFragment extends Fragment implements ButtonAdapter.ButtonI
 					.replace(R.id.fragment_container, plotFragment,
 							TAG_PLOT_FRAGMENT)
 					.addToBackStack(TAG_PLOT_FRAGMENT)
+					.commit();
+		}
+	}
+
+	private void showStatsFragment() {
+		FragmentActivity activity = getActivity();
+		if (activity != null) {
+			TrackStatsFragment statsFragment = new TrackStatsFragment();
+			FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+			transaction
+					.replace(R.id.fragment_container, statsFragment,
+							TAG_STATS_FRAGMENT)
+					.addToBackStack(TAG_STATS_FRAGMENT)
 					.commit();
 		}
 	}

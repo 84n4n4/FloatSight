@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -47,6 +48,9 @@ import java.lang.annotation.Retention;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static com.watchthybridle.floatsight.MainActivity.LOAD_PERMISSION_REQUEST_CODE;
 import static com.watchthybridle.floatsight.MainActivity.TAG_FILE_PICKER_FRAGMENT;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
@@ -128,14 +132,14 @@ public class MainMenuFragment extends Fragment implements ButtonAdapter.ButtonIt
 		}
 	}
 
-	private void showTrackPickerFragment() {
+	public void showTrackPickerFragment() {
 		MainActivity activity = (MainActivity) getActivity();
 		if (activity == null) {
 			return;
 		}
 
 		if (!activity.checkPermission()) {
-			activity.requestPermission();
+			ActivityCompat.requestPermissions(activity, new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, LOAD_PERMISSION_REQUEST_CODE);
 		} else {
 			TrackPickerFragment fileTrackPickerFragment = new TrackPickerFragment();
 			FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();

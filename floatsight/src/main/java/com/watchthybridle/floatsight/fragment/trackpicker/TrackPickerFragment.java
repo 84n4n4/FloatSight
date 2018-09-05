@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
@@ -30,6 +31,8 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.watchthybridle.floatsight.MainActivity.TAG_FILE_PICKER_FRAGMENT;
 import static com.watchthybridle.floatsight.TrackActivity.TRACK_FILE_URI;
 
@@ -40,6 +43,8 @@ public class TrackPickerFragment extends Fragment implements ItemClickListener<F
     private static final int DELETE = 2;
     public static final String PATH_BUNDLE_TAG = "PATH_BUNDLE_TAG";
     FileAdapter fileAdapter;
+
+    public static final int TRACK_PICKER_PERMISSION_REQUEST_CODE = 400;
 
     public TrackPickerFragment() {
     }
@@ -55,7 +60,6 @@ public class TrackPickerFragment extends Fragment implements ItemClickListener<F
 
         RecyclerView recyclerView = view.findViewById(R.id.file_list_view);
         recyclerView.setHasFixedSize(true);
-
         fileAdapter = new FileAdapter(getFiles());
         fileAdapter.setItemClickListener(this);
         recyclerView.setAdapter(fileAdapter);
@@ -95,19 +99,28 @@ public class TrackPickerFragment extends Fragment implements ItemClickListener<F
 
     private List<FileAdapterItem> getFiles() {
         List<FileAdapterItem> files = new ArrayList<>();
-        try {
-            File folder;
-            if(getArguments() == null || getArguments().getString(PATH_BUNDLE_TAG) == null) {
-                folder = ((MainActivity) getActivity()).getTracksFolder();
+        MainActivity activity = (MainActivity) getActivity();
+        if (activity != null) {
+            if (!activity.checkPermission()) {
+                ActivityCompat.requestPermissions(activity, new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, TRACK_PICKER_PERMISSION_REQUEST_CODE);
+
             } else {
-                String pathString = getArguments().getString(PATH_BUNDLE_TAG);
-                folder = new File(pathString);
+                try {
+                    File folder;
+                    if(getArguments() == null || getArguments().getString(PATH_BUNDLE_TAG) == null) {
+                        folder = ((MainActivity) getActivity()).getTracksFolder();
+                    } else {
+                        String pathString = getArguments().getString(PATH_BUNDLE_TAG);
+                        folder = new File(pathString);
+                    }
+                    for (File file : folder.listFiles()) {
+                        files.add(new FileAdapterItem(file));
+                    }
+                } catch (FileNotFoundException e) {
+                    showErrorMessage(R.string.error_opening_local_storage);
+                }
+
             }
-            for (File file : folder.listFiles()) {
-                files.add(new FileAdapterItem(file));
-            }
-        } catch (FileNotFoundException e) {
-            showErrorMessage(R.string.error_opening_local_storage);
         }
         return files;
     }
