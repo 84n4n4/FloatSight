@@ -4,8 +4,8 @@
 
 <size
         android:width="1dp"
-        android:height="1dp" />
+        android:height="2dp" />
 
-<solid android:color="@color/flysightDarkGreen" />
+<solid android:color="@color/flysightLightGrey" />
 
 </shape>

@@ -11,7 +11,7 @@ public class DividerLineDecorator extends RecyclerView.ItemDecoration {
     private Drawable mDivider;
 
     public DividerLineDecorator(Context context) {
-        mDivider = context.getResources().getDrawable(R.drawable.divider_line);
+        mDivider = context.getResources().getDrawable(R.drawable.rv_divider_line);
     }
 
     @Override
