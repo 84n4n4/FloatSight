@@ -100,8 +100,8 @@ public class TrackStatsFragment extends Fragment {
 		statsAdapter.statsItems.get(START_TIME).value = formattedStartTime;
 
 		ChartDataSetProperties timeProperties = new ChartDataSetProperties.TimeDataSetProperties(dummyXProvider);
-		long unixEndTime = flySightTrackData.getFlySightTrackPoints().get(flySightTrackData.getFlySightTrackPoints().size() - 1).unixTimeStamp - unixStartTime;
-		String formattedDuration = getContext().getString(R.string.seconds, timeProperties.decimalFormat.format(unixEndTime));
+		long unixDuration = flySightTrackData.getFlySightTrackPoints().get(flySightTrackData.getFlySightTrackPoints().size() - 1).unixTimeStamp - unixStartTime;
+		String formattedDuration = getContext().getString(R.string.seconds, timeProperties.decimalFormat.format(unixDuration/1000f));
 		statsAdapter.statsItems.get(DURATION).value = formattedDuration;
 
 		ChartDataSetProperties altitudeProperties = new ChartDataSetProperties.AltitudeDataSetProperties(dummyXProvider, unitSystem);
@@ -146,15 +146,15 @@ public class TrackStatsFragment extends Fragment {
 	private List<StatsItem> getStatsItems() {
 		List<StatsItem> statsItemList = new ArrayList<>();
 		statsItemList.add(new StatsItem(R.string.stats_filename, "", R.drawable.disk));
-		statsItemList.add(new StatsItem(R.string.stats_start_time, "", R.drawable.ic_time));
-		statsItemList.add(new StatsItem(R.string.stats_duration, "", R.drawable.ic_time));
-		statsItemList.add(new StatsItem(R.string.stats_max_altitude, "", R.drawable.ic_alt_tot));
-		statsItemList.add(new StatsItem(R.string.stats_min_altitude, "", R.drawable.ic_alt_tot));
-		statsItemList.add(new StatsItem(R.string.stats_distance, "", R.drawable.ic_dist_tot));
-		statsItemList.add(new StatsItem(R.string.stats_max_horizontal_velocity, "", R.drawable.ic_hor_vel));
-		statsItemList.add(new StatsItem(R.string.stats_min_horizontal_velocity, "", R.drawable.ic_hor_vel));
-		statsItemList.add(new StatsItem(R.string.stats_max_vertical_velocity, "", R.drawable.ic_vert_vel));
-		statsItemList.add(new StatsItem(R.string.stats_min_vertical_velocity, "", R.drawable.ic_vert_vel));
+		statsItemList.add(new StatsItem(R.string.stats_start_time, "", R.drawable.time_stats));
+		statsItemList.add(new StatsItem(R.string.stats_duration, "", R.drawable.time_stats));
+		statsItemList.add(new StatsItem(R.string.stats_max_altitude, "", R.drawable.alt_stats));
+		statsItemList.add(new StatsItem(R.string.stats_min_altitude, "", R.drawable.alt_stats));
+		statsItemList.add(new StatsItem(R.string.stats_distance, "", R.drawable.dist_stats));
+		statsItemList.add(new StatsItem(R.string.stats_max_horizontal_velocity, "", R.drawable.hor_stats));
+		statsItemList.add(new StatsItem(R.string.stats_min_horizontal_velocity, "", R.drawable.hor_stats));
+		statsItemList.add(new StatsItem(R.string.stats_max_vertical_velocity, "", R.drawable.vert_stats));
+		statsItemList.add(new StatsItem(R.string.stats_min_vertical_velocity, "", R.drawable.vert_stats));
 		return statsItemList;
 	}
 }
