@@ -27,21 +27,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.TextView;
 import com.watchthybridle.floatsight.configparser.ConfigParser;
 import com.watchthybridle.floatsight.data.ConfigData;
 import com.watchthybridle.floatsight.datarepository.DataRepository;
@@ -60,70 +54,32 @@ public class ConfigActivity extends AppCompatActivity {
 
     private static final int PERMISSION_REQUEST_CODE = 200;
 
-    private View importButton;
-    private View saveButton;
-
     private ConfigDataViewModel configDataViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_config);
+        setContentView(R.layout.activity_with_fragment_container);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        importButton = findViewById(R.id.load_button_linear_layout);
-        ((TextView) importButton.findViewById(R.id.button_title)).setText(R.string.button_config_import_title);
-        ((TextView) importButton.findViewById(R.id.button_description)).setText(R.string.button_config_import_description);
-        ((ImageView) importButton.findViewById(R.id.button_icon)).setImageResource(R.drawable.import_grey);
-        importButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startImportFile();
-            }
-        });
-
-        saveButton = findViewById(R.id.save_button_linear_layout);
-        ((TextView) saveButton.findViewById(R.id.button_title)).setText(R.string.button_config_save_title);
-        ((TextView) saveButton.findViewById(R.id.button_description)).setText(R.string.button_config_save_description);
-        ((ImageView) saveButton.findViewById(R.id.button_icon)).setImageResource(R.drawable.disk);
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO save file
-                finish();
-            }
-        });
-
         configDataViewModel = ViewModelProviders.of(this).get(ConfigDataViewModel.class);
         configDataViewModel.getLiveData()
-                .observe(this, settingsData -> actOnDataChanged(settingsData));
+                .observe(this, this::actOnDataChanged);
 
-        updateButtonVisibility();
+        showConfigEditorFragment();
     }
 
     public void actOnDataChanged(ConfigData configData) {
         getSupportActionBar().setSubtitle(configData.getSourceFileName());
         findViewById(R.id.toolbar_progress_bar).setVisibility(GONE);
 
-        if(configDataViewModel.containsValidData()) {
+        if (configDataViewModel.containsValidData()) {
             showConfigEditorFragment();
-        }
-
-        updateButtonVisibility();
-    }
-
-    private void updateButtonVisibility() {
-        if(configDataViewModel.containsValidData()) {
-            importButton.setVisibility(GONE);
-            saveButton.setVisibility(VISIBLE);
-        } else {
-            importButton.setVisibility(VISIBLE);
-            saveButton.setVisibility(GONE);
         }
     }
 
@@ -155,8 +111,8 @@ public class ConfigActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_CONFIG_FILE) {
-            if(resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_CONFIG_FILE) {
+            if (resultCode == RESULT_OK) {
                 loadFlySightConfigData(data.getData());
             } else {
                 findViewById(R.id.toolbar_progress_bar).setVisibility(GONE);
@@ -184,34 +140,7 @@ public class ConfigActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSION_REQUEST_CODE:
-                if (grantResults.length > 0) {
-
-                    boolean readAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                    boolean writeAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
-
-                    if (readAccepted && writeAccepted) {
-                    }
-                    else {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            if (shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE)) {
-                                showAlertOKCancel(getResources().getString(R.string.permissions_rationale),
-                                        (dialog, which) -> {
-                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                                requestPermissions(new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE},
-                                                        PERMISSION_REQUEST_CODE);
-                                            }
-                                        });
-                                return;
-                            }
-                        }
-
-                    }
-                }
-                break;
-            }
-        }
+    }
 
     private void showAlertOKCancel(String message, DialogInterface.OnClickListener okListener) {
         new AlertDialog.Builder(ConfigActivity.this)

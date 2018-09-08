@@ -22,16 +22,14 @@
 
 package com.watchthybridle.floatsight;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -42,13 +40,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
+import com.watchthybridle.floatsight.data.FileImportData;
+import com.watchthybridle.floatsight.filesystem.FileImporter;
 import com.watchthybridle.floatsight.fragment.mainmenu.MainMenuFragment;
-import org.apache.commons.lang3.time.DatePrinter;
-import org.apache.commons.lang3.time.FastDateFormat;
+import com.watchthybridle.floatsight.viewmodel.FileImportDataViewModel;
 
-import java.io.*;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -60,23 +57,35 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG_FILE_PICKER_FRAGMENT = "TAG_FILE_PICKER_FRAGMENT";
     public static final String TAG_MAIN_MENU_FRAGMENT = "TAG_MAIN_MENU_FRAGMENT";
 
-    private static final int IMPORT_PERMISSION_REQUEST_CODE = 200;
-    private static final DatePrinter DATE_PRINTER = FastDateFormat.getInstance("yyyy-MM-dd'T'HH_mm_ss");
-
     public static final int REQUEST_FILE = 666;
     public static final int LOAD_PERMISSION_REQUEST_CODE = 100;
+
+    private static final int IMPORT_PERMISSION_REQUEST_CODE = 200;
+
+    private FileImportDataViewModel fileImportDataViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_with_fragment_container);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         if (savedInstanceState == null) {
             showMainMenuFragment();
+        }
+
+        fileImportDataViewModel = ViewModelProviders.of(this).get(FileImportDataViewModel.class);
+        fileImportDataViewModel.getLiveData().observe(this, this::actOnDataChanged);
+    }
+
+    private void actOnDataChanged(FileImportData fileImportData) {
+        findViewById(R.id.toolbar_progress_bar).setVisibility(View.GONE);
+        if (fileImportData.getImportingStatus() == FileImportData.IMPORTING_SUCCESS) {
+            Snackbar.make(findViewById(R.id.fragment_container), R.string.file_import_success, Snackbar.LENGTH_SHORT)
+                    .show();
         }
     }
 
@@ -89,8 +98,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void startImportFile() {
         if (!checkPermission()) {
-            ActivityCompat.requestPermissions(this, new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE},
-                    IMPORT_PERMISSION_REQUEST_CODE);
+            requestPermission();
         } else {
             Intent intent = new Intent()
                     .setType("text/*")
@@ -99,18 +107,6 @@ public class MainActivity extends AppCompatActivity {
                     .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
             startActivityForResult(Intent.createChooser(intent, "Select a file"), REQUEST_FILE);
         }
-    }
-
-    public File getTracksFolder() throws FileNotFoundException {
-        File folder = new File(Environment.getExternalStorageDirectory() + File.separator
-                + "FloatSight" + File.separator + "tracks" + File.separator);
-        if (!folder.exists()) {
-            folder.mkdirs();
-        }
-        if (!folder.exists() || !folder.isDirectory()) {
-            throw new FileNotFoundException("Could not access folder on local storage");
-        }
-        return folder;
     }
 
     @Override
@@ -122,86 +118,33 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == REQUEST_FILE) {
             if (resultCode == RESULT_OK) {
-                try {
-                    importData(data);
-                    //todo when done open filepicker at that location
-                    Snackbar mySnackbar = Snackbar.make(findViewById(R.id.fragment_container), R.string.file_import_success, Snackbar.LENGTH_SHORT);
-                    mySnackbar.show();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    //todo show error message
-                }
+                importData(data);
             } else {
                 findViewById(R.id.toolbar_progress_bar).setVisibility(View.GONE);
             }
         }
     }
 
-    //todo move to files importer class
-    //todo make async task
-    private void importData(Intent data) throws IOException {
+    private void importData(Intent data) {
         if (data == null) {
             return;
         }
-        List<Uri> uriList = new ArrayList<>();
+
+        List<Uri> uris = new ArrayList<>();
         ClipData clipData = data.getClipData();
         if (clipData != null) {
             for (int index = 0; index < clipData.getItemCount(); index++) {
-                uriList.add(clipData.getItemAt(index).getUri());
+                uris.add(clipData.getItemAt(index).getUri());
             }
         } else {
-            uriList.add(data.getData());
-        }
-        for (Uri uri : uriList) {
-            copyFromUri(uri);
-        }
-    }
-
-    //todo move to files importer class
-    private void copyFromUri(Uri uri) throws IOException {
-        File folder = new File(getTracksFolder(), DATE_PRINTER.format(Calendar.getInstance().getTime()));
-        if (!folder.exists()) {
-            folder.mkdirs();
-        }
-        if (!folder.exists() || !folder.isDirectory()) {
-            throw new FileNotFoundException("Could not access folder on local storage");
-        }
-        String fileName = File.separator + resolveFileName(uri);
-        File outFile = new File(folder, fileName);
-
-        byte[] buffer = new byte[8 * 1024];
-        int length;
-        try (InputStream inputStream = getContentResolver().openInputStream(uri);
-             OutputStream outputStream = new FileOutputStream(outFile)) {
-            while ((length = inputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, length);
-            }
-        }
-    }
-
-    //todo move to files importer class
-    private String resolveFileName(Uri uri) {
-        String result = null;
-
-        if (uri.getScheme().equals("content")) {
-            try (Cursor cursor = getContentResolver().query(uri, null, null, null, null)) {
-                if (cursor != null && cursor.moveToFirst()) {
-                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-                }
-            }
+            uris.add(data.getData());
         }
 
-        if (result == null) {
-            result = uri.getPath();
-            int cut = result.lastIndexOf('/');
-            if (cut != -1) {
-                result = result.substring(cut + 1);
-            }
-        }
-
-        return result;
+        FileImporter importer = new FileImporter(getContentResolver());
+        importer.importTracks((Uri[]) uris.toArray(), fileImportDataViewModel);
     }
 
     public boolean checkPermission() {
@@ -228,8 +171,7 @@ public class MainActivity extends AppCompatActivity {
             case LOAD_PERMISSION_REQUEST_CODE:
                 if (readAccepted && writeAccepted) {
                     MainMenuFragment mainMenuFragment =
-                            (MainMenuFragment) getSupportFragmentManager()
-                                    .findFragmentByTag(TAG_MAIN_MENU_FRAGMENT);
+                            (MainMenuFragment) getSupportFragmentManager().findFragmentByTag(TAG_MAIN_MENU_FRAGMENT);
                     if (mainMenuFragment != null) {
                         mainMenuFragment.showTrackPickerFragment();
                     }
@@ -246,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case TRACK_PICKER_PERMISSION_REQUEST_CODE:
                 if (readAccepted && writeAccepted) {
-                    //todo
+                    //TODO: Fix onDestroy problem from TrackActivity.
                 } else {
                     showPermissionRationale(TRACK_PICKER_PERMISSION_REQUEST_CODE);
                 }
@@ -259,11 +201,9 @@ public class MainActivity extends AppCompatActivity {
     private void showPermissionRationale(int permissionRequestId) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE)) {
-                showAlertOKCancel(getResources().getString(R.string.permissions_rationale), (dialog, which) -> {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        requestPermissions(new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, permissionRequestId);
-                    }
-                });
+                showAlertOKCancel(getResources().getString(R.string.permissions_rationale), (dialog, which) ->
+                        requestPermissions(new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, permissionRequestId)
+                );
             }
         }
     }

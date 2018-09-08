@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import com.watchthybridle.floatsight.MainActivity;
 import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.TrackActivity;
+import com.watchthybridle.floatsight.filesystem.PathBuilder;
 import com.watchthybridle.floatsight.recyclerview.DividerLineDecorator;
 
 import java.io.File;
@@ -111,7 +112,7 @@ public class TrackPickerFragment extends Fragment implements FileAdapter.FileAda
             try {
                 File folder;
                 if(getArguments() == null || getArguments().getString(PATH_BUNDLE_TAG) == null) {
-                    folder = ((MainActivity) getActivity()).getTracksFolder();
+                    folder = PathBuilder.getTracksFolder();
                 } else {
                     String pathString = getArguments().getString(PATH_BUNDLE_TAG);
                     folder = new File(pathString);

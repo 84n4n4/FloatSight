@@ -26,6 +26,8 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import com.watchthybridle.floatsight.data.FlySightTrackData;
 
+import static com.watchthybridle.floatsight.data.ParsableData.PARSING_FAIL;
+
 public class FlySightTrackDataViewModel extends DataViewModel<FlySightTrackData> {
 
     private MutableLiveData<FlySightTrackData> flySightTrackDataLiveData;
@@ -44,9 +46,10 @@ public class FlySightTrackDataViewModel extends DataViewModel<FlySightTrackData>
         return flySightTrackDataLiveData;
     }
 
+    @Override
     public boolean containsValidData() {
         return flySightTrackDataLiveData.getValue() != null
                 && !flySightTrackDataLiveData.getValue().getFlySightTrackPoints().isEmpty()
-                && flySightTrackDataLiveData.getValue().getParsingStatus() != FlySightTrackData.PARSING_FAIL;
+                && flySightTrackDataLiveData.getValue().getParsingStatus() != PARSING_FAIL;
     }
 }
