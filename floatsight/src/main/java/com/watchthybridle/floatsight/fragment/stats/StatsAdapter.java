@@ -29,33 +29,33 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.watchthybridle.floatsight.R;
 
 import java.util.List;
 
-public class StatsAdapter extends RecyclerView.Adapter<StatsAdapter.ButtonViewHolder> {
+class StatsAdapter extends RecyclerView.Adapter<StatsAdapter.StatsItemViewHolder> {
+
     public List<StatsItem> statsItems;
 
-	public StatsAdapter(List<StatsItem> statsItem) {
+	StatsAdapter(List<StatsItem> statsItem) {
         this.statsItems = statsItem;
 	}
 
     @Override
     @NonNull
-    public ButtonViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.button_view_holder, parent, false);
-        return new ButtonViewHolder(linearLayout);
+    public StatsItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.vh_button, parent, false);
+        return new StatsItemViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ButtonViewHolder holder, int position) {
-	    StatsItem statsItem = statsItems.get(position);
-        holder.title.setText(statsItem.title);
-        holder.description.setText(statsItem.value);
-        holder.icon.setImageResource(statsItem.icon);
+    public void onBindViewHolder(@NonNull StatsItemViewHolder holder, int position) {
+	    StatsItem item = statsItems.get(position);
+        holder.title.setText(item.title);
+        holder.description.setText(item.value);
+        holder.icon.setImageResource(item.icon);
     }
 
     @Override
@@ -63,11 +63,13 @@ public class StatsAdapter extends RecyclerView.Adapter<StatsAdapter.ButtonViewHo
         return statsItems.size();
     }
 
-    public class ButtonViewHolder extends RecyclerView.ViewHolder {
-		public TextView title;
-		public TextView description;
-		public ImageView icon;
-        ButtonViewHolder(View itemView) {
+    static class StatsItemViewHolder extends RecyclerView.ViewHolder {
+
+		TextView title;
+		TextView description;
+		ImageView icon;
+
+        StatsItemViewHolder(View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.button_title);
             description = itemView.findViewById(R.id.button_description);

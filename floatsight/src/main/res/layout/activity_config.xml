@@ -52,7 +52,7 @@
     <RelativeLayout android:layout_width="match_parent"
                   android:layout_height="match_parent"
                   android:layout_marginTop="?attr/actionBarSize">
-            <include layout="@layout/button_view_holder"
+            <include layout="@layout/vh_button"
                      android:id="@+id/load_button_linear_layout"
                      android:layout_width="match_parent"
                      android:layout_height="wrap_content"
@@ -78,7 +78,7 @@
                     android:src="@drawable/divider_line"
                     android:layout_above="@id/save_button_linear_layout"/>
 
-            <include layout="@layout/button_view_holder"
+            <include layout="@layout/vh_button"
                      android:id="@+id/save_button_linear_layout"
                      android:layout_width="match_parent"
                      android:layout_height="wrap_content"

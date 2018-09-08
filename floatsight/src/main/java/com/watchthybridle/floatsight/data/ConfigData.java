@@ -20,26 +20,26 @@
  *
  */
 
-package com.watchthybridle.floatsight.fragment.configeditor;
+package com.watchthybridle.floatsight.data;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.TextView;
-import com.watchthybridle.floatsight.R;
+import com.watchthybridle.floatsight.configparser.ConfigItem;
 
-public class ConfigSettingsViewHolder extends RecyclerView.ViewHolder {
+import java.util.ArrayList;
+import java.util.List;
 
-    public TextView name;
-    public TextView value;
-    public TextView description;
-    public TextView comments;
+public class ConfigData extends ParsableData {
 
-    ConfigSettingsViewHolder(@NonNull View itemView) {
-        super(itemView);
-        name = itemView.findViewById(R.id.name);
-        value = itemView.findViewById(R.id.value);
-        description = itemView.findViewById(R.id.description);
-        comments = itemView.findViewById(R.id.comments);
+    private List<ConfigItem> settings;
+
+    public ConfigData() {
+        settings = new ArrayList<>();
+    }
+
+    public List<ConfigItem> getSettings() {
+        return settings;
+    }
+
+    public void setSettings(List<ConfigItem> settings) {
+        this.settings = settings;
     }
 }

@@ -23,8 +23,8 @@
 package com.watchthybridle.floatsight.csvparser;
 
 import com.watchthybridle.floatsight.configparser.ConfigParser;
-import com.watchthybridle.floatsight.configparser.ConfigSetting;
-import com.watchthybridle.floatsight.data.ConfigSettingsData;
+import com.watchthybridle.floatsight.configparser.ConfigItem;
+import com.watchthybridle.floatsight.data.ConfigData;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -107,7 +107,7 @@ public class SettingsParserTest {
         InputStream inputStream = new ByteArrayInputStream(expectedContent.getBytes());
 
         ConfigParser parser = new ConfigParser();
-        List<ConfigSetting> settings = parser.read(inputStream).getSettings();
+        List<ConfigItem> settings = parser.read(inputStream).getSettings();
 
         assertEquals("setting0", settings.get(0).name);
         assertEquals(0, settings.get(0).value);
@@ -138,13 +138,13 @@ public class SettingsParserTest {
                 "                ;   Comment0\n" +
                 "setting2: 2 ; description2\n";
 
-        ConfigSettingsData settingsData = new ConfigSettingsData();
-        List<ConfigSetting> settings = new ArrayList<>();
-        settings.add(new ConfigSetting("setting0", 0,
+        ConfigData settingsData = new ConfigData();
+        List<ConfigItem> settings = new ArrayList<>();
+        settings.add(new ConfigItem("setting0", 0,
                 "description0", "Comment0", "Comment1 comment with 10 [m/s]"));
-        settings.add(new ConfigSetting("setting1", 1,
+        settings.add(new ConfigItem("setting1", 1,
                 "description1", "Comment0"));
-        settings.add(new ConfigSetting("setting2", 2, "description2"));
+        settings.add(new ConfigItem("setting2", 2, "description2"));
         settingsData.setSettings(settings);
 
         OutputStream outputStream = new ByteArrayOutputStream();

@@ -59,12 +59,9 @@ public class TrackStatsFragment extends Fragment {
 	public static final int MAX_VERT_VELOCITY = 8;
 	public static final int MIN_VERT_VELOCITY = 9;
 
-	private FlySightTrackDataViewModel trackDataViewModel;
-	private StatsAdapter statsAdapter;
-	private String unitSystem = METRIC;
+    private static final DatePrinter PRETTY_DATE_PRINTER = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
 
-	private static final DatePrinter PRETTY_DATE_PRINTER = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
-	private List<ChartDataSetProperties> dataSetPropertiesList;
+	private StatsAdapter statsAdapter;
 
 	public TrackStatsFragment() {
 	}
@@ -72,9 +69,9 @@ public class TrackStatsFragment extends Fragment {
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		trackDataViewModel = ViewModelProviders.of(getActivity()).get(FlySightTrackDataViewModel.class);
 
-		trackDataViewModel.getLiveData()
+		ViewModelProviders.of(getActivity()).get(FlySightTrackDataViewModel.class)
+                .getLiveData()
 				.observe(this, flySightTrackData -> actOnDataChanged(flySightTrackData));
 	}
 
@@ -96,15 +93,16 @@ public class TrackStatsFragment extends Fragment {
 		statsAdapter.statsItems.get(FILENAME).value = flySightTrackData.getSourceFileName();
 
 		long unixStartTime = flySightTrackData.getFlySightTrackPoints().get(0).unixTimeStamp;
-		String formattedStartTime = PRETTY_DATE_PRINTER.format(unixStartTime);
-		statsAdapter.statsItems.get(START_TIME).value = formattedStartTime;
+        statsAdapter.statsItems.get(START_TIME).value = PRETTY_DATE_PRINTER.format(unixStartTime);
 
 		ChartDataSetProperties timeProperties = new ChartDataSetProperties.TimeDataSetProperties(dummyXProvider);
-		long unixDuration = flySightTrackData.getFlySightTrackPoints().get(flySightTrackData.getFlySightTrackPoints().size() - 1).unixTimeStamp - unixStartTime;
-		String formattedDuration = getContext().getString(R.string.seconds, timeProperties.decimalFormat.format(unixDuration/1000f));
-		statsAdapter.statsItems.get(DURATION).value = formattedDuration;
+		long unixDuration = flySightTrackData.getFlySightTrackPoints()
+                .get(flySightTrackData.getFlySightTrackPoints().size() - 1).unixTimeStamp - unixStartTime;
+        statsAdapter.statsItems.get(DURATION).value = getContext()
+                .getString(R.string.seconds, timeProperties.decimalFormat.format(unixDuration/1000f));
 
-		ChartDataSetProperties altitudeProperties = new ChartDataSetProperties.AltitudeDataSetProperties(dummyXProvider, unitSystem);
+        String unitSystem = METRIC;
+        ChartDataSetProperties altitudeProperties = new ChartDataSetProperties.AltitudeDataSetProperties(dummyXProvider, unitSystem);
 		statsAdapter.statsItems.get(MAX_ALTITUDE).value = altitudeProperties.getFormattedYMax(getContext(), flySightTrackData);
 		statsAdapter.statsItems.get(MIN_ALTITUDE).value = altitudeProperties.getFormattedYMin(getContext(), flySightTrackData);
 
@@ -134,7 +132,8 @@ public class TrackStatsFragment extends Fragment {
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.button_list_view);
+
+		RecyclerView recyclerView =  view.findViewById(R.id.button_list_view);
 		recyclerView.setHasFixedSize(true);
 		RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
 		recyclerView.setLayoutManager(layoutManager);

@@ -35,13 +35,11 @@ import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import com.watchthybridle.floatsight.fragment.mainmenu.MainMenuFragment;
@@ -62,39 +60,37 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG_FILE_PICKER_FRAGMENT = "TAG_FILE_PICKER_FRAGMENT";
     public static final String TAG_MAIN_MENU_FRAGMENT = "TAG_MAIN_MENU_FRAGMENT";
 
-    public static final int REQUEST_FILE = 666;
     private static final int IMPORT_PERMISSION_REQUEST_CODE = 200;
-    public static final int LOAD_PERMISSION_REQUEST_CODE = 100;
-
     private static final DatePrinter DATE_PRINTER = FastDateFormat.getInstance("yyyy-MM-dd'T'HH_mm_ss");
+
+    public static final int REQUEST_FILE = 666;
+    public static final int LOAD_PERMISSION_REQUEST_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
         if (savedInstanceState == null) {
             showMainMenuFragment();
-		}
+        }
     }
 
     private void showMainMenuFragment() {
         MainMenuFragment mainMenuFragment = new MainMenuFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, mainMenuFragment,
-                TAG_MAIN_MENU_FRAGMENT);
-        transaction.commit();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, mainMenuFragment, TAG_MAIN_MENU_FRAGMENT)
+                .commit();
     }
 
     public void startImportFile() {
         if (!checkPermission()) {
-            ActivityCompat.requestPermissions(this, new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, IMPORT_PERMISSION_REQUEST_CODE);
+            ActivityCompat.requestPermissions(this, new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE},
+                    IMPORT_PERMISSION_REQUEST_CODE);
         } else {
             Intent intent = new Intent()
                     .setType("text/*")
@@ -108,10 +104,10 @@ public class MainActivity extends AppCompatActivity {
     public File getTracksFolder() throws FileNotFoundException {
         File folder = new File(Environment.getExternalStorageDirectory() + File.separator
                 + "FloatSight" + File.separator + "tracks" + File.separator);
-        if(!folder.exists()) {
+        if (!folder.exists()) {
             folder.mkdirs();
         }
-        if(!folder.exists() || !folder.isDirectory()) {
+        if (!folder.exists() || !folder.isDirectory()) {
             throw new FileNotFoundException("Could not access folder on local storage");
         }
         return folder;
@@ -124,15 +120,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_FILE) {
-            if(resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_FILE) {
+            if (resultCode == RESULT_OK) {
                 try {
                     importData(data);
                     //todo when done open filepicker at that location
@@ -157,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
         List<Uri> uriList = new ArrayList<>();
         ClipData clipData = data.getClipData();
         if (clipData != null) {
-            for (int index = 0; index < clipData.getItemCount(); index ++) {
+            for (int index = 0; index < clipData.getItemCount(); index++) {
                 uriList.add(clipData.getItemAt(index).getUri());
             }
         } else {
@@ -171,10 +162,10 @@ public class MainActivity extends AppCompatActivity {
     //todo move to files importer class
     private void copyFromUri(Uri uri) throws IOException {
         File folder = new File(getTracksFolder(), DATE_PRINTER.format(Calendar.getInstance().getTime()));
-        if(!folder.exists()) {
+        if (!folder.exists()) {
             folder.mkdirs();
         }
-        if(!folder.exists() || !folder.isDirectory()) {
+        if (!folder.exists() || !folder.isDirectory()) {
             throw new FileNotFoundException("Could not access folder on local storage");
         }
         String fileName = File.separator + resolveFileName(uri);
@@ -239,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
                     MainMenuFragment mainMenuFragment =
                             (MainMenuFragment) getSupportFragmentManager()
                                     .findFragmentByTag(TAG_MAIN_MENU_FRAGMENT);
-                    if(mainMenuFragment != null) {
+                    if (mainMenuFragment != null) {
                         mainMenuFragment.showTrackPickerFragment();
                     }
                 } else {
@@ -276,7 +267,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
 
     private void showAlertOKCancel(String message, DialogInterface.OnClickListener okListener) {
         new AlertDialog.Builder(MainActivity.this)

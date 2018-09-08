@@ -24,19 +24,19 @@ package com.watchthybridle.floatsight.fragment.trackpicker;
 
 import java.io.File;
 
-public class FileAdapterItem {
+class FileAdapterItem {
 
 	File file;
 	String fileName;
 	boolean isEnabled;
 
-	public FileAdapterItem(File file) {
+	FileAdapterItem(File file) {
 		this.file = file;
 		this.fileName = file.getName();
 		this.isEnabled = fileName.endsWith(".CSV") || fileName.endsWith(".csv") || file.isDirectory();
 	}
 
-	public void setEnabled(boolean enabled) {
+	void setEnabled(boolean enabled) {
 		isEnabled = enabled;
 	}
 }

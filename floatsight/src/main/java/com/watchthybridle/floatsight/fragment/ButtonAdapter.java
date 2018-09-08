@@ -29,19 +29,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.watchthybridle.floatsight.R;
 
 import java.util.List;
 
 public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.ButtonViewHolder> {
+
     public List<ButtonItem> buttonItems;
     private ButtonItemClickListener buttonItemClickListener;
 
-	public ButtonAdapter(List<ButtonItem> buttonItem) {
+    public ButtonAdapter(List<ButtonItem> buttonItem) {
         this.buttonItems = buttonItem;
-	}
+    }
 
     public void setButtonItemClickListener(ButtonItemClickListener buttonItemClickListener) {
         this.buttonItemClickListener = buttonItemClickListener;
@@ -50,30 +50,31 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.ButtonView
     @Override
     @NonNull
     public ButtonViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.button_view_holder, parent, false);
-        return new ButtonViewHolder(linearLayout);
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.vh_button, parent, false);
+        return new ButtonViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ButtonViewHolder holder, int position) {
-	    ButtonItem buttonItem = buttonItems.get(position);
-	    if(buttonItem.overrideTitle == null) {
-            holder.title.setText(buttonItem.title);
-        } else {
-            holder.title.setText(buttonItem.overrideTitle);
-        }
-        if(buttonItem.overrideDescription == null) {
-            holder.description.setText(buttonItem.description);
-        } else {
-            holder.description.setText(buttonItem.overrideDescription);
-        }
-        holder.icon.setImageResource(buttonItem.icon);
-        holder.title.setEnabled(buttonItem.isEnabled);
-        holder.description.setEnabled(buttonItem.isEnabled);
-        holder.icon.setEnabled(buttonItem.isEnabled);
-        holder.itemView.setOnClickListener(new ViewOnClickListener(buttonItems.get(position)));
+        ButtonItem item = buttonItems.get(position);
 
+        if (item.overrideTitle == null) {
+            holder.title.setText(item.title);
+        } else {
+            holder.title.setText(item.overrideTitle);
+        }
+        if (item.overrideDescription == null) {
+            holder.description.setText(item.description);
+        } else {
+            holder.description.setText(item.overrideDescription);
+        }
+
+        holder.icon.setImageResource(item.icon);
+        holder.title.setEnabled(item.isEnabled);
+        holder.description.setEnabled(item.isEnabled);
+        holder.icon.setEnabled(item.isEnabled);
+        holder.itemView.setOnClickListener(new OnItemViewClickListener(buttonItems.get(position)));
     }
 
     @Override
@@ -81,11 +82,26 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.ButtonView
         return buttonItems.size();
     }
 
-    private class ViewOnClickListener implements View.OnClickListener {
-	    ButtonItem buttonItem;
+    static class ButtonViewHolder extends RecyclerView.ViewHolder {
 
-	    ViewOnClickListener(ButtonItem buttonItem) {
-	        this.buttonItem = buttonItem;
+        TextView title;
+        TextView description;
+        ImageView icon;
+
+        ButtonViewHolder(View itemView) {
+            super(itemView);
+            title = itemView.findViewById(R.id.button_title);
+            description = itemView.findViewById(R.id.button_description);
+            icon = itemView.findViewById(R.id.button_icon);
+        }
+    }
+
+    private class OnItemViewClickListener implements View.OnClickListener {
+
+        ButtonItem buttonItem;
+
+        OnItemViewClickListener(ButtonItem buttonItem) {
+            this.buttonItem = buttonItem;
         }
 
         @Override
@@ -94,19 +110,8 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.ButtonView
         }
     }
 
-    public class ButtonViewHolder extends RecyclerView.ViewHolder {
-		public TextView title;
-		public TextView description;
-		public ImageView icon;
-        ButtonViewHolder(View itemView) {
-            super(itemView);
-            title = itemView.findViewById(R.id.button_title);
-            description = itemView.findViewById(R.id.button_description);
-            icon = itemView.findViewById(R.id.button_icon);
-        }
-	}
-
     public interface ButtonItemClickListener {
+
         void onItemClick(ButtonItem buttonItem);
     }
 }

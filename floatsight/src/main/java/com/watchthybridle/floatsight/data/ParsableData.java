@@ -40,12 +40,12 @@ public abstract class ParsableData {
     private long parsingStatus = PARSING_SUCCESS;
     private String sourceFileName = "";
 
-    @ConfigSettingsData.ParsingResult
+    @ConfigData.ParsingResult
     public long getParsingStatus() {
         return parsingStatus;
     }
 
-    public void setParsingStatus(@ConfigSettingsData.ParsingResult long parsingStatus) {
+    public void setParsingStatus(@ConfigData.ParsingResult long parsingStatus) {
         this.parsingStatus = parsingStatus;
     }
 

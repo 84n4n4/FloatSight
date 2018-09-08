@@ -27,42 +27,64 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import com.watchthybridle.floatsight.R;
-import com.watchthybridle.floatsight.configparser.ConfigSetting;
+import com.watchthybridle.floatsight.configparser.ConfigItem;
 
 import java.util.List;
 import java.util.Locale;
 
-public class ConfigSettingsAdapter extends RecyclerView.Adapter<ConfigSettingsViewHolder> {
+class ConfigAdapter extends RecyclerView.Adapter<ConfigAdapter.ConfigItemViewHolder> {
 
-    private List<ConfigSetting> data;
+    private List<ConfigItem> configItems;
+
+    ConfigAdapter(List<ConfigItem> configItems) {
+        this.configItems = configItems;
+    }
 
     @NonNull
     @Override
-    public ConfigSettingsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int position) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.vh_config_setting, parent, false);
-        return new ConfigSettingsViewHolder(view);
+    public ConfigItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int position) {
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.vh_config_item, parent, false);
+        return new ConfigItemViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ConfigSettingsViewHolder holder, int position) {
-        ConfigSetting item = data.get(position);
+    public void onBindViewHolder(@NonNull ConfigItemViewHolder holder, int position) {
+        ConfigItem item = configItems.get(position);
+
         holder.description.setText(item.description);
         holder.name.setText(item.name);
         holder.value.setText(String.format(Locale.getDefault(), "%d", item.value));
         for (String comment : item.comments) {
-        	holder.comments.append(comment + "\n");
-		}
+            holder.comments.append(comment + "\n");
+        }
     }
 
     @Override
     public int getItemCount() {
-        return data.size();
+        return configItems.size();
     }
 
-    public void setData(List<ConfigSetting> data) {
-        this.data = data;
+    public void setData(List<ConfigItem> configItems) {
+        this.configItems = configItems;
         notifyDataSetChanged();
+    }
+
+    static class ConfigItemViewHolder extends RecyclerView.ViewHolder {
+
+        TextView name;
+        TextView value;
+        TextView description;
+        TextView comments;
+
+        ConfigItemViewHolder(@NonNull View itemView) {
+            super(itemView);
+            name = itemView.findViewById(R.id.name);
+            value = itemView.findViewById(R.id.value);
+            description = itemView.findViewById(R.id.description);
+            comments = itemView.findViewById(R.id.comments);
+        }
     }
 }

@@ -32,16 +32,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.watchthybridle.floatsight.R;
-import com.watchthybridle.floatsight.configparser.ConfigSetting;
-import com.watchthybridle.floatsight.data.ConfigSettingsData;
-import com.watchthybridle.floatsight.viewmodel.ConfigSettingsDataViewModel;
+import com.watchthybridle.floatsight.configparser.ConfigItem;
+import com.watchthybridle.floatsight.data.ConfigData;
+import com.watchthybridle.floatsight.viewmodel.ConfigDataViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ConfigEditorFragment extends Fragment {
 
-    private ConfigSettingsAdapter adapter;
+    private ConfigAdapter adapter;
 
     public ConfigEditorFragment() {
     }
@@ -51,11 +51,11 @@ public class ConfigEditorFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         ViewModelProviders.of(getActivity())
-                .get(ConfigSettingsDataViewModel.class)
+                .get(ConfigDataViewModel.class)
                 .getLiveData().observe(this, this::actOnDataChanged);
     }
 
-    private void actOnDataChanged(ConfigSettingsData data) {
+    private void actOnDataChanged(ConfigData data) {
         if (adapter != null) {
             adapter.setData(data.getSettings());
         }
@@ -63,40 +63,38 @@ public class ConfigEditorFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_config, container, false);
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstance) {
-        super.onActivityCreated(savedInstance);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        adapter = new ConfigSettingsAdapter();
-        adapter.setData(getSettings());
-
-        RecyclerView recyclerView = getView().findViewById(R.id.recycler_view);
+        adapter = new ConfigAdapter(getSettings());
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setAdapter(adapter);
     }
 
-    private List<ConfigSetting> getSettings() {
-    	List<ConfigSetting> settings = new ArrayList<>();
+    private List<ConfigItem> getSettings() {
+        List<ConfigItem> settings = new ArrayList<>();
 
-    	settings.add(new ConfigSetting("Model", 6,
-				"Dynamic model",
-				"0 = Portable",
-				"2 = Stationary",
-				"3 = Pedestrian",
-				"4 = Automotive",
-				"5 = Sea",
-				"6 = Airborne with < 1 G acceleration",
-				"7 = Airborne with < 2 G acceleration",
-				"8 = Airborne with < 4 G acceleration"));
+        settings.add(new ConfigItem("Model", 6,
+                "Dynamic model",
+                "0 = Portable",
+                "2 = Stationary",
+                "3 = Pedestrian",
+                "4 = Automotive",
+                "5 = Sea",
+                "6 = Airborne with < 1 G acceleration",
+                "7 = Airborne with < 2 G acceleration",
+                "8 = Airborne with < 4 G acceleration"));
 
-    	settings.add(new ConfigSetting("Min", 0,
-				"Lowest pitch value",
-				"cm/s        in Mode 0, 1, or 4",
-				"ratio * 100 in Mode 2 or 3"));
+        settings.add(new ConfigItem("Min", 0,
+                "Lowest pitch value",
+                "cm/s        in Mode 0, 1, or 4",
+                "ratio * 100 in Mode 2 or 3"));
 
-    	return settings;
-	}
+        return settings;
+    }
 }

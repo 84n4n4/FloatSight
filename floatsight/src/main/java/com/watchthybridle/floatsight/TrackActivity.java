@@ -104,16 +104,6 @@ public class TrackActivity extends AppCompatActivity {
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
     public void loadFlySightTrackData() {
         if (!checkPermission()) {
             requestPermission();
@@ -192,34 +182,26 @@ public class TrackActivity extends AppCompatActivity {
     }
 
     public void onYAxisDialogCheckboxClicked(View view) {
-        PlotFragment plotFragment =
-                (PlotFragment) getSupportFragmentManager()
-                        .findFragmentByTag(TrackActivity.TAG_PLOT_FRAGMENT);
+        PlotFragment plotFragment = (PlotFragment) getSupportFragmentManager()
+                .findFragmentByTag(TrackActivity.TAG_PLOT_FRAGMENT);
         if (plotFragment != null) {
             plotFragment.onYAxisDialogCheckboxClicked(view);
         }
     }
 
     public void onXAxisDialogCheckboxClicked(View view) {
-        PlotFragment plotFragment =
-                (PlotFragment) getSupportFragmentManager()
-                        .findFragmentByTag(TrackActivity.TAG_PLOT_FRAGMENT);
+        PlotFragment plotFragment = (PlotFragment) getSupportFragmentManager()
+                .findFragmentByTag(TrackActivity.TAG_PLOT_FRAGMENT);
         if (plotFragment != null) {
             plotFragment.onXAxisDialogCheckboxClicked(view);
         }
     }
 
     public void onUnitsDialogCheckboxClicked(View view) {
-        PlotFragment plotFragment =
-                (PlotFragment) getSupportFragmentManager()
-                        .findFragmentByTag(TrackActivity.TAG_PLOT_FRAGMENT);
+        PlotFragment plotFragment = (PlotFragment) getSupportFragmentManager()
+                .findFragmentByTag(TrackActivity.TAG_PLOT_FRAGMENT);
         if (plotFragment != null) {
             plotFragment.onUnitsDialogCheckboxClicked(view);
         }
-    }
-
-    @VisibleForTesting
-    public FlySightTrackDataViewModel getFlySightTrackDataViewModel() {
-        return flySightTrackDataViewModel;
     }
 }
