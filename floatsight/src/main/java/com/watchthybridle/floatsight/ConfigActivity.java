@@ -27,26 +27,20 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.TextView;
 import com.watchthybridle.floatsight.configparser.ConfigParser;
-import com.watchthybridle.floatsight.data.ConfigSettingsData;
+import com.watchthybridle.floatsight.data.ConfigData;
 import com.watchthybridle.floatsight.datarepository.DataRepository;
 import com.watchthybridle.floatsight.fragment.configeditor.ConfigEditorFragment;
-import com.watchthybridle.floatsight.viewmodel.ConfigSettingsDataViewModel;
+import com.watchthybridle.floatsight.viewmodel.ConfigDataViewModel;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -56,81 +50,44 @@ import static android.view.View.VISIBLE;
 public class ConfigActivity extends AppCompatActivity {
 
     public static final String TAG_CONFIG_FRAGMENT = "TAG_CONFIG_FRAGMENT";
-
     public static final int REQUEST_CONFIG_FILE = 777;
-    private static final int PERMISSION_REQUEST_CODE = 200;
-    private View importButton;
-    private View saveButton;
 
-    private ConfigSettingsDataViewModel configSettingsDataViewModel;
+    private static final int PERMISSION_REQUEST_CODE = 200;
+
+    private ConfigDataViewModel configDataViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_config);
+        setContentView(R.layout.activity_with_fragment_container);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        importButton = findViewById(R.id.load_button_linear_layout);
-        ((TextView) importButton.findViewById(R.id.button_title)).setText(R.string.button_config_import_title);
-        ((TextView) importButton.findViewById(R.id.button_description)).setText(R.string.button_config_import_description);
-        ((ImageView) importButton.findViewById(R.id.button_icon)).setImageResource(R.drawable.import_grey);
-        importButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startImportFile();
-            }
-        });
+        configDataViewModel = ViewModelProviders.of(this).get(ConfigDataViewModel.class);
+        configDataViewModel.getLiveData()
+                .observe(this, this::actOnDataChanged);
 
-        saveButton = findViewById(R.id.save_button_linear_layout);
-        ((TextView) saveButton.findViewById(R.id.button_title)).setText(R.string.button_config_save_title);
-        ((TextView) saveButton.findViewById(R.id.button_description)).setText(R.string.button_config_save_description);
-        ((ImageView) saveButton.findViewById(R.id.button_icon)).setImageResource(R.drawable.disk);
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO save file
-                finish();
-            }
-        });
-
-        configSettingsDataViewModel = ViewModelProviders.of(this).get(ConfigSettingsDataViewModel.class);
-        configSettingsDataViewModel.getLiveData()
-                .observe(this, settingsData -> actOnDataChanged(settingsData));
-
-        updateButtonVisibility();
+        showConfigEditorFragment();
     }
 
-    public void actOnDataChanged(ConfigSettingsData configData) {
+    public void actOnDataChanged(ConfigData configData) {
         getSupportActionBar().setSubtitle(configData.getSourceFileName());
         findViewById(R.id.toolbar_progress_bar).setVisibility(GONE);
 
-        if(configSettingsDataViewModel.containsValidData()) {
+        if (configDataViewModel.containsValidData()) {
             showConfigEditorFragment();
-        }
-        updateButtonVisibility();
-    }
-
-    private void updateButtonVisibility() {
-        if(configSettingsDataViewModel.containsValidData()) {
-            importButton.setVisibility(GONE);
-            saveButton.setVisibility(VISIBLE);
-        } else {
-            importButton.setVisibility(VISIBLE);
-            saveButton.setVisibility(GONE);
         }
     }
 
     private void showConfigEditorFragment() {
         ConfigEditorFragment configEditorFragment = new ConfigEditorFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, configEditorFragment,
-                TAG_CONFIG_FRAGMENT);
-        transaction.commit();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, configEditorFragment, TAG_CONFIG_FRAGMENT)
+                .commit();
     }
 
     public void startImportFile() {
@@ -152,15 +109,10 @@ public class ConfigActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_CONFIG_FILE) {
-            if(resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_CONFIG_FILE) {
+            if (resultCode == RESULT_OK) {
                 loadFlySightConfigData(data.getData());
             } else {
                 findViewById(R.id.toolbar_progress_bar).setVisibility(GONE);
@@ -170,9 +122,9 @@ public class ConfigActivity extends AppCompatActivity {
 
     public void loadFlySightConfigData(Uri uri) {
         findViewById(R.id.toolbar_progress_bar).setVisibility(VISIBLE);
-        DataRepository<ConfigSettingsData> repository =
-                new DataRepository<>(ConfigSettingsData.class, getContentResolver(), new ConfigParser());
-        repository.load(uri, configSettingsDataViewModel);
+        DataRepository<ConfigData> repository =
+                new DataRepository<>(ConfigData.class, getContentResolver(), new ConfigParser());
+        repository.load(uri, configDataViewModel);
     }
 
     private boolean checkPermission() {
@@ -188,34 +140,7 @@ public class ConfigActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSION_REQUEST_CODE:
-                if (grantResults.length > 0) {
-
-                    boolean readAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                    boolean writeAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
-
-                    if (readAccepted && writeAccepted) {
-                    }
-                    else {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            if (shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE)) {
-                                showAlertOKCancel(getResources().getString(R.string.permissions_rationale),
-                                        (dialog, which) -> {
-                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                                requestPermissions(new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE},
-                                                        PERMISSION_REQUEST_CODE);
-                                            }
-                                        });
-                                return;
-                            }
-                        }
-
-                    }
-                }
-                break;
-            }
-        }
+    }
 
     private void showAlertOKCancel(String message, DialogInterface.OnClickListener okListener) {
         new AlertDialog.Builder(ConfigActivity.this)

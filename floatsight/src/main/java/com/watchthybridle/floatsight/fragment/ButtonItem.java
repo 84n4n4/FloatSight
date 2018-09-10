@@ -26,6 +26,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 
 public class ButtonItem {
+
 	public @StringRes int title;
 	public @StringRes int description;
 	public @DrawableRes int icon;

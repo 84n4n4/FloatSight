@@ -60,7 +60,7 @@ public class DataRepository<T extends ParsableData> {
         }
     }
 
-    static class ParseFileTask<T extends ParsableData> extends AsyncTask<Uri, Integer, Long> {
+    private static class ParseFileTask<T extends ParsableData> extends AsyncTask<Uri, Integer, Long> {
 
         private T data;
         private ContentResolver contentResolver;

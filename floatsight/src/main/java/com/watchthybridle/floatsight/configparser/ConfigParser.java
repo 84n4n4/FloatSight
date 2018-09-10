@@ -23,7 +23,7 @@
 package com.watchthybridle.floatsight.configparser;
 
 import com.watchthybridle.floatsight.Parser;
-import com.watchthybridle.floatsight.data.ConfigSettingsData;
+import com.watchthybridle.floatsight.data.ConfigData;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ConfigParser implements Parser<ConfigSettingsData> {
+public class ConfigParser implements Parser<ConfigData> {
 
 	public String readToString(InputStream inputStream) throws IOException {
 
@@ -48,9 +48,9 @@ public class ConfigParser implements Parser<ConfigSettingsData> {
 	}
 
 	@Override
-	public ConfigSettingsData read(InputStream inputStream) throws IOException {
+	public ConfigData read(InputStream inputStream) throws IOException {
 
-		List<ConfigSetting> settings = new ArrayList<>();
+		List<ConfigItem> settings = new ArrayList<>();
 		BufferedReader reader = new BufferedReader(new StringReader(readToString(inputStream)));
 
 		Pattern commentPattern = Pattern.compile(";[^\\n]*");
@@ -95,25 +95,25 @@ public class ConfigParser implements Parser<ConfigSettingsData> {
 				String[] comments = new String[commentList.size()];
 				comments = commentList.toArray(comments);
 
-				settings.add(new ConfigSetting(settingName, value, description, comments));
+				settings.add(new ConfigItem(settingName, value, description, comments));
 			} else {
 				line = reader.readLine();
 			}
 		}
 
 		reader.close();
-		ConfigSettingsData settingsData = new ConfigSettingsData();
+		ConfigData settingsData = new ConfigData();
 		settingsData.setSettings(settings);
 
 		return settingsData;
 	}
 
 	@Override
-	public void write(OutputStream outputStream, ConfigSettingsData settingsData) throws IOException {
+	public void write(OutputStream outputStream, ConfigData settingsData) throws IOException {
 
 		OutputStreamWriter writer = new OutputStreamWriter(outputStream);
 
-		for (ConfigSetting setting : settingsData.getSettings()) {
+		for (ConfigItem setting : settingsData.getSettings()) {
 			writer.write(setting.getString());
 		}
 

@@ -29,55 +29,45 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.watchthybridle.floatsight.R;
-import com.watchthybridle.floatsight.recyclerview.ItemClickListener;
 
 import java.io.File;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileAdapterViewHolder> {
+class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileAdapterItemViewHolder> {
 
-    private ItemClickListener<FileAdapterItem> itemClickListener;
     private List<FileAdapterItem> fileAdapterItems;
+    private FileAdapterItemClickListener itemClickListener;
 
     FileAdapter(List<FileAdapterItem> fileAdapterItems) {
         this.fileAdapterItems = fileAdapterItems;
         sort();
     }
 
-    public void setItemClickListener(ItemClickListener<FileAdapterItem> itemClickListener) {
+    public void setItemClickListener(FileAdapterItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
-    }
-
-    private void sort() {
-        Collections.sort(fileAdapterItems, new Comparator<FileAdapterItem>() {
-            @Override
-            public int compare(FileAdapterItem fileItem1, FileAdapterItem fileItem2)
-            {
-                return fileItem1.fileName.compareTo(fileItem2.fileName);
-            }
-        });
     }
 
     @Override
     @NonNull
-    public FileAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.file_view_holder, parent, false);
-        return new FileAdapterViewHolder(linearLayout);
+    public FileAdapterItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.vh_file_adapter_item, parent, false);
+        return new FileAdapterItemViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FileAdapterViewHolder holder, int position) {
-        holder.fileName.setText(fileAdapterItems.get(position).fileName);
-        holder.fileName.setEnabled(fileAdapterItems.get(position).isEnabled);
+    public void onBindViewHolder(@NonNull FileAdapterItemViewHolder holder, int position) {
+        FileAdapterItem item = fileAdapterItems.get(position);
 
-        if (fileAdapterItems.get(position).isEnabled) {
-            if(fileAdapterItems.get(position).file.isDirectory()) {
+        holder.fileName.setText(item.fileName);
+        holder.fileName.setEnabled(item.isEnabled);
+
+        if (item.isEnabled) {
+            if (item.file.isDirectory()) {
                 holder.fileIcon.setImageResource(R.drawable.folder_file_picker);
             } else {
                 holder.fileIcon.setImageResource(R.drawable.suit_file_picker);
@@ -86,7 +76,7 @@ class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileAdapterViewHolder
             holder.fileIcon.setImageResource(R.drawable.no_track_file_picker);
         }
 
-            ViewOnClickListener onClickListener = new ViewOnClickListener(fileAdapterItems.get(position));
+        OnItemViewClickListener onClickListener = new OnItemViewClickListener(item);
         holder.itemView.setOnClickListener(onClickListener);
         holder.itemView.setOnLongClickListener(onClickListener);
     }
@@ -97,8 +87,8 @@ class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileAdapterViewHolder
     }
 
     public boolean contains(String fileName) {
-        for (FileAdapterItem fileAdapterItem : fileAdapterItems) {
-            if (fileAdapterItem.fileName.equals(fileName)) {
+        for (FileAdapterItem item : fileAdapterItems) {
+            if (item.fileName.equals(fileName)) {
                 return true;
             }
         }
@@ -130,11 +120,32 @@ class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileAdapterViewHolder
         return removed;
     }
 
-    private class ViewOnClickListener implements View.OnClickListener, View.OnLongClickListener {
+    private void sort() {
+        Collections.sort(fileAdapterItems, new Comparator<FileAdapterItem>() {
+            @Override
+            public int compare(FileAdapterItem fileItem1, FileAdapterItem fileItem2) {
+                return fileItem1.fileName.compareTo(fileItem2.fileName);
+            }
+        });
+    }
+
+    static class FileAdapterItemViewHolder extends RecyclerView.ViewHolder {
+
+        TextView fileName;
+        ImageView fileIcon;
+
+        FileAdapterItemViewHolder(View itemView) {
+            super(itemView);
+            fileIcon = itemView.findViewById(R.id.file_icon);
+            fileName = itemView.findViewById(R.id.file_name);
+        }
+    }
+
+    private class OnItemViewClickListener implements View.OnClickListener, View.OnLongClickListener {
 
         FileAdapterItem fileAdapterItem;
 
-        ViewOnClickListener(FileAdapterItem fileAdapterItem) {
+        OnItemViewClickListener(FileAdapterItem fileAdapterItem) {
             this.fileAdapterItem = fileAdapterItem;
         }
 
@@ -150,15 +161,10 @@ class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileAdapterViewHolder
         }
     }
 
-    static class FileAdapterViewHolder extends RecyclerView.ViewHolder {
+    public interface FileAdapterItemClickListener {
 
-        TextView fileName;
-        ImageView fileIcon;
+        void onItemClick(FileAdapterItem fileAdapterItem);
 
-        FileAdapterViewHolder(View itemView) {
-            super(itemView);
-            fileIcon = itemView.findViewById(R.id.file_icon);
-            fileName = itemView.findViewById(R.id.file_name);
-        }
+        void onItemLongClick(FileAdapterItem fileAdapterItem);
     }
 }

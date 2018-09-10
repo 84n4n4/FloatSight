@@ -9,4 +9,6 @@ public abstract class DataViewModel<T> extends ViewModel {
     public abstract LiveData<T> getLiveData();
 
     public abstract MutableLiveData<T> getMutableLiveData();
+
+    public abstract boolean containsValidData();
 }

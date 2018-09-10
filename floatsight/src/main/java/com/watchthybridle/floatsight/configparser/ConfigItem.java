@@ -24,7 +24,7 @@ package com.watchthybridle.floatsight.configparser;
 
 import java.util.Locale;
 
-public class ConfigSetting {
+public class ConfigItem {
 
 	private static final String TEMPLATE_VALUE_LINE = "%s: %d ; %s\n";
 	private static final String TEMPLATE_COMMENT_LINE = "                ;   %s\n";
@@ -35,7 +35,7 @@ public class ConfigSetting {
 
 	public String[] comments;
 
-	public ConfigSetting(String name, int value, String description, String... comments) {
+	public ConfigItem(String name, int value, String description, String... comments) {
 		this.name = name;
 		this.value = value;
 		this.description = description;

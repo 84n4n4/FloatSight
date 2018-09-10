@@ -25,13 +25,13 @@ package com.watchthybridle.floatsight.fragment.stats;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 
-public class StatsItem {
-	public int id;
-	public @StringRes int title;
-	public String value;
-	public @DrawableRes int icon;
+class StatsItem {
 
-	public StatsItem(@StringRes int title, String value, @DrawableRes int icon) {
+	@StringRes int title;
+	String value;
+	@DrawableRes int icon;
+
+	StatsItem(@StringRes int title, String value, @DrawableRes int icon) {
 		this.title = title;
 		this.value = value;
 		this.icon = icon;

@@ -26,7 +26,7 @@
                                              android:layout_width="match_parent"
                                              android:layout_height="match_parent"
                                              tools:context=".fragment.plot.PlotFragment"
-                                             tools:showIn="@layout/activity_main">
+                                             tools:showIn="@layout/activity_with_fragment_container">
 
     <FrameLayout
         android:orientation="vertical"
