@@ -31,26 +31,22 @@ import android.support.v4.app.FragmentTransaction;
 import com.watchthybridle.floatsight.Actions;
 import com.watchthybridle.floatsight.MainActivity;
 import com.watchthybridle.floatsight.R;
+import com.watchthybridle.floatsight.TrackActivity;
 import com.watchthybridle.floatsight.csvparser.FlySightCsvParser;
 import com.watchthybridle.floatsight.data.FlySightTrackData;
 import com.watchthybridle.floatsight.datarepository.DataRepository;
 import com.watchthybridle.floatsight.fragment.plot.PlotFragment;
-import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties;
-import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.TrackPointValueProvider;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.List;
 
 import static android.support.test.espresso.Espresso.*;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 import static com.watchthybridle.floatsight.MainActivity.TAG_MAIN_MENU_FRAGMENT;
-import static com.watchthybridle.floatsight.MainActivity.TAG_PLOT_FRAGMENT;
-import static com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetHolder.*;
+import static com.watchthybridle.floatsight.TrackActivity.TAG_PLOT_FRAGMENT;
 import static junit.framework.TestCase.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
@@ -59,7 +55,7 @@ public class XAxisTest {
     private PlotFragment plotFragment;
 
     @Rule
-    public ActivityTestRule<MainActivity> rule = new ActivityTestRule<>(MainActivity.class);
+    public ActivityTestRule<TrackActivity> rule = new ActivityTestRule<>(TrackActivity.class);
 
     @Before
     public void setUp() {
@@ -128,7 +124,7 @@ public class XAxisTest {
     private GlideOverlayChart getChart() {
         PlotFragment plotFragment =
                 (PlotFragment) rule.getActivity().getSupportFragmentManager()
-                        .findFragmentByTag(MainActivity.TAG_PLOT_FRAGMENT);
+                        .findFragmentByTag(TAG_PLOT_FRAGMENT);
         return plotFragment.getChart();
     }
 }

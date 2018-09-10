@@ -31,6 +31,7 @@ import android.support.v4.app.FragmentTransaction;
 import com.watchthybridle.floatsight.Actions;
 import com.watchthybridle.floatsight.MainActivity;
 import com.watchthybridle.floatsight.R;
+import com.watchthybridle.floatsight.TrackActivity;
 import com.watchthybridle.floatsight.csvparser.FlySightCsvParser;
 import com.watchthybridle.floatsight.data.FlySightTrackData;
 import com.watchthybridle.floatsight.datarepository.DataRepository;
@@ -49,7 +50,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 import static com.watchthybridle.floatsight.MainActivity.TAG_MAIN_MENU_FRAGMENT;
-import static com.watchthybridle.floatsight.MainActivity.TAG_PLOT_FRAGMENT;
+import static com.watchthybridle.floatsight.TrackActivity.TAG_PLOT_FRAGMENT;
 import static com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetHolder.*;
 import static junit.framework.TestCase.assertEquals;
 
@@ -59,7 +60,7 @@ public class UnitsTest {
     private PlotFragment plotFragment;
 
     @Rule
-    public ActivityTestRule<MainActivity> rule = new ActivityTestRule<>(MainActivity.class);
+    public ActivityTestRule<TrackActivity> rule = new ActivityTestRule<>(TrackActivity.class);
 
     @Before
     public void setUp() {
@@ -164,7 +165,7 @@ public class UnitsTest {
     private GlideOverlayChart getChart() {
         PlotFragment plotFragment =
                 (PlotFragment) rule.getActivity().getSupportFragmentManager()
-                        .findFragmentByTag(MainActivity.TAG_PLOT_FRAGMENT);
+                        .findFragmentByTag(TAG_PLOT_FRAGMENT);
         return plotFragment.getChart();
     }
 }
