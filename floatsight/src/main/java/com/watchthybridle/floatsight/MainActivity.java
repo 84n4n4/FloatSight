@@ -73,6 +73,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         if (savedInstanceState == null) {
             showMainMenuFragment();
         }
@@ -144,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         FileImporter importer = new FileImporter(getContentResolver());
-        importer.importTracks((Uri[]) uris.toArray(), fileImportDataViewModel);
+        importer.importTracks(uris, fileImportDataViewModel);
     }
 
     public boolean checkPermission() {

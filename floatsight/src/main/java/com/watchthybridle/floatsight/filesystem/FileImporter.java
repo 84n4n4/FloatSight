@@ -14,6 +14,7 @@ import org.apache.commons.lang3.time.FastDateFormat;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -32,8 +33,10 @@ public class FileImporter {
         this.contentResolver = contentResolver;
     }
 
-    public void importTracks(Uri[] uris, DataViewModel<FileImportData> viewModel) {
-        new ImportFilesTask(viewModel.getMutableLiveData()).execute(uris);
+    public void importTracks(List<Uri> urisList, DataViewModel<FileImportData> viewModel) {
+        Uri[] urisArray = new Uri[urisList.size()];
+        urisList.toArray(urisArray);
+        new ImportFilesTask(viewModel.getMutableLiveData()).execute(urisArray);
     }
 
     private class ImportFilesTask extends AsyncTask<Uri, Integer, Long> {
