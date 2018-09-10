@@ -37,6 +37,13 @@ public class FlySightTrackData extends ParsableData {
         flySightTrackPoints = new ArrayList<>();
     }
 
+    public FlySightTrackData(List<FlySightTrackPoint> flySightTrackPoints, String sourceFileName) {
+        this.flySightTrackPoints = flySightTrackPoints;
+        setSourceFileName(sourceFileName);
+        setParsingStatus(PARSING_SUCCESS);
+        setDirty(true);
+    }
+
     public List<FlySightTrackPoint> getFlySightTrackPoints() {
         return flySightTrackPoints;
     }

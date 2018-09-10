@@ -23,7 +23,10 @@
 
 package com.watchthybridle.floatsight.fragment;
 
+import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +41,8 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.ButtonView
 
     public List<ButtonItem> buttonItems;
     private ButtonItemClickListener buttonItemClickListener;
+    @ColorInt int highlightColor;
+    @ColorInt int defaultColor;
 
     public ButtonAdapter(List<ButtonItem> buttonItem) {
         this.buttonItems = buttonItem;
@@ -52,6 +57,8 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.ButtonView
     public ButtonViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.vh_button, parent, false);
+        highlightColor = ContextCompat.getColor(itemView.getContext(), R.color.buttonHighlighted);
+        defaultColor = ContextCompat.getColor(itemView.getContext(), R.color.buttonDefault);
         return new ButtonViewHolder(itemView);
     }
 
@@ -75,6 +82,12 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.ButtonView
         holder.description.setEnabled(item.isEnabled);
         holder.icon.setEnabled(item.isEnabled);
         holder.itemView.setOnClickListener(new OnItemViewClickListener(buttonItems.get(position)));
+
+        if (item.highlighted) {
+            holder.title.setTextColor(highlightColor);
+        } else {
+            holder.title.setTextColor(defaultColor);
+        }
     }
 
     @Override

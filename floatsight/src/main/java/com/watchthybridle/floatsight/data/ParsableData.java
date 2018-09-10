@@ -39,6 +39,7 @@ public abstract class ParsableData {
 
     private long parsingStatus = PARSING_SUCCESS;
     private String sourceFileName = "";
+    private boolean dirty = false;
 
     @ParsingResult
     public long getParsingStatus() {
@@ -55,5 +56,13 @@ public abstract class ParsableData {
 
     public void setSourceFileName(String sourceFileName) {
         this.sourceFileName = sourceFileName;
+    }
+
+    public boolean isDirty() {
+        return dirty;
+    }
+
+    public void setDirty(boolean dirty) {
+        this.dirty = dirty;
     }
 }

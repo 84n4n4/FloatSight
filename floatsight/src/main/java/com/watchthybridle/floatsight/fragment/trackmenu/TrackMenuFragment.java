@@ -22,14 +22,19 @@
 
 package com.watchthybridle.floatsight.fragment.trackmenu;
 
+import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -42,6 +47,7 @@ import com.watchthybridle.floatsight.fragment.ButtonItem;
 import com.watchthybridle.floatsight.fragment.Dialogs;
 import com.watchthybridle.floatsight.fragment.plot.PlotFragment;
 import com.watchthybridle.floatsight.fragment.stats.TrackStatsFragment;
+import com.watchthybridle.floatsight.fragment.trackpicker.TrackPickerFragment;
 import com.watchthybridle.floatsight.recyclerview.DividerLineDecorator;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
 import org.apache.commons.lang3.time.DatePrinter;
@@ -62,6 +68,9 @@ public class TrackMenuFragment extends Fragment implements ButtonAdapter.ButtonI
 	private static final int BUTTON_LABEL = 0;
 	private static final int BUTTON_PLOT = 1;
 	private static final int BUTTON_STATS = 2;
+
+	private static final int SAVE_AS = 0;
+	private static final int DISCARD = 1;
 
 	private FlySightTrackDataViewModel trackDataViewModel;
 	private ButtonAdapter buttonAdapter;
@@ -99,7 +108,13 @@ public class TrackMenuFragment extends Fragment implements ButtonAdapter.ButtonI
 		ButtonItem statsButton = buttonAdapter.buttonItems.get(BUTTON_STATS);
 		if (trackDataViewModel.containsValidData()) {
 			FlySightTrackData flySightTrackData = trackDataViewModel.getLiveData().getValue();
-			labelButton.overrideTitle = getString(R.string.button_label_filename, flySightTrackData.getSourceFileName());
+			if(flySightTrackData.isDirty()) {
+				labelButton.overrideTitle = getString(R.string.button_label_file_modified, flySightTrackData.getSourceFileName());
+				labelButton.setHighlighted(true);
+			} else {
+				labelButton.overrideTitle = getString(R.string.button_label_filename, flySightTrackData.getSourceFileName());
+				labelButton.setHighlighted(false);
+			}
 			long unixStartTime = flySightTrackData.getFlySightTrackPoints().get(0).unixTimeStamp;
 			String formattedTime = PRETTY_DATE_PRINTER.format(unixStartTime);
 			labelButton.overrideDescription = getString(R.string.button_label_start_time, formattedTime);
@@ -132,6 +147,8 @@ public class TrackMenuFragment extends Fragment implements ButtonAdapter.ButtonI
 		recyclerView.setAdapter(buttonAdapter);
 		recyclerView.addItemDecoration(new DividerLineDecorator(view.getContext()));
 		updateButtons();
+		((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
+
 	}
 
 	private List<ButtonItem> getButtons() {
@@ -146,6 +163,13 @@ public class TrackMenuFragment extends Fragment implements ButtonAdapter.ButtonI
 		if (buttonItem.isEnabled) {
 			int id = buttonItem.id;
 			switch (id) {
+				case BUTTON_LABEL:
+					if (trackDataViewModel.getLiveData().getValue().isDirty()) {
+						new AlertDialog.Builder(getContext())
+								.setItems(R.array.context_track_activity_file, new OnDialogItemClickListener())
+								.show();
+					}
+					break;
 				case BUTTON_PLOT:
 					showPlotFragment();
 					break;
@@ -182,5 +206,41 @@ public class TrackMenuFragment extends Fragment implements ButtonAdapter.ButtonI
 					.addToBackStack(TAG_STATS_FRAGMENT)
 					.commit();
 		}
+	}
+
+	private class OnDialogItemClickListener implements DialogInterface.OnClickListener {
+		@Override
+		public void onClick(DialogInterface dialog, int which) {
+			switch (which) {
+				case SAVE_AS:
+					showSaveAsDialog();
+					break;
+				case DISCARD:
+					//TODO
+					break;
+			}
+		}
+	}
+
+	public void showSaveAsDialog() {
+		AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+				.setView(R.layout.text_input_layout)
+				.setPositiveButton(getString(R.string.save), (dialog, which) -> {
+					TextInputLayout textInputLayout = ((Dialog) dialog).findViewById(R.id.text_input_layout);
+					String newFileName = textInputLayout.getEditText().getText().toString().trim();
+					//TODO write to file!
+				})
+				.create();
+
+		alertDialog.show();
+
+		TextInputLayout inputLayout = alertDialog.findViewById(R.id.text_input_layout);
+		inputLayout.setHint(getString(R.string.file_name_hint));
+		String fileName = trackDataViewModel.getLiveData().getValue().getSourceFileName();
+		inputLayout.getEditText().setText(fileName);
+		inputLayout.getEditText().setSelection(0,
+				fileName.contains(".") ? fileName.lastIndexOf(".") : fileName.length());
+
+		//TODO add text watcher
 	}
 }

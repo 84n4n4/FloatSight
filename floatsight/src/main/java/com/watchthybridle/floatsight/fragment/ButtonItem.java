@@ -22,8 +22,10 @@
 
 package com.watchthybridle.floatsight.fragment;
 
+import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
+import com.watchthybridle.floatsight.R;
 
 public class ButtonItem {
 
@@ -31,6 +33,7 @@ public class ButtonItem {
 	public @StringRes int description;
 	public @DrawableRes int icon;
 	public boolean isEnabled = true;
+	public boolean highlighted = false;
 	public int id;
 	public String overrideTitle = null;
 	public String overrideDescription = null;
@@ -40,6 +43,10 @@ public class ButtonItem {
 		this.description = description;
 		this.id = id;
 		this.icon = icon;
+	}
+
+	public void setHighlighted(boolean highlighted) {
+		this.highlighted = highlighted;
 	}
 
 	public void setEnabled(boolean enabled) {

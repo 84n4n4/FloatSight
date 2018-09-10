@@ -23,20 +23,25 @@
 package com.watchthybridle.floatsight.fragment.plot;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.view.*;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
+import com.github.mikephil.charting.components.LimitLine;
 import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.data.FlySightTrackData;
 import com.watchthybridle.floatsight.mpandroidchart.customcharts.GlideOverlayChart;
 import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.*;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
+
+import java.util.List;
 
 import static com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetHolder.*;
 import static com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties.METRIC;
@@ -79,6 +84,8 @@ public class PlotFragment extends Fragment {
 
         frameLayout.addView(chart.glideChart);
         frameLayout.addView(chart);
+
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("");
     }
 
     public void actOnDataChanged(FlySightTrackData flySightTrackData) {
@@ -135,9 +142,38 @@ public class PlotFragment extends Fragment {
             case R.id.menu_item_units:
                 showUnitsDialog();
                 return true;
+            case R.id.menu_item_set_range_marker:
+                chart.setRangeMarker();
+                return true;
+            case R.id.menu_item_crop_range:
+                crop();
+                return true;
+            case R.id.menu_item_discard_markers:
+                chart.clearRangeMarkers();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void crop() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
+                .setTitle(R.string.crop_plot_dialog_title)
+                .setMessage(R.string.crop_plot_dialog_description)
+                .setPositiveButton(R.string.crop_plot_dialog_button, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        List<LimitLine> limitLines = chart.getXAxis().getLimitLines();
+                        if(limitLines.size() == 2) {
+                            trackDataViewModel.crop(limitLines.get(0).getLimit(),
+                                    limitLines.get(1).getLimit(),
+                                    xAxisValueProviderWrapper.xAxisValueProvider);
+                            
+                        }
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null);
+        builder.show();
     }
 
     private void showYAxisDialog() {

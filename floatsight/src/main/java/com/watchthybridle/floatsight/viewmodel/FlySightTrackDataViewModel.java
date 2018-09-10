@@ -24,7 +24,12 @@ package com.watchthybridle.floatsight.viewmodel;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import com.watchthybridle.floatsight.csvparser.FlySightTrackPoint;
 import com.watchthybridle.floatsight.data.FlySightTrackData;
+import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.TrackPointValueProvider;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.watchthybridle.floatsight.data.ParsableData.PARSING_FAIL;
 
@@ -51,5 +56,27 @@ public class FlySightTrackDataViewModel extends DataViewModel<FlySightTrackData>
         return flySightTrackDataLiveData.getValue() != null
                 && !flySightTrackDataLiveData.getValue().getFlySightTrackPoints().isEmpty()
                 && flySightTrackDataLiveData.getValue().getParsingStatus() != PARSING_FAIL;
+    }
+
+    public void crop(float start, float end, TrackPointValueProvider valueProvider) {
+        if(start > end) {
+            float tmp = start;
+            start = end;
+            end = tmp;
+        }
+        int startIndex = 0;
+        int endIndex = flySightTrackDataLiveData.getValue().getFlySightTrackPoints().size();
+        for(FlySightTrackPoint point : flySightTrackDataLiveData.getValue().getFlySightTrackPoints()) {
+            if(valueProvider.getValue(point) <= start) {
+                startIndex = flySightTrackDataLiveData.getValue().getFlySightTrackPoints().indexOf(point);
+            }
+            if(valueProvider.getValue(point) <= end) {
+                endIndex = flySightTrackDataLiveData.getValue().getFlySightTrackPoints().indexOf(point);
+            }
+        }
+
+        List<FlySightTrackPoint> subListCopy = new ArrayList<>(flySightTrackDataLiveData.getValue().getFlySightTrackPoints().subList(startIndex, endIndex));
+        FlySightTrackData cropped = new FlySightTrackData(subListCopy, flySightTrackDataLiveData.getValue().getSourceFileName());
+        flySightTrackDataLiveData.setValue(cropped);
     }
 }

@@ -64,6 +64,9 @@
     <string name="plot_units_dialog_title">Units</string>
     <string name="plot_units_metric">Metric</string>
     <string name="plot_units_imperial">Imperial</string>
+    <string name="crop_plot_dialog_title">Crop data to range</string>
+    <string name="crop_plot_dialog_description">Remove data outside the currently marked range.</string>
+    <string name="crop_plot_dialog_button">crop</string>
 
     <!-- Main menu -->
     <string name="button_import_title">Import tracks</string>
@@ -77,6 +80,7 @@
 
     <!-- Track menu -->
     <string name="button_label_filename">File: %1$s</string>
+    <string name="button_label_file_modified">Modified: %1$s</string>
     <string name="button_label_empty"> </string>
     <string name="button_label_parsing_error">Could not read file.</string>
     <string name="button_label_start_time">Date: %1$s</string>
@@ -84,6 +88,9 @@
     <string name="button_plot_description">Show track plot</string>
     <string name="button_stats_title">Stats</string>
     <string name="button_stats_description">Show track stats</string>
+    <string name="discard_changes">Discard changes</string>
+    <string name="save_as">Save as</string>
+    <string name="save">Save</string>
 
     <!-- Stats fragment -->
     <string name="stats_filename">File</string>
@@ -118,6 +125,9 @@
     <string name="menu_item_y_axis">Y-axis</string>
     <string name="menu_item_cap_glide">Glide limit</string>
     <string name="menu_item_units">Units</string>
+    <string name="menu_item_set_range_marker">Set range marker</string>
+    <string name="menu_item_crop_range">Crop range</string>
+    <string name="menu_item_discard_markers">Discard markers</string>
 
     <!-- UnitSystem -->
     <string name="kmh">%1$s km/h</string>

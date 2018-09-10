@@ -26,4 +26,9 @@
         <item>@string/rename</item>
         <item>@string/delete</item>
     </array>
+
+    <array name="context_track_activity_file">
+        <item>@string/save_as</item>
+        <item>@string/discard_changes</item>
+    </array>
 </resources>
