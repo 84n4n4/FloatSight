@@ -54,6 +54,7 @@
     <string name="file_save_success">Track stored.</string>
     <string name="file_name_empty">File name should contain at least one character.</string>
     <string name="file_already_exists">File with this name already exists</string>
+    <string name="file_overwrite_warning">WARNING! This will overwrite this track file.</string>
     <string name="file_has_to_be_csv">File name has to end with ".csv" or ".CSV"</string>
     <string name="file_name_hint">File name</string>
 

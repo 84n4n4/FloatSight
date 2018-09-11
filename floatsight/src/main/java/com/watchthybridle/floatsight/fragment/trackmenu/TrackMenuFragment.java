@@ -41,13 +41,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.watchthybridle.floatsight.R;
+import com.watchthybridle.floatsight.TrackActivity;
 import com.watchthybridle.floatsight.data.FlySightTrackData;
 import com.watchthybridle.floatsight.fragment.ButtonAdapter;
 import com.watchthybridle.floatsight.fragment.ButtonItem;
 import com.watchthybridle.floatsight.fragment.Dialogs;
 import com.watchthybridle.floatsight.fragment.plot.PlotFragment;
 import com.watchthybridle.floatsight.fragment.stats.TrackStatsFragment;
-import com.watchthybridle.floatsight.fragment.trackpicker.TrackPickerFragment;
 import com.watchthybridle.floatsight.recyclerview.DividerLineDecorator;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
 import org.apache.commons.lang3.time.DatePrinter;
@@ -213,34 +213,12 @@ public class TrackMenuFragment extends Fragment implements ButtonAdapter.ButtonI
 		public void onClick(DialogInterface dialog, int which) {
 			switch (which) {
 				case SAVE_AS:
-					showSaveAsDialog();
+					((TrackActivity) getActivity()).saveFlySightTrackData();
 					break;
 				case DISCARD:
-					//TODO
+					((TrackActivity) getActivity()).loadFlySightTrackData();
 					break;
 			}
 		}
-	}
-
-	public void showSaveAsDialog() {
-		AlertDialog alertDialog = new AlertDialog.Builder(getContext())
-				.setView(R.layout.text_input_layout)
-				.setPositiveButton(getString(R.string.save), (dialog, which) -> {
-					TextInputLayout textInputLayout = ((Dialog) dialog).findViewById(R.id.text_input_layout);
-					String newFileName = textInputLayout.getEditText().getText().toString().trim();
-					//TODO write to file!
-				})
-				.create();
-
-		alertDialog.show();
-
-		TextInputLayout inputLayout = alertDialog.findViewById(R.id.text_input_layout);
-		inputLayout.setHint(getString(R.string.file_name_hint));
-		String fileName = trackDataViewModel.getLiveData().getValue().getSourceFileName();
-		inputLayout.getEditText().setText(fileName);
-		inputLayout.getEditText().setSelection(0,
-				fileName.contains(".") ? fileName.lastIndexOf(".") : fileName.length());
-
-		//TODO add text watcher
 	}
 }
