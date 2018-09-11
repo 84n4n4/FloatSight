@@ -102,11 +102,16 @@
     <string name="stats_max_altitude">Max altitude</string>
     <string name="stats_min_altitude">Min altitude</string>
     <string name="stats_distance">Distance</string>
+    <string name="stats_one_to_one">Distance equals altitude</string>
     <string name="stats_max_horizontal_velocity">Max horizontal velocity</string>
     <string name="stats_min_horizontal_velocity">Min horizontal velocity</string>
+    <string name="stats_avg_horizontal_velocity">Average horizontal velocity</string>
     <string name="stats_max_vertical_velocity">Max vertical velocity</string>
-    <string name="stats_min_vertical_velocity">Min velocity velocity</string>
-
+    <string name="stats_min_vertical_velocity">Min vertical velocity</string>
+    <string name="stats_avg_vertical_velocity">Average vertical velocity</string>
+    <string name="stats_max_glide">Max glide</string>
+    <string name="stats_min_glide">Min glide</string>
+    <string name="stats_avg_glide">Average glide</string>
 
     <!-- Config menu -->
     <string name="button_config_import_title">Import</string>

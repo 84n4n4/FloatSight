@@ -73,6 +73,9 @@ public class RangeMarkerChart extends RestorableChart {
         if (limitLines.size() > 2) {
             limitLines.remove(1);
         }
+        if (limitLines.size() == 2 && limitLines.get(0).getLimit() == limitLines.get(1).getLimit()) {
+            limitLines.remove(1);
+        }
         invalidate();
     }
 

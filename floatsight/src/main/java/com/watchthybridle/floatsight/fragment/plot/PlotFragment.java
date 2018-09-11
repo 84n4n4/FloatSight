@@ -168,7 +168,7 @@ public class PlotFragment extends Fragment {
                             trackDataViewModel.crop(limitLines.get(0).getLimit(),
                                     limitLines.get(1).getLimit(),
                                     xAxisValueProviderWrapper.xAxisValueProvider);
-                            
+                            chart.clearRangeMarkers();
                         }
                     }
                 })

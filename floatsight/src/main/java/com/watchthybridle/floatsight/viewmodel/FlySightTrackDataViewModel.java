@@ -64,19 +64,26 @@ public class FlySightTrackDataViewModel extends DataViewModel<FlySightTrackData>
             start = end;
             end = tmp;
         }
+        List<FlySightTrackPoint> flySightTrackPoints = flySightTrackDataLiveData.getValue().getFlySightTrackPoints();
         int startIndex = 0;
-        int endIndex = flySightTrackDataLiveData.getValue().getFlySightTrackPoints().size();
-        for(FlySightTrackPoint point : flySightTrackDataLiveData.getValue().getFlySightTrackPoints()) {
+        int endIndex = flySightTrackPoints.size();
+        for(FlySightTrackPoint point : flySightTrackPoints) {
             if(valueProvider.getValue(point) <= start) {
-                startIndex = flySightTrackDataLiveData.getValue().getFlySightTrackPoints().indexOf(point);
+                startIndex = flySightTrackPoints.indexOf(point);
             }
             if(valueProvider.getValue(point) <= end) {
-                endIndex = flySightTrackDataLiveData.getValue().getFlySightTrackPoints().indexOf(point);
+                endIndex = flySightTrackPoints.indexOf(point);
             }
         }
+        if(startIndex == endIndex) {
+            return;
+        }
 
-        List<FlySightTrackPoint> subListCopy = new ArrayList<>(flySightTrackDataLiveData.getValue().getFlySightTrackPoints().subList(startIndex, endIndex));
+        List<FlySightTrackPoint> subListCopy = new ArrayList<>(flySightTrackPoints.subList(startIndex, endIndex));
         FlySightTrackData cropped = new FlySightTrackData(subListCopy, flySightTrackDataLiveData.getValue().getSourceFileName());
+        float timeOffset = cropped.getFlySightTrackPoints().get(0).trackTimeInSeconds;
+        float distanceOffset = cropped.getFlySightTrackPoints().get(0).distance;
+        cropped.offsetDistanceAndTime(distanceOffset, timeOffset);
         flySightTrackDataLiveData.setValue(cropped);
     }
 }

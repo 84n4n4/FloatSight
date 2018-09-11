@@ -55,4 +55,21 @@ public class FlySightTrackData extends ParsableData {
         }
         return entries;
     }
+
+    public void offsetDistanceAndTime(float distanceOffset, float timeOffset) {
+        for(FlySightTrackPoint point : flySightTrackPoints) {
+            point.trackTimeInSeconds = point.trackTimeInSeconds - timeOffset;
+            point.distance = point.distance - distanceOffset;
+        }
+    }
+
+    public float distanceSurpassesAltitude() {
+        for(FlySightTrackPoint point : flySightTrackPoints) {
+            float altitudeDiff = flySightTrackPoints.get(0).altitude - point.altitude;
+            if(point.distance > altitudeDiff) {
+                return point.distance;
+            }
+        }
+        return 0;
+    }
 }

@@ -34,8 +34,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.data.FlySightTrackData;
+import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.CappedTrackPointValueProvider;
 import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties;
 import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.TrackPointValueProvider;
+import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.XAxisValueProviderWrapper;
 import com.watchthybridle.floatsight.recyclerview.DividerLineDecorator;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
 import org.apache.commons.lang3.time.DatePrinter;
@@ -54,10 +56,16 @@ public class TrackStatsFragment extends Fragment {
 	public static final int MAX_ALTITUDE = 3;
 	public static final int MIN_ALTITUDE = 4;
 	public static final int DISTANCE = 5;
-	public static final int MAX_HOR_VELOCITY = 6;
-	public static final int MIN_HOR_VELOCITY = 7;
-	public static final int MAX_VERT_VELOCITY = 8;
-	public static final int MIN_VERT_VELOCITY = 9;
+	public static final int ONE_TO_ONE = 6;
+	public static final int MAX_HOR_VELOCITY = 7;
+	public static final int MIN_HOR_VELOCITY = 8;
+	public static final int AVG_HOR_VELOCITY = 9;
+	public static final int MAX_VERT_VELOCITY = 10;
+	public static final int MIN_VERT_VELOCITY = 11;
+	public static final int AVG_VERT_VELOCITY = 12;
+	public static final int MAX_GLIDE = 13;
+	public static final int MIN_GLIDE = 14;
+	public static final int AVG_GLIDE = 15;
 
     private static final DatePrinter PRETTY_DATE_PRINTER = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
 
@@ -89,33 +97,40 @@ public class TrackStatsFragment extends Fragment {
 	}
 
 	private void updateStatsItems(FlySightTrackData flySightTrackData) {
-		TrackPointValueProvider dummyXProvider = TrackPointValueProvider.TIME_VALUE_PROVIDER;
+		TrackPointValueProvider timeXProvider = TrackPointValueProvider.TIME_VALUE_PROVIDER;
 		statsAdapter.statsItems.get(FILENAME).value = flySightTrackData.getSourceFileName();
 
+		float trackTimeInSeconds = flySightTrackData.getFlySightTrackPoints().get(flySightTrackData.getFlySightTrackPoints().size() - 1).trackTimeInSeconds;
 		long unixStartTime = flySightTrackData.getFlySightTrackPoints().get(0).unixTimeStamp;
         statsAdapter.statsItems.get(START_TIME).value = PRETTY_DATE_PRINTER.format(unixStartTime);
 
-		ChartDataSetProperties timeProperties = new ChartDataSetProperties.TimeDataSetProperties(dummyXProvider);
-		long unixDuration = flySightTrackData.getFlySightTrackPoints()
-                .get(flySightTrackData.getFlySightTrackPoints().size() - 1).unixTimeStamp - unixStartTime;
-        statsAdapter.statsItems.get(DURATION).value = getContext()
-                .getString(R.string.seconds, timeProperties.decimalFormat.format(unixDuration/1000f));
+		ChartDataSetProperties timeProperties = new ChartDataSetProperties.TimeDataSetProperties(timeXProvider);
+        statsAdapter.statsItems.get(DURATION).value = timeProperties.getFormattedYMax(getContext(), flySightTrackData);
 
         String unitSystem = METRIC;
-        ChartDataSetProperties altitudeProperties = new ChartDataSetProperties.AltitudeDataSetProperties(dummyXProvider, unitSystem);
+        ChartDataSetProperties altitudeProperties = new ChartDataSetProperties.AltitudeDataSetProperties(timeXProvider, unitSystem);
 		statsAdapter.statsItems.get(MAX_ALTITUDE).value = altitudeProperties.getFormattedYMax(getContext(), flySightTrackData);
 		statsAdapter.statsItems.get(MIN_ALTITUDE).value = altitudeProperties.getFormattedYMin(getContext(), flySightTrackData);
 
-		ChartDataSetProperties distanceProperties = new ChartDataSetProperties.DistanceDataSetProperties(dummyXProvider, unitSystem);
+		ChartDataSetProperties distanceProperties = new ChartDataSetProperties.DistanceDataSetProperties(timeXProvider, unitSystem);
 		statsAdapter.statsItems.get(DISTANCE).value = distanceProperties.getFormattedYMax(getContext(), flySightTrackData);
 
-		ChartDataSetProperties horVelocityProperties = new ChartDataSetProperties.HorizontalVelocityDataSetProperties(dummyXProvider, unitSystem);
+		statsAdapter.statsItems.get(ONE_TO_ONE).value = distanceProperties.getFormattedValue(getContext(), flySightTrackData.distanceSurpassesAltitude());
+
+		ChartDataSetProperties horVelocityProperties = new ChartDataSetProperties.HorizontalVelocityDataSetProperties(timeXProvider, unitSystem);
 		statsAdapter.statsItems.get(MAX_HOR_VELOCITY).value = horVelocityProperties.getFormattedYMax(getContext(), flySightTrackData);
 		statsAdapter.statsItems.get(MIN_HOR_VELOCITY).value = horVelocityProperties.getFormattedYMin(getContext(), flySightTrackData);
+		statsAdapter.statsItems.get(AVG_HOR_VELOCITY).value = horVelocityProperties.getFormattedValueForRange(getContext(), 0f, trackTimeInSeconds, flySightTrackData);
 
-		ChartDataSetProperties vertVelocityProperties = new ChartDataSetProperties.VerticalVelocityDataSetProperties(dummyXProvider, unitSystem);
+		ChartDataSetProperties vertVelocityProperties = new ChartDataSetProperties.VerticalVelocityDataSetProperties(timeXProvider, unitSystem);
 		statsAdapter.statsItems.get(MAX_VERT_VELOCITY).value = vertVelocityProperties.getFormattedYMax(getContext(), flySightTrackData);
 		statsAdapter.statsItems.get(MIN_VERT_VELOCITY).value = vertVelocityProperties.getFormattedYMin(getContext(), flySightTrackData);
+		statsAdapter.statsItems.get(AVG_VERT_VELOCITY).value = vertVelocityProperties.getFormattedValueForRange(getContext(), 0f, trackTimeInSeconds, flySightTrackData);
+
+		ChartDataSetProperties glideProperties = new ChartDataSetProperties.GlideDataSetProperties(timeXProvider, new CappedTrackPointValueProvider(TrackPointValueProvider.GLIDE_VALUE_PROVIDER, Float.MAX_VALUE));
+		statsAdapter.statsItems.get(MAX_GLIDE).value = glideProperties.getFormattedYMax(getContext(), flySightTrackData);
+		statsAdapter.statsItems.get(MIN_GLIDE).value = glideProperties.getFormattedYMin(getContext(), flySightTrackData);
+		statsAdapter.statsItems.get(AVG_GLIDE).value = glideProperties.getFormattedValueForRange(getContext(), 0f, trackTimeInSeconds, flySightTrackData);
 	}
 
 	public boolean isValid(FlySightTrackData flySightTrackData) {
@@ -150,10 +165,16 @@ public class TrackStatsFragment extends Fragment {
 		statsItemList.add(new StatsItem(R.string.stats_max_altitude, "", R.drawable.alt_stats));
 		statsItemList.add(new StatsItem(R.string.stats_min_altitude, "", R.drawable.alt_stats));
 		statsItemList.add(new StatsItem(R.string.stats_distance, "", R.drawable.dist_stats));
+		statsItemList.add(new StatsItem(R.string.stats_one_to_one, "", R.drawable.one_to_one_stats));
 		statsItemList.add(new StatsItem(R.string.stats_max_horizontal_velocity, "", R.drawable.hor_stats));
 		statsItemList.add(new StatsItem(R.string.stats_min_horizontal_velocity, "", R.drawable.hor_stats));
+		statsItemList.add(new StatsItem(R.string.stats_avg_horizontal_velocity, "", R.drawable.hor_avg_stats));
 		statsItemList.add(new StatsItem(R.string.stats_max_vertical_velocity, "", R.drawable.vert_stats));
 		statsItemList.add(new StatsItem(R.string.stats_min_vertical_velocity, "", R.drawable.vert_stats));
+		statsItemList.add(new StatsItem(R.string.stats_avg_vertical_velocity, "", R.drawable.vert_avg_stats));
+		statsItemList.add(new StatsItem(R.string.stats_max_glide, "", R.drawable.glide_stats));
+		statsItemList.add(new StatsItem(R.string.stats_min_glide, "", R.drawable.glide_stats));
+		statsItemList.add(new StatsItem(R.string.stats_avg_glide, "", R.drawable.glide_avg_stats));
 		return statsItemList;
 	}
 }
