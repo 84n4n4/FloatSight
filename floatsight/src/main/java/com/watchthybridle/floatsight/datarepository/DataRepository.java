@@ -81,8 +81,8 @@ public class DataRepository<T extends ParsableData> {
             Process.setThreadPriority(THREAD_PRIORITY_BACKGROUND + THREAD_PRIORITY_MORE_FAVORABLE);
             if (uris.length > 0) {
                 try {
-                    data = parser.read(contentResolver.openInputStream(uris[0]));
                     data.setParsingStatus(PARSING_SUCCESS);
+                    data = parser.read(contentResolver.openInputStream(uris[0]));
                 } catch (IOException e) {
                     e.printStackTrace();
                     data.setParsingStatus(PARSING_FAIL);

@@ -6,20 +6,14 @@
 ### plot fragment
 
 ### track menu fragment
-* remove app title from toolbar
 
 ### stats fragment
 
 ## track picker
-* track picker as activity
-* show location/foldername in toolbar
-* remove app name from toolbar
 
 ## main activity
-* open trackpicker at import location after successful import
 
 ## parsers, data, viewmodels
-* parsing status "some errors" not working correctly
 
 # nice to have:
 * config editor
