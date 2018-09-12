@@ -27,21 +27,16 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
-import android.widget.CheckBox;
-import android.widget.FrameLayout;
 import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.TrackActivity;
 import com.watchthybridle.floatsight.data.FlySightTrackData;
 import com.watchthybridle.floatsight.fragment.UnitSystemDialogListener;
-import com.watchthybridle.floatsight.fragment.plot.PlotFragmentDialogs;
 import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.CappedTrackPointValueProvider;
 import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties;
 import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.TrackPointValueProvider;
-import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.XAxisValueProviderWrapper;
 import com.watchthybridle.floatsight.recyclerview.DividerLineDecorator;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
 import org.apache.commons.lang3.time.DatePrinter;
@@ -52,7 +47,6 @@ import java.util.List;
 
 import static com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties.IMPERIAL;
 import static com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties.METRIC;
-import static com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.TrackPointValueProvider.IMPERIAL_DISTANCE_VALUE_PROVIDER;
 
 public class TrackStatsFragment extends Fragment implements UnitSystemDialogListener {
 

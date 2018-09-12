@@ -49,20 +49,21 @@ import android.widget.FrameLayout;
 import com.watchthybridle.floatsight.csvparser.FlySightCsvParser;
 import com.watchthybridle.floatsight.data.FlySightTrackData;
 import com.watchthybridle.floatsight.datarepository.DataRepository;
-import com.watchthybridle.floatsight.fragment.mainmenu.MainMenuFragment;
 import com.watchthybridle.floatsight.fragment.plot.PlotFragment;
 import com.watchthybridle.floatsight.fragment.stats.TrackStatsFragment;
 import com.watchthybridle.floatsight.fragment.trackmenu.TrackMenuFragment;
 import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static com.watchthybridle.floatsight.fragment.trackpicker.TrackPickerFragment.TRACK_PICKER_PERMISSION_REQUEST_CODE;
 
 public class TrackActivity extends AppCompatActivity {
 
@@ -113,7 +114,7 @@ public class TrackActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_track_activity, menu);
         return true;
     }
 

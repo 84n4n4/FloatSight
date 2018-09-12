@@ -22,14 +22,12 @@
 
 package com.watchthybridle.floatsight.fragment.trackmenu;
 
-import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -148,7 +146,6 @@ public class TrackMenuFragment extends Fragment implements ButtonAdapter.ButtonI
 		recyclerView.addItemDecoration(new DividerLineDecorator(view.getContext()));
 		updateButtons();
 		((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
-
 	}
 
 	private List<ButtonItem> getButtons() {

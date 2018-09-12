@@ -14,15 +14,12 @@ import org.apache.commons.lang3.time.FastDateFormat;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
 import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
 import static android.os.Process.THREAD_PRIORITY_MORE_FAVORABLE;
-import static com.watchthybridle.floatsight.data.FileImportData.IMPORTING_ERRORS;
-import static com.watchthybridle.floatsight.data.FileImportData.IMPORTING_FAIL;
-import static com.watchthybridle.floatsight.data.FileImportData.IMPORTING_SUCCESS;
+import static com.watchthybridle.floatsight.data.FileImportData.*;
 
 public class FileImporter {
 
@@ -52,21 +49,27 @@ public class FileImporter {
         protected Long doInBackground(Uri... uris) {
             Process.setThreadPriority(THREAD_PRIORITY_BACKGROUND + THREAD_PRIORITY_MORE_FAVORABLE);
             data.setImportingStatus(IMPORTING_SUCCESS);
+            File directory;
 
-            List<File> files = new ArrayList<>();
-
-            for (Uri uri : uris) {
-                try {
-                    files.add(importTrack(uri));
-                } catch (IOException e) {
-                    e.printStackTrace();
+            try {
+                directory = createImportFolder();
+                data.setImportFolder(directory);
+                List<File> files = new ArrayList<>();
+                for (Uri uri : uris) {
+                    try {
+                        files.add(importTrack(directory, uri));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-            if (uris.length == files.size()) {
-                data.setImportingStatus(IMPORTING_SUCCESS);
-            } else if (uris.length > 0 && files.size() > 0) {
-                data.setImportingStatus(IMPORTING_ERRORS);
-            } else {
+                if (uris.length == files.size()) {
+                    data.setImportingStatus(IMPORTING_SUCCESS);
+                } else if (uris.length > 0 && files.size() > 0) {
+                    data.setImportingStatus(IMPORTING_ERRORS);
+                } else {
+                    data.setImportingStatus(IMPORTING_FAIL);
+                }
+            } catch (FileNotFoundException e) {
                 data.setImportingStatus(IMPORTING_FAIL);
             }
             return 0L;
@@ -78,7 +81,7 @@ public class FileImporter {
         }
     }
 
-    private File importTrack(Uri uri) throws IOException {
+    private File createImportFolder() throws FileNotFoundException {
         File directory = new File(PathBuilder.getTracksFolder(), DATE_PRINTER.format(Calendar.getInstance().getTime()));
 
         if (!directory.exists()) {
@@ -88,7 +91,10 @@ public class FileImporter {
         if (!directory.exists() || !directory.isDirectory()) {
             throw new FileNotFoundException("Could not access folder on local storage");
         }
+        return directory;
+    }
 
+    private File importTrack(File directory, Uri uri) throws IOException {
         String fileName = resolveFileName(uri);
         File outFile = new File(directory, fileName);
 

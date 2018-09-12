@@ -22,10 +22,8 @@
 
 package com.watchthybridle.floatsight.fragment;
 
-import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
-import com.watchthybridle.floatsight.R;
 
 public class ButtonItem {
 

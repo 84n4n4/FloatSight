@@ -31,6 +31,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -43,6 +44,7 @@ import android.view.WindowManager;
 import com.watchthybridle.floatsight.data.FileImportData;
 import com.watchthybridle.floatsight.filesystem.FileImporter;
 import com.watchthybridle.floatsight.fragment.mainmenu.MainMenuFragment;
+import com.watchthybridle.floatsight.fragment.trackpicker.TrackPickerFragment;
 import com.watchthybridle.floatsight.viewmodel.FileImportDataViewModel;
 
 import java.util.ArrayList;
@@ -50,16 +52,14 @@ import java.util.List;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static com.watchthybridle.floatsight.fragment.trackpicker.TrackPickerFragment.TRACK_PICKER_PERMISSION_REQUEST_CODE;
+import static com.watchthybridle.floatsight.TrackActivity.TRACK_FILE_URI;
+import static com.watchthybridle.floatsight.TrackPickerActivity.TRACK_PICKER_PATH;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String TAG_FILE_PICKER_FRAGMENT = "TAG_FILE_PICKER_FRAGMENT";
     public static final String TAG_MAIN_MENU_FRAGMENT = "TAG_MAIN_MENU_FRAGMENT";
 
     public static final int REQUEST_FILE = 666;
-    public static final int LOAD_PERMISSION_REQUEST_CODE = 100;
-
     private static final int IMPORT_PERMISSION_REQUEST_CODE = 200;
 
     private FileImportDataViewModel fileImportDataViewModel;
@@ -86,10 +86,21 @@ public class MainActivity extends AppCompatActivity {
 
     private void actOnDataChanged(FileImportData fileImportData) {
         findViewById(R.id.toolbar_progress_bar).setVisibility(View.GONE);
+        @StringRes int message = R.string.file_import_fail;
         if (fileImportData.getImportingStatus() == FileImportData.IMPORTING_SUCCESS) {
-            Snackbar.make(findViewById(R.id.fragment_container), R.string.file_import_success, Snackbar.LENGTH_SHORT)
-                    .show();
+            message = R.string.file_import_success;
+        } else if (fileImportData.getImportingStatus() == FileImportData.IMPORTING_ERRORS) {
+            message = R.string.file_import_some_errors;
         }
+
+        if (!(fileImportData.getImportingStatus() == FileImportData.IMPORTING_ERRORS)) {
+            Intent showTrackIntent = new Intent(this, TrackPickerActivity.class);
+            showTrackIntent.putExtra(TRACK_PICKER_PATH, fileImportData.getImportFolder().getAbsolutePath());
+            startActivity(showTrackIntent);
+        }
+
+        Snackbar.make(findViewById(R.id.fragment_container), message, Snackbar.LENGTH_SHORT)
+                .show();
     }
 
     private void showMainMenuFragment() {
@@ -171,29 +182,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         switch (requestCode) {
-            case LOAD_PERMISSION_REQUEST_CODE:
-                if (readAccepted && writeAccepted) {
-                    MainMenuFragment mainMenuFragment =
-                            (MainMenuFragment) getSupportFragmentManager().findFragmentByTag(TAG_MAIN_MENU_FRAGMENT);
-                    if (mainMenuFragment != null) {
-                        mainMenuFragment.showTrackPickerFragment();
-                    }
-                } else {
-                    showPermissionRationale(LOAD_PERMISSION_REQUEST_CODE);
-                }
-                break;
             case IMPORT_PERMISSION_REQUEST_CODE:
                 if (readAccepted && writeAccepted) {
                     startImportFile();
                 } else {
                     showPermissionRationale(IMPORT_PERMISSION_REQUEST_CODE);
-                }
-                break;
-            case TRACK_PICKER_PERMISSION_REQUEST_CODE:
-                if (readAccepted && writeAccepted) {
-                    //TODO: Fix onDestroy problem from TrackActivity.
-                } else {
-                    showPermissionRationale(TRACK_PICKER_PERMISSION_REQUEST_CODE);
                 }
                 break;
             default:

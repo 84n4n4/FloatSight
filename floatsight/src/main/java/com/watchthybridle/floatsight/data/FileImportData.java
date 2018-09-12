@@ -2,6 +2,7 @@ package com.watchthybridle.floatsight.data;
 
 import android.support.annotation.LongDef;
 
+import java.io.File;
 import java.lang.annotation.Retention;
 import java.nio.file.Files;
 import java.util.List;
@@ -19,6 +20,7 @@ public class FileImportData {
 
     private long importingStatus = IMPORTING_SUCCESS;
     private List<Files> files;
+    private File importFolder;
 
     @ImportingResult
     public long getImportingStatus() {
@@ -31,5 +33,13 @@ public class FileImportData {
 
     public List<Files> getFiles() {
         return files;
+    }
+
+    public File getImportFolder() {
+        return importFolder;
+    }
+
+    public void setImportFolder(File importFolder) {
+        this.importFolder = importFolder;
     }
 }

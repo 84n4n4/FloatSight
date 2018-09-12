@@ -28,6 +28,7 @@ public class FileImportDataViewModel extends DataViewModel<FileImportData> {
     public boolean containsValidData() {
         return fileData.getValue() != null
                 && !fileData.getValue().getFiles().isEmpty()
-                && fileData.getValue().getImportingStatus() != IMPORTING_ERRORS;
+                && fileData.getValue().getImportingStatus() != IMPORTING_ERRORS
+                && fileData.getValue().getImportFolder().isDirectory();
     }
 }

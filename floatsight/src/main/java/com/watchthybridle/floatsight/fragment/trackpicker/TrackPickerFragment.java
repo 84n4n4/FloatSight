@@ -13,15 +13,16 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.watchthybridle.floatsight.MainActivity;
 import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.TrackActivity;
+import com.watchthybridle.floatsight.TrackPickerActivity;
 import com.watchthybridle.floatsight.filesystem.PathBuilder;
 import com.watchthybridle.floatsight.recyclerview.DividerLineDecorator;
 
@@ -32,8 +33,10 @@ import java.util.List;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static com.watchthybridle.floatsight.MainActivity.TAG_FILE_PICKER_FRAGMENT;
 import static com.watchthybridle.floatsight.TrackActivity.TRACK_FILE_URI;
+import static com.watchthybridle.floatsight.TrackPickerActivity.TAG_FILE_PICKER_FRAGMENT;
+import static com.watchthybridle.floatsight.filesystem.PathBuilder.FLOAT_SIGHT_FOLDER_NAME;
+import static com.watchthybridle.floatsight.filesystem.PathBuilder.TRACKS_FOLDER_NAME;
 
 public class TrackPickerFragment extends Fragment implements FileAdapter.FileAdapterItemClickListener {
 
@@ -64,6 +67,13 @@ public class TrackPickerFragment extends Fragment implements FileAdapter.FileAda
         fileAdapter.setItemClickListener(this);
         recyclerView.setAdapter(fileAdapter);
         recyclerView.addItemDecoration(new DividerLineDecorator(view.getContext()));
+        try {
+            String fullPath = getCurrentFolder().getPath();
+            String currentFolder = fullPath.substring(fullPath.indexOf(TRACKS_FOLDER_NAME) + TRACKS_FOLDER_NAME.length()) + "/";
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(currentFolder);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -87,7 +97,6 @@ public class TrackPickerFragment extends Fragment implements FileAdapter.FileAda
         }
     }
 
-
     @Override
     public void onItemLongClick(FileAdapterItem fileAdapterItem) {
         new AlertDialog.Builder(getContext())
@@ -96,9 +105,20 @@ public class TrackPickerFragment extends Fragment implements FileAdapter.FileAda
                 .show();
     }
 
+    private File getCurrentFolder() throws FileNotFoundException {
+        File folder;
+        if (getArguments() == null || getArguments().getString(PATH_BUNDLE_TAG) == null) {
+            folder = PathBuilder.getTracksFolder();
+        } else {
+            String pathString = getArguments().getString(PATH_BUNDLE_TAG);
+            folder = new File(pathString);
+        }
+        return folder;
+    }
+
     private List<FileAdapterItem> getFiles() {
         List<FileAdapterItem> files = new ArrayList<>();
-        MainActivity activity = (MainActivity) getActivity();
+        TrackPickerActivity activity = (TrackPickerActivity) getActivity();
 
         if (activity == null) {
             return files;
@@ -110,13 +130,7 @@ public class TrackPickerFragment extends Fragment implements FileAdapter.FileAda
 
         } else {
             try {
-                File folder;
-                if(getArguments() == null || getArguments().getString(PATH_BUNDLE_TAG) == null) {
-                    folder = PathBuilder.getTracksFolder();
-                } else {
-                    String pathString = getArguments().getString(PATH_BUNDLE_TAG);
-                    folder = new File(pathString);
-                }
+                File folder = getCurrentFolder();
                 for (File file : folder.listFiles()) {
                     files.add(new FileAdapterItem(file));
                 }
