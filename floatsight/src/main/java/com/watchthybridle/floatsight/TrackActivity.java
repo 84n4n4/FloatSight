@@ -40,14 +40,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.CheckBox;
+import android.widget.FrameLayout;
 import com.watchthybridle.floatsight.csvparser.FlySightCsvParser;
 import com.watchthybridle.floatsight.data.FlySightTrackData;
 import com.watchthybridle.floatsight.datarepository.DataRepository;
+import com.watchthybridle.floatsight.fragment.mainmenu.MainMenuFragment;
 import com.watchthybridle.floatsight.fragment.plot.PlotFragment;
+import com.watchthybridle.floatsight.fragment.stats.TrackStatsFragment;
 import com.watchthybridle.floatsight.fragment.trackmenu.TrackMenuFragment;
+import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
 
 import java.io.*;
@@ -56,6 +62,7 @@ import java.util.List;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static com.watchthybridle.floatsight.fragment.trackpicker.TrackPickerFragment.TRACK_PICKER_PERMISSION_REQUEST_CODE;
 
 public class TrackActivity extends AppCompatActivity {
 
@@ -261,37 +268,45 @@ public class TrackActivity extends AppCompatActivity {
         return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED;
     }
 
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        boolean readAccepted = false;
+        boolean writeAccepted = false;
+        if (grantResults.length > 0) {
+            readAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+            writeAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+        }
+
         switch (requestCode) {
             case TRACK_LOAD_PERMISSION_REQUEST_CODE:
-                if (grantResults.length > 0) {
-
-                    boolean readAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                    boolean writeAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
-
-                    if (readAccepted && writeAccepted) {
-                        loadFlySightTrackData();
-                    }
-                    else {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            if (shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE)) {
-                                showAlertOKCancel(getResources().getString(R.string.permissions_rationale),
-                                        (dialog, which) -> {
-                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                                requestPermissions(new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE},
-                                                        TRACK_LOAD_PERMISSION_REQUEST_CODE);
-                                            }
-                                        });
-                                return;
-                            }
-                        }
-
-                    }
+                if (readAccepted && writeAccepted) {
+                    loadFlySightTrackData();
+                } else {
+                    showPermissionRationale(TRACK_LOAD_PERMISSION_REQUEST_CODE);
                 }
                 break;
+            case TRACK_SAVE_PERMISSION_REQUEST_CODE:
+                if (readAccepted && writeAccepted) {
+                    saveFlySightTrackData();
+                } else {
+                    showPermissionRationale(TRACK_SAVE_PERMISSION_REQUEST_CODE);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void showPermissionRationale(int permissionRequestId) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE)) {
+                showAlertOKCancel(getResources().getString(R.string.permissions_rationale), (dialog, which) ->
+                        requestPermissions(new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, permissionRequestId)
+                );
             }
         }
+    }
 
     private void showAlertOKCancel(String message, DialogInterface.OnClickListener okListener) {
         new AlertDialog.Builder(TrackActivity.this)
@@ -325,11 +340,53 @@ public class TrackActivity extends AppCompatActivity {
     }
 
     public void onUnitsDialogCheckboxClicked(View view) {
+        String unitSystem = ChartDataSetProperties.METRIC;
+        boolean checked = ((CheckBox) view).isChecked();
+        switch(view.getId()) {
+            case R.id.checkbox_metric:
+                ((CheckBox) view.getRootView().findViewById(R.id.checkbox_imperial)).setChecked(!checked);
+                if(checked) {
+                    unitSystem = ChartDataSetProperties.METRIC;
+                } else {
+                    unitSystem = ChartDataSetProperties.IMPERIAL;
+                }
+                break;
+            case R.id.checkbox_imperial:
+                ((CheckBox) view.getRootView().findViewById(R.id.checkbox_metric)).setChecked(!checked);
+                if(checked) {
+                    unitSystem = ChartDataSetProperties.IMPERIAL;
+
+                } else {
+                    unitSystem = ChartDataSetProperties.METRIC;
+                }
+                break;
+        }
+
         PlotFragment plotFragment = (PlotFragment) getSupportFragmentManager()
                 .findFragmentByTag(TrackActivity.TAG_PLOT_FRAGMENT);
+        TrackStatsFragment trackStatsFragment = (TrackStatsFragment) getSupportFragmentManager()
+                .findFragmentByTag(TrackActivity.TAG_STATS_FRAGMENT);
         if (plotFragment != null) {
-            plotFragment.onUnitsDialogCheckboxClicked(view);
+            plotFragment.onUnitsDialogCheckboxClicked(unitSystem);
         }
+        if (trackStatsFragment != null) {
+            trackStatsFragment.onUnitsDialogCheckboxClicked(unitSystem);
+        }
+    }
+
+    public void showUnitsDialog(String currentUnitSystem) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle(R.string.plot_units_dialog_title)
+                .setPositiveButton(R.string.ok, null);
+        final FrameLayout frameView = new FrameLayout(this);
+        builder.setView(frameView);
+
+        final AlertDialog dialog = builder.create();
+        LayoutInflater inflater = dialog.getLayoutInflater();
+        View dialoglayout = inflater.inflate(R.layout.units_dialog, frameView);
+        ((CheckBox) dialoglayout.findViewById(R.id.checkbox_metric)).setChecked(currentUnitSystem.equals(ChartDataSetProperties.METRIC));
+        ((CheckBox) dialoglayout.findViewById(R.id.checkbox_imperial)).setChecked(currentUnitSystem.equals(ChartDataSetProperties.IMPERIAL));
+        dialog.show();
     }
 
     @VisibleForTesting

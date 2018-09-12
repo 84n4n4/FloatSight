@@ -36,7 +36,9 @@ import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import com.github.mikephil.charting.components.LimitLine;
 import com.watchthybridle.floatsight.R;
+import com.watchthybridle.floatsight.TrackActivity;
 import com.watchthybridle.floatsight.data.FlySightTrackData;
+import com.watchthybridle.floatsight.fragment.UnitSystemDialogListener;
 import com.watchthybridle.floatsight.mpandroidchart.customcharts.GlideOverlayChart;
 import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.*;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
@@ -46,7 +48,7 @@ import java.util.List;
 import static com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetHolder.*;
 import static com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties.METRIC;
 
-public class PlotFragment extends Fragment {
+public class PlotFragment extends Fragment implements UnitSystemDialogListener {
 
     private GlideOverlayChart chart;
     private XAxisValueProviderWrapper xAxisValueProviderWrapper;
@@ -140,7 +142,7 @@ public class PlotFragment extends Fragment {
                 PlotFragmentDialogs.showGlideCapDialog(this, cappedGlideValueProvider);
                 return true;
             case R.id.menu_item_units:
-                showUnitsDialog();
+                ((TrackActivity) getActivity()).showUnitsDialog(unitSystem);
                 return true;
             case R.id.menu_item_set_range_marker:
                 chart.setRangeMarker();
@@ -251,42 +253,9 @@ public class PlotFragment extends Fragment {
         triggerOnDataChanged();
     }
 
-    private void showUnitsDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
-                .setTitle(R.string.plot_units_dialog_title)
-                .setPositiveButton(R.string.ok, null);
-        final FrameLayout frameView = new FrameLayout(getContext());
-        builder.setView(frameView);
-
-        final AlertDialog dialog = builder.create();
-        LayoutInflater inflater = dialog.getLayoutInflater();
-        View dialoglayout = inflater.inflate(R.layout.units_dialog, frameView);
-        ((CheckBox) dialoglayout.findViewById(R.id.checkbox_metric)).setChecked(unitSystem.equals(ChartDataSetProperties.METRIC));
-        ((CheckBox) dialoglayout.findViewById(R.id.checkbox_imperial)).setChecked(unitSystem.equals(ChartDataSetProperties.IMPERIAL));
-        dialog.show();
-    }
-
-    public void onUnitsDialogCheckboxClicked(View view) {
-        boolean checked = ((CheckBox) view).isChecked();
-        switch(view.getId()) {
-            case R.id.checkbox_metric:
-                ((CheckBox) view.getRootView().findViewById(R.id.checkbox_imperial)).setChecked(!checked);
-                if(checked) {
-                    unitSystem = ChartDataSetProperties.METRIC;
-                } else {
-                    unitSystem = ChartDataSetProperties.IMPERIAL;
-                }
-                break;
-            case R.id.checkbox_imperial:
-                ((CheckBox) view.getRootView().findViewById(R.id.checkbox_metric)).setChecked(!checked);
-                if(checked) {
-                    unitSystem = ChartDataSetProperties.IMPERIAL;
-
-                } else {
-                    unitSystem = ChartDataSetProperties.METRIC;
-                }
-                break;
-        }
+    @Override
+    public void onUnitsDialogCheckboxClicked(String unitSystem) {
+        this.unitSystem = unitSystem;
         xAxisValueProviderWrapper.setUnitSystem(unitSystem);
         chart.resetUserChanges();
         triggerOnDataChanged();

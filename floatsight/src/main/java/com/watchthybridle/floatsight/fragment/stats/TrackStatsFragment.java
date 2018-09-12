@@ -27,13 +27,17 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
+import android.widget.CheckBox;
+import android.widget.FrameLayout;
 import com.watchthybridle.floatsight.R;
+import com.watchthybridle.floatsight.TrackActivity;
 import com.watchthybridle.floatsight.data.FlySightTrackData;
+import com.watchthybridle.floatsight.fragment.UnitSystemDialogListener;
+import com.watchthybridle.floatsight.fragment.plot.PlotFragmentDialogs;
 import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.CappedTrackPointValueProvider;
 import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties;
 import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.TrackPointValueProvider;
@@ -46,9 +50,11 @@ import org.apache.commons.lang3.time.FastDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties.IMPERIAL;
 import static com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties.METRIC;
+import static com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.TrackPointValueProvider.IMPERIAL_DISTANCE_VALUE_PROVIDER;
 
-public class TrackStatsFragment extends Fragment {
+public class TrackStatsFragment extends Fragment implements UnitSystemDialogListener {
 
 	public static final int FILENAME = 0;
 	public static final int START_TIME = 1;
@@ -71,16 +77,40 @@ public class TrackStatsFragment extends Fragment {
 
 	private StatsAdapter statsAdapter;
 
+	private String unitSystem = METRIC;
+	private FlySightTrackDataViewModel trackDataViewModel;
+
 	public TrackStatsFragment() {
 	}
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
 
-		ViewModelProviders.of(getActivity()).get(FlySightTrackDataViewModel.class)
-                .getLiveData()
+		trackDataViewModel = ViewModelProviders.of(getActivity()).get(FlySightTrackDataViewModel.class);
+
+		trackDataViewModel.getLiveData()
 				.observe(this, flySightTrackData -> actOnDataChanged(flySightTrackData));
+		super.onCreate(savedInstanceState);
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.stats_fragment_menu, menu);
+		boolean enabled = trackDataViewModel != null && trackDataViewModel.containsValidData();
+		menu.findItem(R.id.menu_item_units).setEnabled(enabled);
+		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.menu_item_units:
+				((TrackActivity) getActivity()).showUnitsDialog(unitSystem);
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
 	}
 
 	protected void actOnDataChanged(FlySightTrackData flySightTrackData) {
@@ -98,7 +128,11 @@ public class TrackStatsFragment extends Fragment {
 
 	private void updateStatsItems(FlySightTrackData flySightTrackData) {
 		TrackPointValueProvider timeXProvider = TrackPointValueProvider.TIME_VALUE_PROVIDER;
-		statsAdapter.statsItems.get(FILENAME).value = flySightTrackData.getSourceFileName();
+		if(flySightTrackData.isDirty()) {
+			statsAdapter.statsItems.get(FILENAME).value = getContext().getString(R.string.button_label_file_modified, flySightTrackData.getSourceFileName());
+		} else {
+			statsAdapter.statsItems.get(FILENAME).value = flySightTrackData.getSourceFileName();
+		}
 
 		float trackTimeInSeconds = flySightTrackData.getFlySightTrackPoints().get(flySightTrackData.getFlySightTrackPoints().size() - 1).trackTimeInSeconds;
 		long unixStartTime = flySightTrackData.getFlySightTrackPoints().get(0).unixTimeStamp;
@@ -107,7 +141,6 @@ public class TrackStatsFragment extends Fragment {
 		ChartDataSetProperties timeProperties = new ChartDataSetProperties.TimeDataSetProperties(timeXProvider);
         statsAdapter.statsItems.get(DURATION).value = timeProperties.getFormattedYMax(getContext(), flySightTrackData);
 
-        String unitSystem = METRIC;
         ChartDataSetProperties altitudeProperties = new ChartDataSetProperties.AltitudeDataSetProperties(timeXProvider, unitSystem);
 		statsAdapter.statsItems.get(MAX_ALTITUDE).value = altitudeProperties.getFormattedYMax(getContext(), flySightTrackData);
 		statsAdapter.statsItems.get(MIN_ALTITUDE).value = altitudeProperties.getFormattedYMin(getContext(), flySightTrackData);
@@ -115,7 +148,11 @@ public class TrackStatsFragment extends Fragment {
 		ChartDataSetProperties distanceProperties = new ChartDataSetProperties.DistanceDataSetProperties(timeXProvider, unitSystem);
 		statsAdapter.statsItems.get(DISTANCE).value = distanceProperties.getFormattedYMax(getContext(), flySightTrackData);
 
-		statsAdapter.statsItems.get(ONE_TO_ONE).value = distanceProperties.getFormattedValue(getContext(), flySightTrackData.distanceSurpassesAltitude());
+		float distanceSurpassesAltitude = flySightTrackData.distanceSurpassesAltitude();
+		if(unitSystem.equals(IMPERIAL)) {
+			distanceSurpassesAltitude = distanceSurpassesAltitude * 3.28084f;
+		}
+		statsAdapter.statsItems.get(ONE_TO_ONE).value = distanceProperties.getFormattedValue(getContext(), distanceSurpassesAltitude);
 
 		ChartDataSetProperties horVelocityProperties = new ChartDataSetProperties.HorizontalVelocityDataSetProperties(timeXProvider, unitSystem);
 		statsAdapter.statsItems.get(MAX_HOR_VELOCITY).value = horVelocityProperties.getFormattedYMax(getContext(), flySightTrackData);
@@ -176,5 +213,11 @@ public class TrackStatsFragment extends Fragment {
 		statsItemList.add(new StatsItem(R.string.stats_min_glide, "", R.drawable.glide_stats));
 		statsItemList.add(new StatsItem(R.string.stats_avg_glide, "", R.drawable.glide_avg_stats));
 		return statsItemList;
+	}
+
+	@Override
+	public void onUnitsDialogCheckboxClicked(String unitSystem) {
+		this.unitSystem = unitSystem;
+		actOnDataChanged(trackDataViewModel.getLiveData().getValue());
 	}
 }
