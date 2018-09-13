@@ -24,19 +24,12 @@ package com.watchthybridle.floatsight;
 
 import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
@@ -49,6 +42,8 @@ import com.watchthybridle.floatsight.fragment.trackfragment.plot.PlotFragment;
 import com.watchthybridle.floatsight.fragment.trackfragment.stats.TrackStatsFragment;
 import com.watchthybridle.floatsight.fragment.trackmenu.SaveFileDialogTextWatcher;
 import com.watchthybridle.floatsight.fragment.trackmenu.TrackMenuFragment;
+import com.watchthybridle.floatsight.permissionactivity.PermissionActivity;
+import com.watchthybridle.floatsight.permissionactivity.PermissionStrategy;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
 
 import java.io.File;
@@ -58,10 +53,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-
-public class TrackActivity extends AppCompatActivity {
+public class TrackActivity extends PermissionActivity {
 
     public static final String TAG_PLOT_FRAGMENT = "TAG_PLOT_FRAGMENT";
     public static final String TAG_STATS_FRAGMENT = "TAG_STATS_FRAGMENT";
@@ -115,22 +107,22 @@ public class TrackActivity extends AppCompatActivity {
     }
 
     public void loadFlySightTrackData() {
-        if (!checkPermission()) {
-            ActivityCompat.requestPermissions(this, new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, TRACK_LOAD_PERMISSION_REQUEST_CODE);
-        } else {
-            Bundle extras = getIntent().getExtras();
-            if(extras != null) {
-                String trackPath = extras.getString(TRACK_FILE_URI);
-                if (trackPath != null) {
-                    Uri trackFileUri = Uri.parse(extras.getString(TRACK_FILE_URI));
+        new PermissionStrategy(TRACK_LOAD_PERMISSION_REQUEST_CODE) {
+            public void task() {
+                Bundle extras = getIntent().getExtras();
+                if(extras != null) {
+                    String trackPath = extras.getString(TRACK_FILE_URI);
+                    if (trackPath != null) {
+                        Uri trackFileUri = Uri.parse(extras.getString(TRACK_FILE_URI));
 
-                    findViewById(R.id.toolbar_progress_bar).setVisibility(View.VISIBLE);
-                    DataRepository<FlySightTrackData> repository =
-                            new DataRepository<>(FlySightTrackData.class, getContentResolver(), new FlySightCsvParser());
-                    repository.load(trackFileUri, flySightTrackDataViewModel);
+                        findViewById(R.id.toolbar_progress_bar).setVisibility(View.VISIBLE);
+                        DataRepository<FlySightTrackData> repository =
+                                new DataRepository<>(FlySightTrackData.class, getContentResolver(), new FlySightCsvParser());
+                        repository.load(trackFileUri, flySightTrackDataViewModel);
+                    }
                 }
             }
-        }
+        }.execute(this);
     }
 
     private void reopenActivityWithUri(Uri uri) {
@@ -141,46 +133,46 @@ public class TrackActivity extends AppCompatActivity {
     }
 
     public void saveFlySightTrackData() {
-        if (!checkPermission()) {
-            ActivityCompat.requestPermissions(this, new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, TRACK_SAVE_PERMISSION_REQUEST_CODE);
-        } else {
-            try {
-                AlertDialog alertDialog = new AlertDialog.Builder(this)
-                        .setView(R.layout.text_input_layout)
-                        .setPositiveButton(getString(R.string.save), (dialog, which) -> {
-                            TextInputLayout textInputLayout = ((Dialog) dialog).findViewById(R.id.text_input_layout);
-                            String newFileName = textInputLayout.getEditText().getText().toString().trim();
-                            try {
-                                File newFile = new File(getImportFolder(), newFileName);
-                                (new FlySightCsvParser()).write(new FileOutputStream(newFile), flySightTrackDataViewModel.getLiveData().getValue());
-                                reopenActivityWithUri(Uri.fromFile(newFile));
-                            } catch (FileNotFoundException e) {
-                                showAlertOKCancel(getResources().getString(R.string.save_error), null);
-                            } catch (IOException e) {
-                                showAlertOKCancel(getResources().getString(R.string.error_opening_local_storage), null);
-                            }
+        new PermissionStrategy(TRACK_SAVE_PERMISSION_REQUEST_CODE) {
+            public void task() {
+                try {
+                    AlertDialog alertDialog = new AlertDialog.Builder(TrackActivity.this)
+                            .setView(R.layout.text_input_layout)
+                            .setPositiveButton(getString(R.string.save), (dialog, which) -> {
+                                TextInputLayout textInputLayout = ((Dialog) dialog).findViewById(R.id.text_input_layout);
+                                String newFileName = textInputLayout.getEditText().getText().toString().trim();
+                                try {
+                                    File newFile = new File(getImportFolder(), newFileName);
+                                    (new FlySightCsvParser()).write(new FileOutputStream(newFile), flySightTrackDataViewModel.getLiveData().getValue());
+                                    reopenActivityWithUri(Uri.fromFile(newFile));
+                                } catch (FileNotFoundException e) {
+                                    showAlertOKCancel(getResources().getString(R.string.save_error), null);
+                                } catch (IOException e) {
+                                    showAlertOKCancel(getResources().getString(R.string.error_opening_local_storage), null);
+                                }
 
-                        })
-                        .create();
+                            })
+                            .create();
 
-                alertDialog.show();
+                    alertDialog.show();
 
-                TextInputLayout inputLayout = alertDialog.findViewById(R.id.text_input_layout);
-                inputLayout.setHint(getString(R.string.file_name_hint));
-                String fileName = flySightTrackDataViewModel.getLiveData().getValue().getSourceFileName();
-                inputLayout.getEditText().setText(fileName);
-                inputLayout.getEditText().setSelection(0,
-                        fileName.contains(".") ? fileName.lastIndexOf(".") : fileName.length());
+                    TextInputLayout inputLayout = alertDialog.findViewById(R.id.text_input_layout);
+                    inputLayout.setHint(getString(R.string.file_name_hint));
+                    String fileName = flySightTrackDataViewModel.getLiveData().getValue().getSourceFileName();
+                    inputLayout.getEditText().setText(fileName);
+                    inputLayout.getEditText().setSelection(0,
+                            fileName.contains(".") ? fileName.lastIndexOf(".") : fileName.length());
 
-                SaveFileDialogTextWatcher textWatcher =
-                        new SaveFileDialogTextWatcher(fileName, getFilesInCurrentImportFolder(), inputLayout, alertDialog);
-                inputLayout.getEditText().addTextChangedListener(textWatcher);
-                inputLayout.setError(getString(R.string.file_already_exists));
+                    SaveFileDialogTextWatcher textWatcher =
+                            new SaveFileDialogTextWatcher(fileName, getFilesInCurrentImportFolder(), inputLayout, alertDialog);
+                    inputLayout.getEditText().addTextChangedListener(textWatcher);
+                    inputLayout.setError(getString(R.string.file_already_exists));
 
-            } catch (FileNotFoundException e) {
-                showAlertOKCancel(getResources().getString(R.string.save_error), null);
+                } catch (FileNotFoundException e) {
+                    showAlertOKCancel(getResources().getString(R.string.save_error), null);
+                }
             }
-        }
+        }.execute(this);
     }
 
     private File getImportFolder() throws FileNotFoundException {
@@ -210,62 +202,6 @@ public class TrackActivity extends AppCompatActivity {
             throw new FileNotFoundException();
         }
         return files;
-    }
-
-    public boolean checkPermission() {
-        int result = ContextCompat.checkSelfPermission(getApplicationContext(), READ_EXTERNAL_STORAGE);
-        int result1 = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE);
-
-        return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED;
-    }
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        boolean readAccepted = false;
-        boolean writeAccepted = false;
-        if (grantResults.length > 0) {
-            readAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-            writeAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
-        }
-
-        switch (requestCode) {
-            case TRACK_LOAD_PERMISSION_REQUEST_CODE:
-                if (readAccepted && writeAccepted) {
-                    loadFlySightTrackData();
-                } else {
-                    showPermissionRationale(TRACK_LOAD_PERMISSION_REQUEST_CODE);
-                }
-                break;
-            case TRACK_SAVE_PERMISSION_REQUEST_CODE:
-                if (readAccepted && writeAccepted) {
-                    saveFlySightTrackData();
-                } else {
-                    showPermissionRationale(TRACK_SAVE_PERMISSION_REQUEST_CODE);
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
-    private void showPermissionRationale(int permissionRequestId) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE)) {
-                showAlertOKCancel(getResources().getString(R.string.permissions_rationale), (dialog, which) ->
-                        requestPermissions(new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, permissionRequestId)
-                );
-            }
-        }
-    }
-
-    private void showAlertOKCancel(String message, DialogInterface.OnClickListener okListener) {
-        new AlertDialog.Builder(TrackActivity.this)
-                .setMessage(message)
-                .setPositiveButton(R.string.ok, okListener)
-                .setNegativeButton(R.string.cancel, null)
-                .create()
-                .show();
     }
 
     @Override

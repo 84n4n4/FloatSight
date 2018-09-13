@@ -12,10 +12,7 @@ import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.data.FlySightTrackData;
-import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.CappedTrackPointValueProvider;
 import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties;
-import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.TrackPointValueProvider;
-import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.XAxisValueProviderWrapper;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
 
 import static com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties.METRIC;

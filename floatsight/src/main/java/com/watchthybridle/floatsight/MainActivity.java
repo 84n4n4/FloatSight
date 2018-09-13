@@ -24,19 +24,11 @@ package com.watchthybridle.floatsight;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ClipData;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
@@ -44,18 +36,16 @@ import android.view.WindowManager;
 import com.watchthybridle.floatsight.data.FileImportData;
 import com.watchthybridle.floatsight.filesystem.FileImporter;
 import com.watchthybridle.floatsight.fragment.mainmenu.MainMenuFragment;
-import com.watchthybridle.floatsight.fragment.trackpicker.TrackPickerFragment;
+import com.watchthybridle.floatsight.permissionactivity.PermissionActivity;
+import com.watchthybridle.floatsight.permissionactivity.PermissionStrategy;
 import com.watchthybridle.floatsight.viewmodel.FileImportDataViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static com.watchthybridle.floatsight.TrackActivity.TRACK_FILE_URI;
 import static com.watchthybridle.floatsight.TrackPickerActivity.TRACK_PICKER_PATH;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends PermissionActivity {
 
     public static final String TAG_MAIN_MENU_FRAGMENT = "TAG_MAIN_MENU_FRAGMENT";
 
@@ -111,16 +101,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startImportFile() {
-        if (!checkPermission()) {
-            requestPermission();
-        } else {
-            Intent intent = new Intent()
-                    .setType("text/*")
-                    .addCategory(Intent.CATEGORY_OPENABLE)
-                    .setAction(Intent.ACTION_OPEN_DOCUMENT)
-                    .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-            startActivityForResult(Intent.createChooser(intent, "Select a file"), REQUEST_FILE);
-        }
+        new PermissionStrategy(IMPORT_PERMISSION_REQUEST_CODE) {
+            @Override
+            public void task() {
+                Intent intent = new Intent()
+                        .setType("text/*")
+                        .addCategory(Intent.CATEGORY_OPENABLE)
+                        .setAction(Intent.ACTION_OPEN_DOCUMENT)
+                        .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                startActivityForResult(Intent.createChooser(intent, "Select a file"), REQUEST_FILE);
+            }
+        }.execute(this);
     }
 
     @Override
@@ -159,58 +150,6 @@ public class MainActivity extends AppCompatActivity {
 
         FileImporter importer = new FileImporter(getContentResolver());
         importer.importTracks(uris, fileImportDataViewModel);
-    }
-
-    public boolean checkPermission() {
-        int result = ContextCompat.checkSelfPermission(getApplicationContext(), READ_EXTERNAL_STORAGE);
-        int result1 = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE);
-
-        return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED;
-    }
-
-    public void requestPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, IMPORT_PERMISSION_REQUEST_CODE);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        boolean readAccepted = false;
-        boolean writeAccepted = false;
-        if (grantResults.length > 0) {
-            readAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-            writeAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
-        }
-
-        switch (requestCode) {
-            case IMPORT_PERMISSION_REQUEST_CODE:
-                if (readAccepted && writeAccepted) {
-                    startImportFile();
-                } else {
-                    showPermissionRationale(IMPORT_PERMISSION_REQUEST_CODE);
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
-    private void showPermissionRationale(int permissionRequestId) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE)) {
-                showAlertOKCancel(getResources().getString(R.string.permissions_rationale), (dialog, which) ->
-                        requestPermissions(new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, permissionRequestId)
-                );
-            }
-        }
-    }
-
-    private void showAlertOKCancel(String message, DialogInterface.OnClickListener okListener) {
-        new AlertDialog.Builder(MainActivity.this)
-                .setMessage(message)
-                .setPositiveButton(R.string.ok, okListener)
-                .setNegativeButton(R.string.cancel, null)
-                .create()
-                .show();
     }
 
     @Override

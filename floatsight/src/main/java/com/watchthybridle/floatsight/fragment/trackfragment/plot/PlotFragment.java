@@ -37,12 +37,14 @@ import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.data.FlySightTrackData;
 import com.watchthybridle.floatsight.fragment.trackfragment.TrackFragment;
 import com.watchthybridle.floatsight.mpandroidchart.customcharts.GlideOverlayChart;
-import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.*;
+import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.CappedTrackPointValueProvider;
+import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetHolder;
+import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.TrackPointValueProvider;
+import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.XAxisValueProviderWrapper;
 
 import java.util.List;
 
 import static com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetHolder.*;
-import static com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties.METRIC;
 
 public class PlotFragment extends TrackFragment {
 

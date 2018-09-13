@@ -10,7 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +21,7 @@ import com.watchthybridle.floatsight.R;
 import com.watchthybridle.floatsight.TrackActivity;
 import com.watchthybridle.floatsight.TrackPickerActivity;
 import com.watchthybridle.floatsight.filesystem.PathBuilder;
+import com.watchthybridle.floatsight.permissionactivity.PermissionStrategy;
 import com.watchthybridle.floatsight.recyclerview.DividerLineDecorator;
 
 import java.io.File;
@@ -29,8 +29,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.watchthybridle.floatsight.TrackActivity.TRACK_FILE_URI;
 import static com.watchthybridle.floatsight.TrackPickerActivity.TAG_FILE_PICKER_FRAGMENT;
 import static com.watchthybridle.floatsight.filesystem.PathBuilder.TRACKS_FOLDER_NAME;
@@ -121,20 +119,19 @@ public class TrackPickerFragment extends Fragment implements FileAdapter.FileAda
             return files;
         }
 
-        if (!activity.checkPermission()) {
-            ActivityCompat.requestPermissions(activity, new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE},
-                    TRACK_PICKER_PERMISSION_REQUEST_CODE);
-
-        } else {
-            try {
-                File folder = getCurrentFolder();
-                for (File file : folder.listFiles()) {
-                    files.add(new FileAdapterItem(file));
+        new PermissionStrategy(TRACK_PICKER_PERMISSION_REQUEST_CODE) {
+            public void task() {
+                try {
+                    File folder = getCurrentFolder();
+                    for (File file : folder.listFiles()) {
+                        files.add(new FileAdapterItem(file));
+                    }
+                } catch (FileNotFoundException e) {
+                    showErrorMessage(R.string.error_opening_local_storage);
                 }
-            } catch (FileNotFoundException e) {
-                showErrorMessage(R.string.error_opening_local_storage);
             }
-        }
+        }.execute(activity);
+
         return files;
     }
 
