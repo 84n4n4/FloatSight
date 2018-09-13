@@ -15,8 +15,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +33,6 @@ import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.watchthybridle.floatsight.TrackActivity.TRACK_FILE_URI;
 import static com.watchthybridle.floatsight.TrackPickerActivity.TAG_FILE_PICKER_FRAGMENT;
-import static com.watchthybridle.floatsight.filesystem.PathBuilder.FLOAT_SIGHT_FOLDER_NAME;
 import static com.watchthybridle.floatsight.filesystem.PathBuilder.TRACKS_FOLDER_NAME;
 
 public class TrackPickerFragment extends Fragment implements FileAdapter.FileAdapterItemClickListener {
@@ -164,7 +161,7 @@ public class TrackPickerFragment extends Fragment implements FileAdapter.FileAda
                 item.fileName.contains(".") ? item.fileName.lastIndexOf(".") : item.fileName.length());
 
         RenameFileAdapterItemDialogTextWatcher textWatcher =
-                new RenameFileAdapterItemDialogTextWatcher(item, inputLayout, alertDialog);
+                new RenameFileAdapterItemDialogTextWatcher(fileAdapter, item.fileName, inputLayout, alertDialog);
         inputLayout.getEditText().addTextChangedListener(textWatcher);
     }
 
@@ -200,45 +197,6 @@ public class TrackPickerFragment extends Fragment implements FileAdapter.FileAda
                     deleteItem(fileAdapterItem);
                     break;
             }
-        }
-    }
-
-    private class RenameFileAdapterItemDialogTextWatcher implements TextWatcher {
-
-        private FileAdapterItem item;
-        private TextInputLayout textInputLayout;
-        private AlertDialog alertDialog;
-
-        RenameFileAdapterItemDialogTextWatcher(FileAdapterItem item, TextInputLayout textInputLayout, AlertDialog alertDialog) {
-            this.item = item;
-            this.textInputLayout = textInputLayout;
-            this.alertDialog = alertDialog;
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-
-            String input = s.toString().trim();
-            String error = null;
-
-            if (!input.endsWith(".csv") && !input.endsWith(".CSV")) {
-                error = getString(R.string.file_has_to_be_csv);
-            } else if (input.startsWith(".")) {
-                error = getString(R.string.file_name_empty);
-            } else if (!input.equals(item.fileName) && fileAdapter.contains(input)) {
-                error = getString(R.string.file_already_exists);
-            }
-
-            textInputLayout.setError(error);
-            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(error == null);
         }
     }
 }

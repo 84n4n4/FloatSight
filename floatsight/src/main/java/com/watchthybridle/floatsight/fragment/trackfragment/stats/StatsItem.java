@@ -20,7 +20,7 @@
  *
  */
 
-package com.watchthybridle.floatsight.fragment.stats;
+package com.watchthybridle.floatsight.fragment.trackfragment.stats;
 
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;

@@ -20,15 +20,13 @@
  *
  */
 
-package com.watchthybridle.floatsight.fragment.plot;
+package com.watchthybridle.floatsight.fragment.trackfragment.plot;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.*;
@@ -36,38 +34,29 @@ import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import com.github.mikephil.charting.components.LimitLine;
 import com.watchthybridle.floatsight.R;
-import com.watchthybridle.floatsight.TrackActivity;
 import com.watchthybridle.floatsight.data.FlySightTrackData;
-import com.watchthybridle.floatsight.fragment.UnitSystemDialogListener;
+import com.watchthybridle.floatsight.fragment.trackfragment.TrackFragment;
 import com.watchthybridle.floatsight.mpandroidchart.customcharts.GlideOverlayChart;
 import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.*;
-import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
 
 import java.util.List;
 
 import static com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetHolder.*;
 import static com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties.METRIC;
 
-public class PlotFragment extends Fragment implements UnitSystemDialogListener {
+public class PlotFragment extends TrackFragment {
 
     private GlideOverlayChart chart;
     private XAxisValueProviderWrapper xAxisValueProviderWrapper;
     private CappedTrackPointValueProvider cappedGlideValueProvider;
-    private FlySightTrackDataViewModel trackDataViewModel;
-    private String unitSystem = METRIC;
 
     public PlotFragment() {
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        setHasOptionsMenu(true);
         xAxisValueProviderWrapper = new XAxisValueProviderWrapper(XAxisValueProviderWrapper.TIME, unitSystem);
         cappedGlideValueProvider = new CappedTrackPointValueProvider(TrackPointValueProvider.GLIDE_VALUE_PROVIDER, 5f);
-        trackDataViewModel = ViewModelProviders.of(getActivity()).get(FlySightTrackDataViewModel.class);
-
-        trackDataViewModel.getLiveData()
-                .observe(this, flySightTrackData -> actOnDataChanged(flySightTrackData));
         super.onCreate(savedInstanceState);
     }
 
@@ -91,10 +80,6 @@ public class PlotFragment extends Fragment implements UnitSystemDialogListener {
     }
 
     public void actOnDataChanged(FlySightTrackData flySightTrackData) {
-        if(getActivity() != null) {
-            getActivity().invalidateOptionsMenu();
-        }
-
         if (!isValid(flySightTrackData)) {
             return;
         }
@@ -104,11 +89,11 @@ public class PlotFragment extends Fragment implements UnitSystemDialogListener {
 
         chart.setDataSetHolder(chartDataSetHolder);
         chart.invalidate();
-    }
 
-    public boolean isValid(FlySightTrackData flySightTrackData) {
-        return !flySightTrackData.getFlySightTrackPoints().isEmpty()
-                && !(flySightTrackData.getParsingStatus() == FlySightTrackData.PARSING_FAIL);
+        if(getActivity() != null) {
+            getActivity().invalidateOptionsMenu();
+        }
+
     }
 
     private void triggerOnDataChanged() {
@@ -142,7 +127,7 @@ public class PlotFragment extends Fragment implements UnitSystemDialogListener {
                 PlotFragmentDialogs.showGlideCapDialog(this, cappedGlideValueProvider);
                 return true;
             case R.id.menu_item_units:
-                ((TrackActivity) getActivity()).showUnitsDialog(unitSystem);
+                showUnitsDialog(unitSystem);
                 return true;
             case R.id.menu_item_set_range_marker:
                 chart.setRangeMarker();
@@ -274,7 +259,6 @@ public class PlotFragment extends Fragment implements UnitSystemDialogListener {
         chart.glideChart.saveState(outState);
         outState.putString(XAxisValueProviderWrapper.BUNDLE_KEY, xAxisValueProviderWrapper.getStringValue());
         outState.putFloat(CappedTrackPointValueProvider.BUNDLE_KEY, cappedGlideValueProvider.getCapYValueAt());
-        outState.putString(ChartDataSetProperties.UNIT_BUNDLE_KEY, unitSystem);
     }
 
     @Override
@@ -283,8 +267,6 @@ public class PlotFragment extends Fragment implements UnitSystemDialogListener {
         chart.restoreState(savedInstanceState);
         chart.glideChart.restoreState(savedInstanceState);
         if(savedInstanceState != null) {
-            unitSystem = savedInstanceState.getString(ChartDataSetProperties.UNIT_BUNDLE_KEY);
-            unitSystem = unitSystem == null ? METRIC : unitSystem;
             xAxisValueProviderWrapper = new XAxisValueProviderWrapper(
                     savedInstanceState.getString(XAxisValueProviderWrapper.BUNDLE_KEY), unitSystem);
             cappedGlideValueProvider = new CappedTrackPointValueProvider(TrackPointValueProvider.GLIDE_VALUE_PROVIDER,

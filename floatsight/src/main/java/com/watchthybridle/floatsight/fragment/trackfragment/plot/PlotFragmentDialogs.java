@@ -1,4 +1,4 @@
-package com.watchthybridle.floatsight.fragment.plot;
+package com.watchthybridle.floatsight.fragment.trackfragment.plot;
 
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;

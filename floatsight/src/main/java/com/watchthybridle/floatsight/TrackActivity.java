@@ -38,21 +38,17 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.CheckBox;
-import android.widget.FrameLayout;
 import com.watchthybridle.floatsight.csvparser.FlySightCsvParser;
 import com.watchthybridle.floatsight.data.FlySightTrackData;
 import com.watchthybridle.floatsight.datarepository.DataRepository;
-import com.watchthybridle.floatsight.fragment.plot.PlotFragment;
-import com.watchthybridle.floatsight.fragment.stats.TrackStatsFragment;
+import com.watchthybridle.floatsight.fragment.trackfragment.TrackFragment;
+import com.watchthybridle.floatsight.fragment.trackfragment.plot.PlotFragment;
+import com.watchthybridle.floatsight.fragment.trackfragment.stats.TrackStatsFragment;
+import com.watchthybridle.floatsight.fragment.trackmenu.SaveFileDialogTextWatcher;
 import com.watchthybridle.floatsight.fragment.trackmenu.TrackMenuFragment;
-import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties;
 import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
 
 import java.io.File;
@@ -187,52 +183,6 @@ public class TrackActivity extends AppCompatActivity {
         }
     }
 
-    private class SaveFileDialogTextWatcher implements TextWatcher {
-
-        private List<String> filesInFolder;
-        private TextInputLayout textInputLayout;
-        private AlertDialog alertDialog;
-        private String oldFileName;
-
-        SaveFileDialogTextWatcher(String oldFileName, List<String> filesInFolder, TextInputLayout textInputLayout, AlertDialog alertDialog) {
-            this.oldFileName = oldFileName;
-            this.filesInFolder = filesInFolder;
-            this.textInputLayout = textInputLayout;
-            this.alertDialog = alertDialog;
-            filesInFolder.remove(oldFileName);
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-
-            String input = s.toString().trim();
-            String error = null;
-
-            if (!input.endsWith(".csv") && !input.endsWith(".CSV")) {
-                error = getString(R.string.file_has_to_be_csv);
-            } else if (input.startsWith(".")) {
-                error = getString(R.string.file_name_empty);
-            } else if (filesInFolder.contains(input)) {
-                error = getString(R.string.file_already_exists);
-            }
-
-            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(error == null);
-
-            if (input.equals(oldFileName)) {
-                error = getString(R.string.file_overwrite_warning);
-            }
-            textInputLayout.setError(error);
-        }
-    }
-
     private File getImportFolder() throws FileNotFoundException {
         Bundle extras = getIntent().getExtras();
         if(extras != null) {
@@ -341,53 +291,18 @@ public class TrackActivity extends AppCompatActivity {
     }
 
     public void onUnitsDialogCheckboxClicked(View view) {
-        String unitSystem = ChartDataSetProperties.METRIC;
-        boolean checked = ((CheckBox) view).isChecked();
-        switch(view.getId()) {
-            case R.id.checkbox_metric:
-                ((CheckBox) view.getRootView().findViewById(R.id.checkbox_imperial)).setChecked(!checked);
-                if(checked) {
-                    unitSystem = ChartDataSetProperties.METRIC;
-                } else {
-                    unitSystem = ChartDataSetProperties.IMPERIAL;
-                }
-                break;
-            case R.id.checkbox_imperial:
-                ((CheckBox) view.getRootView().findViewById(R.id.checkbox_metric)).setChecked(!checked);
-                if(checked) {
-                    unitSystem = ChartDataSetProperties.IMPERIAL;
-
-                } else {
-                    unitSystem = ChartDataSetProperties.METRIC;
-                }
-                break;
-        }
-
-        PlotFragment plotFragment = (PlotFragment) getSupportFragmentManager()
+        TrackFragment trackFragment = (TrackFragment) getSupportFragmentManager()
                 .findFragmentByTag(TrackActivity.TAG_PLOT_FRAGMENT);
-        TrackStatsFragment trackStatsFragment = (TrackStatsFragment) getSupportFragmentManager()
+        if (trackFragment != null) {
+            trackFragment.onUnitsDialogCheckboxClicked(view);
+            return;
+        }
+
+        trackFragment = (TrackStatsFragment) getSupportFragmentManager()
                 .findFragmentByTag(TrackActivity.TAG_STATS_FRAGMENT);
-        if (plotFragment != null) {
-            plotFragment.onUnitsDialogCheckboxClicked(unitSystem);
+        if (trackFragment != null) {
+            trackFragment.onUnitsDialogCheckboxClicked(view);
         }
-        if (trackStatsFragment != null) {
-            trackStatsFragment.onUnitsDialogCheckboxClicked(unitSystem);
-        }
-    }
-
-    public void showUnitsDialog(String currentUnitSystem) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                .setTitle(R.string.plot_units_dialog_title)
-                .setPositiveButton(R.string.ok, null);
-        final FrameLayout frameView = new FrameLayout(this);
-        builder.setView(frameView);
-
-        final AlertDialog dialog = builder.create();
-        LayoutInflater inflater = dialog.getLayoutInflater();
-        View dialoglayout = inflater.inflate(R.layout.units_dialog, frameView);
-        ((CheckBox) dialoglayout.findViewById(R.id.checkbox_metric)).setChecked(currentUnitSystem.equals(ChartDataSetProperties.METRIC));
-        ((CheckBox) dialoglayout.findViewById(R.id.checkbox_imperial)).setChecked(currentUnitSystem.equals(ChartDataSetProperties.IMPERIAL));
-        dialog.show();
     }
 
     @VisibleForTesting

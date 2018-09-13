@@ -21,7 +21,7 @@
  *
  */
 
-package com.watchthybridle.floatsight.fragment.stats;
+package com.watchthybridle.floatsight.fragment.trackfragment.stats;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;

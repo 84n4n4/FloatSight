@@ -20,25 +20,21 @@
  *
  */
 
-package com.watchthybridle.floatsight.fragment.stats;
+package com.watchthybridle.floatsight.fragment.trackfragment.stats;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
 import com.watchthybridle.floatsight.R;
-import com.watchthybridle.floatsight.TrackActivity;
 import com.watchthybridle.floatsight.data.FlySightTrackData;
-import com.watchthybridle.floatsight.fragment.UnitSystemDialogListener;
+import com.watchthybridle.floatsight.fragment.trackfragment.TrackFragment;
 import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.CappedTrackPointValueProvider;
 import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties;
 import com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.TrackPointValueProvider;
 import com.watchthybridle.floatsight.recyclerview.DividerLineDecorator;
-import com.watchthybridle.floatsight.viewmodel.FlySightTrackDataViewModel;
 import org.apache.commons.lang3.time.DatePrinter;
 import org.apache.commons.lang3.time.FastDateFormat;
 
@@ -46,9 +42,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties.IMPERIAL;
-import static com.watchthybridle.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties.METRIC;
 
-public class TrackStatsFragment extends Fragment implements UnitSystemDialogListener {
+public class TrackStatsFragment extends TrackFragment {
 
 	public static final int FILENAME = 0;
 	public static final int START_TIME = 1;
@@ -71,21 +66,7 @@ public class TrackStatsFragment extends Fragment implements UnitSystemDialogList
 
 	private StatsAdapter statsAdapter;
 
-	private String unitSystem = METRIC;
-	private FlySightTrackDataViewModel trackDataViewModel;
-
 	public TrackStatsFragment() {
-	}
-
-	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		setHasOptionsMenu(true);
-
-		trackDataViewModel = ViewModelProviders.of(getActivity()).get(FlySightTrackDataViewModel.class);
-
-		trackDataViewModel.getLiveData()
-				.observe(this, flySightTrackData -> actOnDataChanged(flySightTrackData));
-		super.onCreate(savedInstanceState);
 	}
 
 	@Override
@@ -100,7 +81,7 @@ public class TrackStatsFragment extends Fragment implements UnitSystemDialogList
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.menu_item_units:
-				((TrackActivity) getActivity()).showUnitsDialog(unitSystem);
+				showUnitsDialog(unitSystem);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -108,16 +89,15 @@ public class TrackStatsFragment extends Fragment implements UnitSystemDialogList
 	}
 
 	protected void actOnDataChanged(FlySightTrackData flySightTrackData) {
-		if(getActivity() != null) {
-			getActivity().invalidateOptionsMenu();
-		}
-
 		if (!isValid(flySightTrackData)) {
 			return;
 		}
 		updateStatsItems(flySightTrackData);
-
 		statsAdapter.notifyDataSetChanged();
+
+		if(getActivity() != null) {
+			getActivity().invalidateOptionsMenu();
+		}
 	}
 
 	private void updateStatsItems(FlySightTrackData flySightTrackData) {
@@ -162,11 +142,6 @@ public class TrackStatsFragment extends Fragment implements UnitSystemDialogList
 		statsAdapter.statsItems.get(MAX_GLIDE).value = glideProperties.getFormattedYMax(getContext(), flySightTrackData);
 		statsAdapter.statsItems.get(MIN_GLIDE).value = glideProperties.getFormattedYMin(getContext(), flySightTrackData);
 		statsAdapter.statsItems.get(AVG_GLIDE).value = glideProperties.getFormattedValueForRange(getContext(), 0f, trackTimeInSeconds, flySightTrackData);
-	}
-
-	public boolean isValid(FlySightTrackData flySightTrackData) {
-		return !flySightTrackData.getFlySightTrackPoints().isEmpty()
-				&& !(flySightTrackData.getParsingStatus() == FlySightTrackData.PARSING_FAIL);
 	}
 
 	@Override
