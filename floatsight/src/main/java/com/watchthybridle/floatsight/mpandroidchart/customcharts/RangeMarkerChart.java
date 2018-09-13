@@ -22,10 +22,13 @@
 
 package com.watchthybridle.floatsight.mpandroidchart.customcharts;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.v4.content.ContextCompat;
+import android.view.MotionEvent;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
@@ -49,6 +52,24 @@ public class RangeMarkerChart extends RestorableChart {
         rangePaint.setStyle(Paint.Style.FILL);
         rangePaint.setColor(ContextCompat.getColor(context, R.color.rangeColor));
         limitLineColor = ContextCompat.getColor(context, R.color.limitLineColor);
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        mChartTouchListener = new CustomBarLineChartTouchListener(this, mViewPortHandler.getMatrixTouch(), 3f);
+    }
+
+    @Override
+    public void highlightValues(Highlight[] highs) {
+        super.highlightValues(highs);
+        invalidateOptionsMenu();
+    }
+
+    @Override
+    public void highlightValue(Highlight highlight) {
+        super.highlightValue(highlight, false);
+        invalidateOptionsMenu();
     }
 
     public void setRangeMarkerView(RangeMarkerView markerView) {
@@ -77,6 +98,18 @@ public class RangeMarkerChart extends RestorableChart {
             limitLines.remove(1);
         }
         invalidate();
+        invalidateOptionsMenu();
+    }
+
+    public void invalidateOptionsMenu() {
+        Context context = getContext();
+        while (context instanceof ContextWrapper) {
+            if (context instanceof Activity) {
+                ((Activity)context).invalidateOptionsMenu();
+                break;
+            }
+            context = ((ContextWrapper)context).getBaseContext();
+        }
     }
 
     private LimitLine createLimitLine(float position) {
@@ -90,6 +123,7 @@ public class RangeMarkerChart extends RestorableChart {
         getXAxis().removeAllLimitLines();
         invalidate();
         rangeVisible = false;
+        invalidateOptionsMenu();
     }
 
     @Override

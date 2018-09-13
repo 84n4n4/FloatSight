@@ -68,7 +68,7 @@
     <string name="plot_units_metric">Metric</string>
     <string name="plot_units_imperial">Imperial</string>
     <string name="crop_plot_dialog_title">Crop data to range</string>
-    <string name="crop_plot_dialog_description">Remove data outside the currently marked range.</string>
+    <string name="crop_plot_dialog_description">Remove data outside the currently marked range?</string>
     <string name="crop_plot_dialog_button">crop</string>
 
     <!-- Main menu -->

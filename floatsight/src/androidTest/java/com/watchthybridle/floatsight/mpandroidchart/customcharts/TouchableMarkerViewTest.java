@@ -25,6 +25,7 @@ package com.watchthybridle.floatsight.mpandroidchart.customcharts;
 import android.content.pm.ActivityInfo;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.support.test.espresso.assertion.ViewAssertions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v4.app.FragmentTransaction;
@@ -43,10 +44,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static com.watchthybridle.floatsight.MainActivity.TAG_MAIN_MENU_FRAGMENT;
 import static com.watchthybridle.floatsight.TrackActivity.TAG_PLOT_FRAGMENT;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
@@ -134,6 +139,89 @@ public class TouchableMarkerViewTest {
         onView(isRoot()).perform(Actions.wait(500));
 
         assertEquals(0, getNumberOfHighlights());
+    }
+
+    @Test
+    public void testMenuIconsEnabledOrientationChange() {
+        onView(isRoot()).perform(Actions.wait(500));
+
+        assertEquals(0, getNumberOfHighlights());
+        onView(withId(R.id.menu_item_set_range_marker)).check(matches(not(isEnabled())));
+        onView(withId(R.id.menu_item_crop_range)).check(matches(not(isEnabled())));
+        onView(withId(R.id.menu_item_discard_markers)).check(matches(not(isEnabled())));
+
+        onView(withId(R.id.root_chart_view))
+                .perform(Actions.clickOnPosition(getChart().getRight() / 2, getChart().getBottom() / 2));
+
+        assertEquals(1, getNumberOfHighlights());
+        onView(withId(R.id.menu_item_set_range_marker)).check(matches(isEnabled()));
+        onView(withId(R.id.menu_item_crop_range)).check(matches(not(isEnabled())));
+        onView(withId(R.id.menu_item_discard_markers)).check(matches(isEnabled()));
+
+        rule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        onView(isRoot()).perform(Actions.wait(500));
+
+        assertEquals(1, getNumberOfHighlights());
+        onView(withId(R.id.menu_item_set_range_marker)).check(matches(isEnabled()));
+        onView(withId(R.id.menu_item_crop_range)).check(matches(not(isEnabled())));
+        onView(withId(R.id.menu_item_discard_markers)).check(matches(isEnabled()));
+    }
+
+    @Test
+    public void testMenuIconsEnabledDismissedByMarkerClick() {
+        onView(isRoot()).perform(Actions.wait(500));
+
+        assertEquals(0, getNumberOfHighlights());
+        onView(withId(R.id.menu_item_set_range_marker)).check(matches(not(isEnabled())));
+        onView(withId(R.id.menu_item_crop_range)).check(matches(not(isEnabled())));
+        onView(withId(R.id.menu_item_discard_markers)).check(matches(not(isEnabled())));
+
+        onView(withId(R.id.root_chart_view))
+                .perform(Actions.clickOnPosition(getChart().getRight() / 2, getChart().getBottom() / 2));
+
+        assertEquals(1, getNumberOfHighlights());
+        onView(withId(R.id.menu_item_set_range_marker)).check(matches(isEnabled()));
+        onView(withId(R.id.menu_item_crop_range)).check(matches(not(isEnabled())));
+        onView(withId(R.id.menu_item_discard_markers)).check(matches(isEnabled()));
+
+        onView(isRoot()).perform(Actions.wait(500));
+
+        Rect markerArea = ((TouchAbleMarkerView) getChart().getMarker()).getMarkerViewDrawArea();
+        onView(withId(R.id.root_chart_view))
+                .perform(Actions.clickOnPosition(markerArea.centerX(), markerArea.centerY()));
+
+        assertEquals(0, getNumberOfHighlights());
+        onView(withId(R.id.menu_item_set_range_marker)).check(matches(not(isEnabled())));
+        onView(withId(R.id.menu_item_crop_range)).check(matches(not(isEnabled())));
+        onView(withId(R.id.menu_item_discard_markers)).check(matches(not(isEnabled())));
+    }
+
+    @Test
+    public void testMenuIconsEnabledDismissedByMenuClick() {
+        onView(isRoot()).perform(Actions.wait(500));
+
+        assertEquals(0, getNumberOfHighlights());
+        onView(withId(R.id.menu_item_set_range_marker)).check(matches(not(isEnabled())));
+        onView(withId(R.id.menu_item_crop_range)).check(matches(not(isEnabled())));
+        onView(withId(R.id.menu_item_discard_markers)).check(matches(not(isEnabled())));
+
+        onView(withId(R.id.root_chart_view))
+                .perform(Actions.clickOnPosition(getChart().getRight() / 2, getChart().getBottom() / 2));
+
+        assertEquals(1, getNumberOfHighlights());
+        onView(withId(R.id.menu_item_set_range_marker)).check(matches(isEnabled()));
+        onView(withId(R.id.menu_item_crop_range)).check(matches(not(isEnabled())));
+        onView(withId(R.id.menu_item_discard_markers)).check(matches(isEnabled()));
+
+        onView(isRoot()).perform(Actions.wait(500));
+
+        onView(withId(R.id.menu_item_discard_markers))
+                .perform(click());
+
+        assertEquals(0, getNumberOfHighlights());
+        onView(withId(R.id.menu_item_set_range_marker)).check(matches(not(isEnabled())));
+        onView(withId(R.id.menu_item_crop_range)).check(matches(not(isEnabled())));
+        onView(withId(R.id.menu_item_discard_markers)).check(matches(not(isEnabled())));
     }
 
     private int getNumberOfHighlights() {

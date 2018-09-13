@@ -94,4 +94,10 @@ public abstract class TrackFragment extends Fragment {
             unitSystem = unitSystem == null ? METRIC : unitSystem;
         }
     }
+
+    public void invalidateOptionsMenu() {
+        if(getActivity() != null) {
+            getActivity().invalidateOptionsMenu();
+        }
+    }
 }

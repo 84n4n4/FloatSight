@@ -42,11 +42,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static com.watchthybridle.floatsight.MainActivity.TAG_MAIN_MENU_FRAGMENT;
 import static com.watchthybridle.floatsight.TrackActivity.TAG_PLOT_FRAGMENT;
 import static junit.framework.TestCase.assertTrue;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertFalse;
 
 @RunWith(AndroidJUnit4.class)
@@ -135,6 +139,94 @@ public class RangeMarkerViewTest {
         onView(isRoot()).perform(Actions.wait(500));
 
         assertFalse(getChart().isRangeVisible());
+    }
+
+    @Test
+    public void testMenuIconsEnabledOrientationChange() {
+        onView(isRoot()).perform(Actions.wait(500));
+
+        onView(withId(R.id.menu_item_set_range_marker)).check(matches(not(isEnabled())));
+        onView(withId(R.id.menu_item_crop_range)).check(matches(not(isEnabled())));
+        onView(withId(R.id.menu_item_discard_markers)).check(matches(not(isEnabled())));
+
+        setRangeMarkerAt(getChart().getRight() / 4);
+        onView(withId(R.id.menu_item_set_range_marker)).check(matches(isEnabled()));
+        onView(withId(R.id.menu_item_crop_range)).check(matches(not(isEnabled())));
+        onView(withId(R.id.menu_item_discard_markers)).check(matches(isEnabled()));
+
+        setRangeMarkerAt((getChart().getRight() / 4) * 3);
+        onView(withId(R.id.menu_item_set_range_marker)).check(matches(isEnabled()));
+        onView(withId(R.id.menu_item_crop_range)).check(matches(isEnabled()));
+        onView(withId(R.id.menu_item_discard_markers)).check(matches(isEnabled()));
+
+        assertTrue(getChart().isRangeVisible());
+
+        rule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        onView(isRoot()).perform(Actions.wait(500));
+
+        assertTrue(getChart().isRangeVisible());
+        onView(withId(R.id.menu_item_set_range_marker)).check(matches(isEnabled()));
+        onView(withId(R.id.menu_item_crop_range)).check(matches(isEnabled()));
+        onView(withId(R.id.menu_item_discard_markers)).check(matches(isEnabled()));
+    }
+
+    @Test
+    public void testMenuIconsEnabledDismissedByMarkerClick() {
+        onView(isRoot()).perform(Actions.wait(500));
+
+        onView(withId(R.id.menu_item_set_range_marker)).check(matches(not(isEnabled())));
+        onView(withId(R.id.menu_item_crop_range)).check(matches(not(isEnabled())));
+        onView(withId(R.id.menu_item_discard_markers)).check(matches(not(isEnabled())));
+
+        setRangeMarkerAt(getChart().getRight() / 4);
+        onView(withId(R.id.menu_item_set_range_marker)).check(matches(isEnabled()));
+        onView(withId(R.id.menu_item_crop_range)).check(matches(not(isEnabled())));
+        onView(withId(R.id.menu_item_discard_markers)).check(matches(isEnabled()));
+
+        setRangeMarkerAt((getChart().getRight() / 4) * 3);
+        onView(withId(R.id.menu_item_set_range_marker)).check(matches(isEnabled()));
+        onView(withId(R.id.menu_item_crop_range)).check(matches(isEnabled()));
+        onView(withId(R.id.menu_item_discard_markers)).check(matches(isEnabled()));
+
+        assertTrue(getChart().isRangeVisible());
+
+        Rect markerArea = getChart().getRangeMarkerView().getMarkerViewDrawArea();
+        onView(withId(R.id.root_chart_view))
+                .perform(Actions.clickOnPosition(markerArea.centerX(), markerArea.centerY()));
+
+        assertFalse(getChart().isRangeVisible());
+        onView(withId(R.id.menu_item_set_range_marker)).check(matches(not(isEnabled())));
+        onView(withId(R.id.menu_item_crop_range)).check(matches(not(isEnabled())));
+        onView(withId(R.id.menu_item_discard_markers)).check(matches(not(isEnabled())));
+    }
+
+    @Test
+    public void testMenuIconsEnabledDismissedByMenuClick() {
+        onView(isRoot()).perform(Actions.wait(500));
+
+        onView(withId(R.id.menu_item_set_range_marker)).check(matches(not(isEnabled())));
+        onView(withId(R.id.menu_item_crop_range)).check(matches(not(isEnabled())));
+        onView(withId(R.id.menu_item_discard_markers)).check(matches(not(isEnabled())));
+
+        setRangeMarkerAt(getChart().getRight() / 4);
+        onView(withId(R.id.menu_item_set_range_marker)).check(matches(isEnabled()));
+        onView(withId(R.id.menu_item_crop_range)).check(matches(not(isEnabled())));
+        onView(withId(R.id.menu_item_discard_markers)).check(matches(isEnabled()));
+
+        setRangeMarkerAt((getChart().getRight() / 4) * 3);
+        onView(withId(R.id.menu_item_set_range_marker)).check(matches(isEnabled()));
+        onView(withId(R.id.menu_item_crop_range)).check(matches(isEnabled()));
+        onView(withId(R.id.menu_item_discard_markers)).check(matches(isEnabled()));
+
+        assertTrue(getChart().isRangeVisible());
+
+        onView(withId(R.id.menu_item_discard_markers))
+                .perform(click());
+
+        assertFalse(getChart().isRangeVisible());
+        onView(withId(R.id.menu_item_set_range_marker)).check(matches(not(isEnabled())));
+        onView(withId(R.id.menu_item_crop_range)).check(matches(not(isEnabled())));
+        onView(withId(R.id.menu_item_discard_markers)).check(matches(not(isEnabled())));
     }
 
     private void setRangeMarkerAt(int xPosition) {

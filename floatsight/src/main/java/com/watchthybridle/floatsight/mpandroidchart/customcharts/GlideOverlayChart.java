@@ -133,6 +133,7 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
     public void invalidate() {
         super.invalidate();
         glideChart.invalidate();
+        invalidateOptionsMenu();
     }
 
     @Override

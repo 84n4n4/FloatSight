@@ -95,9 +95,7 @@ public class TrackStatsFragment extends TrackFragment {
 		updateStatsItems(flySightTrackData);
 		statsAdapter.notifyDataSetChanged();
 
-		if(getActivity() != null) {
-			getActivity().invalidateOptionsMenu();
-		}
+		invalidateOptionsMenu();
 	}
 
 	private void updateStatsItems(FlySightTrackData flySightTrackData) {

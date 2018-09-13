@@ -23,10 +23,11 @@
 package com.watchthybridle.floatsight.fragment.trackfragment.plot;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
+import android.support.annotation.*;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.*;
@@ -92,10 +93,7 @@ public class PlotFragment extends TrackFragment {
         chart.setDataSetHolder(chartDataSetHolder);
         chart.invalidate();
 
-        if(getActivity() != null) {
-            getActivity().invalidateOptionsMenu();
-        }
-
+        invalidateOptionsMenu();
     }
 
     private void triggerOnDataChanged() {
@@ -113,7 +111,27 @@ public class PlotFragment extends TrackFragment {
         menu.findItem(R.id.menu_item_x_axis).setEnabled(enabled);
         menu.findItem(R.id.menu_item_cap_glide).setEnabled(enabled);
         menu.findItem(R.id.menu_item_units).setEnabled(enabled);
+
+        boolean highlightVisible = chart.getHighlighted() != null && chart.getHighlighted().length > 0;
+        setMenuIconEnabled(menu, highlightVisible, R.id.menu_item_set_range_marker, R.drawable.range);
+
+        boolean rangeVisible = chart.getXAxis().getLimitLines().size() == 2;
+        setMenuIconEnabled(menu, rangeVisible, R.id.menu_item_crop_range, R.drawable.cut);
+
+        boolean anyMarkerOrLimitVisible =  chart.getXAxis().getLimitLines().size() > 0 || highlightVisible;
+        setMenuIconEnabled(menu, anyMarkerOrLimitVisible, R.id.menu_item_discard_markers, R.drawable.discard);
+
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    private void setMenuIconEnabled(Menu menu, boolean enabled, int menuId, @DrawableRes int iconId) {
+        MenuItem menuItem = menu.findItem(menuId);
+        menuItem.setEnabled(enabled);
+        Drawable icon = getResources().getDrawable(iconId);
+        if (!enabled) {
+            icon.mutate().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN);
+            menuItem.setIcon(icon);
+        }
     }
 
     @Override
@@ -139,6 +157,8 @@ public class PlotFragment extends TrackFragment {
                 return true;
             case R.id.menu_item_discard_markers:
                 chart.clearRangeMarkers();
+                chart.highlightValues(null);
+                invalidateOptionsMenu();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -158,6 +178,8 @@ public class PlotFragment extends TrackFragment {
                                     limitLines.get(1).getLimit(),
                                     xAxisValueProviderWrapper.xAxisValueProvider);
                             chart.clearRangeMarkers();
+                            chart.highlightValues(null);
+                            invalidateOptionsMenu();
                         }
                     }
                 })

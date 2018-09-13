@@ -27,17 +27,20 @@
             android:id="@+id/menu_item_set_range_marker"
             android:icon="@drawable/range"
             android:title="@string/menu_item_set_range_marker"
-            app:showAsAction="always" />
+            app:showAsAction="always"
+            android:enabled="false"/>
     <item
             android:id="@+id/menu_item_crop_range"
             android:icon="@drawable/cut"
             android:title="@string/menu_item_set_range_marker"
-            app:showAsAction="always" />
+            app:showAsAction="always"
+            android:enabled="false"/>
     <item
             android:id="@+id/menu_item_discard_markers"
             android:icon="@drawable/discard"
             android:title="@string/menu_item_discard_markers"
-            app:showAsAction="always" />
+            app:showAsAction="always"
+            android:enabled="false"/>
     <item
             android:id="@+id/menu_item_x_axis"
             android:orderInCategory="100"
