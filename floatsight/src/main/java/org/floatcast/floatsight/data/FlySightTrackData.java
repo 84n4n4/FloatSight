@@ -25,8 +25,6 @@ package org.floatcast.floatsight.data;
 import com.github.mikephil.charting.data.Entry;
 import org.floatcast.floatsight.csvparser.FlySightTrackPoint;
 import org.floatcast.floatsight.mpandroidchart.linedatasetcreation.TrackPointValueProvider;
-import org.floatcast.floatsight.csvparser.FlySightTrackPoint;
-import org.floatcast.floatsight.mpandroidchart.linedatasetcreation.TrackPointValueProvider;
 
 import java.util.ArrayList;
 import java.util.List;

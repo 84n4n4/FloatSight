@@ -48,10 +48,10 @@ import static android.support.test.espresso.Espresso.*;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
+import static junit.framework.TestCase.assertEquals;
 import static org.floatcast.floatsight.MainActivity.TAG_MAIN_MENU_FRAGMENT;
 import static org.floatcast.floatsight.TrackActivity.TAG_PLOT_FRAGMENT;
 import static org.floatcast.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetHolder.*;
-import static junit.framework.TestCase.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class UnitsTest {

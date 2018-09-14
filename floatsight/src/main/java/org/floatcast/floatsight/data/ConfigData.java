@@ -23,7 +23,6 @@
 package org.floatcast.floatsight.data;
 
 import org.floatcast.floatsight.configparser.ConfigItem;
-import org.floatcast.floatsight.configparser.ConfigItem;
 
 import java.util.ArrayList;
 import java.util.List;

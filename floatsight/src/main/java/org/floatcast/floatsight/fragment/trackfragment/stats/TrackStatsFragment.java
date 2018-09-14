@@ -28,15 +28,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
-import org.floatcast.floatsight.R;
-import org.floatcast.floatsight.data.FlySightTrackData;
-import org.floatcast.floatsight.fragment.trackfragment.TrackFragment;
-import org.floatcast.floatsight.mpandroidchart.linedatasetcreation.CappedTrackPointValueProvider;
-import org.floatcast.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties;
-import org.floatcast.floatsight.mpandroidchart.linedatasetcreation.TrackPointValueProvider;
-import org.floatcast.floatsight.recyclerview.DividerLineDecorator;
 import org.apache.commons.lang3.time.DatePrinter;
 import org.apache.commons.lang3.time.FastDateFormat;
+import org.floatcast.floatsight.R;
+import org.floatcast.floatsight.data.FlySightTrackData;
 import org.floatcast.floatsight.fragment.trackfragment.TrackFragment;
 import org.floatcast.floatsight.mpandroidchart.linedatasetcreation.CappedTrackPointValueProvider;
 import org.floatcast.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties;
@@ -45,8 +40,6 @@ import org.floatcast.floatsight.recyclerview.DividerLineDecorator;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.floatcast.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties.IMPERIAL;
 
 public class TrackStatsFragment extends TrackFragment {
 

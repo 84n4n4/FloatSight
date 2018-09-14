@@ -42,13 +42,17 @@ class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileAdapterItemViewHo
     private List<FileAdapterItem> fileAdapterItems;
     private FileAdapterItemClickListener itemClickListener;
 
-    FileAdapter(List<FileAdapterItem> fileAdapterItems) {
-        this.fileAdapterItems = fileAdapterItems;
-        sort();
+    FileAdapter() {
     }
 
     public void setItemClickListener(FileAdapterItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
+    }
+
+    public void update(List<FileAdapterItem> fileAdapterItems) {
+        this.fileAdapterItems = fileAdapterItems;
+        sort();
+        notifyDataSetChanged();
     }
 
     @Override
@@ -108,6 +112,14 @@ class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileAdapterItemViewHo
     public boolean remove(FileAdapterItem item) {
         int position = fileAdapterItems.indexOf(item);
 
+        if (item.file.isDirectory()) {
+            for (File file : item.file.listFiles()) {
+                if (!file.delete()) {
+                    Log.e("REMOVE", "Removing " + item.file.getAbsolutePath()
+                            + " failed, removing form adapter anyway.");
+                }
+            }
+        }
         if (!item.file.delete()) {
             Log.e("REMOVE", "Removing " + item.file.getAbsolutePath()
                     + " failed, removing form adapter anyway.");

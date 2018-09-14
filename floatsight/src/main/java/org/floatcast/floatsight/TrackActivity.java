@@ -34,19 +34,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
-import org.floatcast.floatsight.R;
 import org.floatcast.floatsight.csvparser.FlySightCsvParser;
 import org.floatcast.floatsight.data.FlySightTrackData;
-import org.floatcast.floatsight.datarepository.DataRepository;
-import org.floatcast.floatsight.fragment.trackfragment.TrackFragment;
-import org.floatcast.floatsight.fragment.trackfragment.plot.PlotFragment;
-import org.floatcast.floatsight.fragment.trackfragment.stats.TrackStatsFragment;
-import org.floatcast.floatsight.fragment.trackmenu.SaveFileDialogTextWatcher;
-import org.floatcast.floatsight.fragment.trackmenu.TrackMenuFragment;
-import org.floatcast.floatsight.permissionactivity.PermissionActivity;
-import org.floatcast.floatsight.permissionactivity.PermissionStrategy;
-import org.floatcast.floatsight.viewmodel.FlySightTrackDataViewModel;
-import org.floatcast.floatsight.csvparser.FlySightCsvParser;
 import org.floatcast.floatsight.datarepository.DataRepository;
 import org.floatcast.floatsight.fragment.trackfragment.TrackFragment;
 import org.floatcast.floatsight.fragment.trackfragment.plot.PlotFragment;
@@ -148,6 +137,7 @@ public class TrackActivity extends PermissionActivity {
             public void task() {
                 try {
                     AlertDialog alertDialog = new AlertDialog.Builder(TrackActivity.this)
+                            .setTitle(R.string.save_dialog_title)
                             .setView(R.layout.text_input_layout)
                             .setPositiveButton(getString(R.string.save), (dialog, which) -> {
                                 TextInputLayout textInputLayout = ((Dialog) dialog).findViewById(R.id.text_input_layout);

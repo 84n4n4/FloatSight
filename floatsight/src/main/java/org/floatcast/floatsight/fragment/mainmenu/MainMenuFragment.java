@@ -39,9 +39,6 @@ import org.floatcast.floatsight.fragment.ButtonAdapter;
 import org.floatcast.floatsight.fragment.ButtonItem;
 import org.floatcast.floatsight.fragment.Dialogs;
 import org.floatcast.floatsight.recyclerview.DividerLineDecorator;
-import org.floatcast.floatsight.fragment.ButtonAdapter;
-import org.floatcast.floatsight.fragment.Dialogs;
-import org.floatcast.floatsight.recyclerview.DividerLineDecorator;
 
 import java.util.ArrayList;
 import java.util.List;

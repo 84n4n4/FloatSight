@@ -23,7 +23,6 @@
 package org.floatcast.floatsight;
 
 import org.floatcast.floatsight.data.ParsableData;
-import org.floatcast.floatsight.data.ParsableData;
 
 import java.io.IOException;
 import java.io.InputStream;

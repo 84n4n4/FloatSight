@@ -8,10 +8,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import org.floatcast.floatsight.R;
 import org.floatcast.floatsight.mpandroidchart.linedatasetcreation.CappedTrackPointValueProvider;
-import org.floatcast.floatsight.mpandroidchart.linedatasetcreation.CappedTrackPointValueProvider;
 import org.floatcast.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties;
-
-import static org.floatcast.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties.GLIDE_FORMAT;
 
 public final class PlotFragmentDialogs {
 

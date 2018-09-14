@@ -22,8 +22,8 @@
 
 package org.floatcast.floatsight.csvparser;
 
-import org.floatcast.floatsight.configparser.ConfigParser;
 import org.floatcast.floatsight.configparser.ConfigItem;
+import org.floatcast.floatsight.configparser.ConfigParser;
 import org.floatcast.floatsight.data.ConfigData;
 import org.junit.Test;
 import org.junit.runner.RunWith;

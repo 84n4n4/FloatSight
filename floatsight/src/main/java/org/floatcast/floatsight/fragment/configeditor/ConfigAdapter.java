@@ -30,7 +30,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import org.floatcast.floatsight.R;
 import org.floatcast.floatsight.configparser.ConfigItem;
-import org.floatcast.floatsight.configparser.ConfigItem;
 
 import java.util.List;
 import java.util.Locale;

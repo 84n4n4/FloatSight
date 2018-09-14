@@ -7,10 +7,10 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Process;
 import android.provider.OpenableColumns;
-import org.floatcast.floatsight.data.FileImportData;
-import org.floatcast.floatsight.viewmodel.DataViewModel;
 import org.apache.commons.lang3.time.DatePrinter;
 import org.apache.commons.lang3.time.FastDateFormat;
+import org.floatcast.floatsight.data.FileImportData;
+import org.floatcast.floatsight.viewmodel.DataViewModel;
 
 import java.io.*;
 import java.util.ArrayList;

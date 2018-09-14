@@ -23,42 +23,29 @@
 package org.floatcast.floatsight;
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.WindowManager;
-import org.floatcast.floatsight.R;
 import org.floatcast.floatsight.configparser.ConfigParser;
 import org.floatcast.floatsight.data.ConfigData;
 import org.floatcast.floatsight.datarepository.DataRepository;
 import org.floatcast.floatsight.fragment.configeditor.ConfigEditorFragment;
-import org.floatcast.floatsight.viewmodel.ConfigDataViewModel;
-import org.floatcast.floatsight.configparser.ConfigParser;
-import org.floatcast.floatsight.data.ConfigData;
-import org.floatcast.floatsight.datarepository.DataRepository;
-import org.floatcast.floatsight.fragment.configeditor.ConfigEditorFragment;
+import org.floatcast.floatsight.permissionactivity.PermissionActivity;
+import org.floatcast.floatsight.permissionactivity.PermissionStrategy;
 import org.floatcast.floatsight.viewmodel.ConfigDataViewModel;
 
-import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-public class ConfigActivity extends AppCompatActivity {
+public class ConfigActivity extends PermissionActivity {
 
     public static final String TAG_CONFIG_FRAGMENT = "TAG_CONFIG_FRAGMENT";
     public static final int REQUEST_CONFIG_FILE = 777;
 
-    private static final int PERMISSION_REQUEST_CODE = 200;
+    private static final int CONFIG_LOAD_PERMISSION_REQUEST_CODE = 400;
 
     private ConfigDataViewModel configDataViewModel;
 
@@ -97,15 +84,15 @@ public class ConfigActivity extends AppCompatActivity {
     }
 
     public void startImportFile() {
-        if (!checkPermission()) {
-            requestPermission();
-        } else {
-            Intent intent = new Intent()
-                    .setType("text/*")
-                    .addCategory(Intent.CATEGORY_OPENABLE)
-                    .setAction(Intent.ACTION_OPEN_DOCUMENT);
-            startActivityForResult(Intent.createChooser(intent, "Select a file"), REQUEST_CONFIG_FILE);
-        }
+        new PermissionStrategy(CONFIG_LOAD_PERMISSION_REQUEST_CODE) {
+            public void task() {
+                Intent intent = new Intent()
+                        .setType("text/*")
+                        .addCategory(Intent.CATEGORY_OPENABLE)
+                        .setAction(Intent.ACTION_OPEN_DOCUMENT);
+                startActivityForResult(Intent.createChooser(intent, "Select a file"), REQUEST_CONFIG_FILE);
+            }
+        }.execute(this);
     }
 
     @Override
@@ -131,30 +118,6 @@ public class ConfigActivity extends AppCompatActivity {
         DataRepository<ConfigData> repository =
                 new DataRepository<>(ConfigData.class, getContentResolver(), new ConfigParser());
         repository.load(uri, configDataViewModel);
-    }
-
-    private boolean checkPermission() {
-        int result = ContextCompat.checkSelfPermission(getApplicationContext(), READ_EXTERNAL_STORAGE);
-        int result1 = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE);
-
-        return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void requestPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-    }
-
-    private void showAlertOKCancel(String message, DialogInterface.OnClickListener okListener) {
-        new AlertDialog.Builder(ConfigActivity.this)
-                .setMessage(message)
-                .setPositiveButton(R.string.ok, okListener)
-                .setNegativeButton(R.string.cancel, null)
-                .create()
-                .show();
     }
 
     @Override

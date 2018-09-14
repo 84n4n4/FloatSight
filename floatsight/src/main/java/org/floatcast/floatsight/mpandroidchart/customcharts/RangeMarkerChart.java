@@ -28,12 +28,10 @@ import android.content.ContextWrapper;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.v4.content.ContextCompat;
-import android.view.MotionEvent;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import org.floatcast.floatsight.R;
-import org.floatcast.floatsight.mpandroidchart.customcharts.markerviews.RangeMarkerView;
 import org.floatcast.floatsight.mpandroidchart.customcharts.markerviews.RangeMarkerView;
 
 import java.util.Collections;

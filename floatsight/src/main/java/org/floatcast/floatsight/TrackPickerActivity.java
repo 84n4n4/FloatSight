@@ -27,16 +27,9 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.WindowManager;
-import org.floatcast.floatsight.R;
 import org.floatcast.floatsight.fragment.trackpicker.TrackPickerFragment;
 import org.floatcast.floatsight.permissionactivity.PermissionActivity;
 import org.floatcast.floatsight.permissionactivity.PermissionStrategy;
-import org.floatcast.floatsight.fragment.trackpicker.TrackPickerFragment;
-import org.floatcast.floatsight.permissionactivity.PermissionActivity;
-import org.floatcast.floatsight.permissionactivity.PermissionStrategy;
-
-import static org.floatcast.floatsight.fragment.trackpicker.TrackPickerFragment.PATH_BUNDLE_TAG;
-import static org.floatcast.floatsight.fragment.trackpicker.TrackPickerFragment.TRACK_PICKER_PERMISSION_REQUEST_CODE;
 
 public class TrackPickerActivity extends PermissionActivity {
 

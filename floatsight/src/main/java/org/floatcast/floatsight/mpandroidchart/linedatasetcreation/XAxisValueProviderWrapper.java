@@ -4,8 +4,8 @@ import android.support.annotation.StringDef;
 
 import java.lang.annotation.Retention;
 
-import static org.floatcast.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties.METRIC;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
+import static org.floatcast.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties.METRIC;
 
 public class XAxisValueProviderWrapper {
     public static final String BUNDLE_KEY = "XAxisValueProviderWrapper";

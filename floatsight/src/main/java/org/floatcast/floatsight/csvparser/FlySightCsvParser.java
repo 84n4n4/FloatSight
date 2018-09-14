@@ -22,10 +22,10 @@
 
 package org.floatcast.floatsight.csvparser;
 
-import org.floatcast.floatsight.Parser;
-import org.floatcast.floatsight.data.FlySightTrackData;
 import org.apache.commons.lang3.time.DateParser;
 import org.apache.commons.lang3.time.FastDateFormat;
+import org.floatcast.floatsight.Parser;
+import org.floatcast.floatsight.data.FlySightTrackData;
 
 import java.io.*;
 import java.text.ParseException;
@@ -63,6 +63,7 @@ public class FlySightCsvParser implements Parser<FlySightTrackData> {
         for (FlySightTrackPoint trackPoint : data.getFlySightTrackPoints()) {
             writer.write(trackPoint.csvRow + "\n");
         }
+        writer.close();
     }
 
     //0   ,1  ,2  ,3   ,4   ,5   ,6   ,7   ,8   ,9   ,10     ,11  ,12    ,13

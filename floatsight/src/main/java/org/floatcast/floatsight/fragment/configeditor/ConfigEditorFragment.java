@@ -35,8 +35,6 @@ import org.floatcast.floatsight.R;
 import org.floatcast.floatsight.configparser.ConfigItem;
 import org.floatcast.floatsight.data.ConfigData;
 import org.floatcast.floatsight.viewmodel.ConfigDataViewModel;
-import org.floatcast.floatsight.configparser.ConfigItem;
-import org.floatcast.floatsight.viewmodel.ConfigDataViewModel;
 
 import java.util.ArrayList;
 import java.util.List;

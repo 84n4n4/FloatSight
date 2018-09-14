@@ -23,9 +23,6 @@ import org.floatcast.floatsight.TrackPickerActivity;
 import org.floatcast.floatsight.filesystem.PathBuilder;
 import org.floatcast.floatsight.permissionactivity.PermissionStrategy;
 import org.floatcast.floatsight.recyclerview.DividerLineDecorator;
-import org.floatcast.floatsight.filesystem.PathBuilder;
-import org.floatcast.floatsight.permissionactivity.PermissionStrategy;
-import org.floatcast.floatsight.recyclerview.DividerLineDecorator;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -34,7 +31,6 @@ import java.util.List;
 
 import static org.floatcast.floatsight.TrackActivity.TRACK_FILE_URI;
 import static org.floatcast.floatsight.TrackPickerActivity.TAG_FILE_PICKER_FRAGMENT;
-import static org.floatcast.floatsight.filesystem.PathBuilder.TRACKS_FOLDER_NAME;
 
 public class TrackPickerFragment extends Fragment implements FileAdapter.FileAdapterItemClickListener {
 
@@ -56,12 +52,18 @@ public class TrackPickerFragment extends Fragment implements FileAdapter.FileAda
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        fileAdapter.update(getFiles());
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         RecyclerView recyclerView = view.findViewById(R.id.file_list_view);
         recyclerView.setHasFixedSize(true);
-        fileAdapter = new FileAdapter(getFiles());
+        fileAdapter = new FileAdapter();
         fileAdapter.setItemClickListener(this);
         recyclerView.setAdapter(fileAdapter);
         recyclerView.addItemDecoration(new DividerLineDecorator(view.getContext()));

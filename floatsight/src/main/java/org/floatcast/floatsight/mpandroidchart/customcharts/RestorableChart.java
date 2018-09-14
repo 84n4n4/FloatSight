@@ -12,9 +12,6 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import org.floatcast.floatsight.mpandroidchart.customcharts.parcelables.ParcelableHighlight;
 import org.floatcast.floatsight.mpandroidchart.customcharts.parcelables.ParcelableLimitLine;
 import org.floatcast.floatsight.mpandroidchart.customcharts.parcelables.ParcelableLineDataSetVisibility;
-import org.floatcast.floatsight.mpandroidchart.customcharts.parcelables.ParcelableHighlight;
-import org.floatcast.floatsight.mpandroidchart.customcharts.parcelables.ParcelableLimitLine;
-import org.floatcast.floatsight.mpandroidchart.customcharts.parcelables.ParcelableLineDataSetVisibility;
 
 import java.util.ArrayList;
 

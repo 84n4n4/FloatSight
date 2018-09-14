@@ -38,6 +38,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import org.apache.commons.lang3.time.DatePrinter;
+import org.apache.commons.lang3.time.FastDateFormat;
 import org.floatcast.floatsight.R;
 import org.floatcast.floatsight.TrackActivity;
 import org.floatcast.floatsight.data.FlySightTrackData;
@@ -48,18 +50,14 @@ import org.floatcast.floatsight.fragment.trackfragment.plot.PlotFragment;
 import org.floatcast.floatsight.fragment.trackfragment.stats.TrackStatsFragment;
 import org.floatcast.floatsight.recyclerview.DividerLineDecorator;
 import org.floatcast.floatsight.viewmodel.FlySightTrackDataViewModel;
-import org.apache.commons.lang3.time.DatePrinter;
-import org.apache.commons.lang3.time.FastDateFormat;
-import org.floatcast.floatsight.recyclerview.DividerLineDecorator;
-import org.floatcast.floatsight.viewmodel.FlySightTrackDataViewModel;
 
 import java.lang.annotation.Retention;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.annotation.RetentionPolicy.SOURCE;
 import static org.floatcast.floatsight.TrackActivity.TAG_PLOT_FRAGMENT;
 import static org.floatcast.floatsight.TrackActivity.TAG_STATS_FRAGMENT;
-import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 public class TrackMenuFragment extends Fragment implements ButtonAdapter.ButtonItemClickListener {
 	@Retention(SOURCE)

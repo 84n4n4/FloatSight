@@ -37,14 +37,8 @@ import org.floatcast.floatsight.mpandroidchart.customcharts.markerviews.PlotRang
 import org.floatcast.floatsight.mpandroidchart.customcharts.markerviews.TouchAbleMarkerView;
 import org.floatcast.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetHolder;
 import org.floatcast.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties;
-import org.floatcast.floatsight.mpandroidchart.customcharts.markerviews.PlotMarkerView;
-import org.floatcast.floatsight.mpandroidchart.customcharts.markerviews.PlotRangeMarkerView;
-import org.floatcast.floatsight.mpandroidchart.customcharts.markerviews.TouchAbleMarkerView;
-import org.floatcast.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetHolder;
-import org.floatcast.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties;
 
 import static com.github.mikephil.charting.components.YAxis.YAxisLabelPosition.INSIDE_CHART;
-import static org.floatcast.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetHolder.ALTITUDE;
 
 public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueSelectedListener {
 

@@ -10,7 +10,6 @@ import org.floatcast.floatsight.R;
 import org.floatcast.floatsight.data.FlySightTrackData;
 import org.floatcast.floatsight.mpandroidchart.customcharts.GlideOverlayChart;
 import org.floatcast.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties;
-import org.floatcast.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties;
 
 import java.util.List;
 

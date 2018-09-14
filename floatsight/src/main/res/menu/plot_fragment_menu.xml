@@ -32,7 +32,7 @@
     <item
             android:id="@+id/menu_item_crop_range"
             android:icon="@drawable/cut"
-            android:title="@string/menu_item_set_range_marker"
+            android:title="@string/menu_item_crop_range"
             app:showAsAction="always"
             android:enabled="false"/>
     <item

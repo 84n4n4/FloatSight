@@ -27,7 +27,10 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.*;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.*;
@@ -42,16 +45,8 @@ import org.floatcast.floatsight.mpandroidchart.linedatasetcreation.CappedTrackPo
 import org.floatcast.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetHolder;
 import org.floatcast.floatsight.mpandroidchart.linedatasetcreation.TrackPointValueProvider;
 import org.floatcast.floatsight.mpandroidchart.linedatasetcreation.XAxisValueProviderWrapper;
-import org.floatcast.floatsight.fragment.trackfragment.TrackFragment;
-import org.floatcast.floatsight.mpandroidchart.customcharts.GlideOverlayChart;
-import org.floatcast.floatsight.mpandroidchart.linedatasetcreation.CappedTrackPointValueProvider;
-import org.floatcast.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetHolder;
-import org.floatcast.floatsight.mpandroidchart.linedatasetcreation.TrackPointValueProvider;
-import org.floatcast.floatsight.mpandroidchart.linedatasetcreation.XAxisValueProviderWrapper;
 
 import java.util.List;
-
-import static org.floatcast.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetHolder.*;
 
 public class PlotFragment extends TrackFragment {
 

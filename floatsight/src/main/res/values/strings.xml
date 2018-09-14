@@ -22,7 +22,6 @@
 
 <resources>
     <string name="app_name">FloatSight</string>
-    <string name="config_activity">Config editor</string>
 
     <!-- Chart labels -->
     <string name="vert_velocity_label">V-vert</string>
@@ -30,7 +29,7 @@
     <string name="altitude_label">Altitude</string>
     <string name="glide_label">Glide</string>
     <string name="distance_label">Distance</string>
-    <string name="time_label">time</string>
+    <string name="time_label">Time</string>
 
     <!-- File open and parsing -->
     <string name="some_errors_parsing_file">Had some problems parsing CSV file, FlySight track data may be incomplete or incorrect.</string>
@@ -38,7 +37,6 @@
     <string name="file_import_success">Tracks imported!</string>
     <string name="file_import_some_errors">Couldn\'t import all files.</string>
     <string name="file_import_fail">Couldn\'t read files.</string>
-    <string name="file_open_success">Track opened</string>
     <string name="permissions_rationale">Storage access is required to read and save FlySight track data.</string>
 
 
@@ -49,11 +47,11 @@
     <!-- About dialog -->
     <string name="about_dialog_version">Version %1$s</string>
     <string name="about_dialog_link">https://github.com/84n4n4/FloatSight/blob/master/README.md</string>
+    <string name="about_dialog_floatcast_link">https://www.floatcast.org</string>
 
     <!-- Save dialog -->
     <string name="save_dialog_title">Save file as</string>
     <string name="save_error">Couldn\'t write file to local storage.</string>
-    <string name="file_save_success">Track stored.</string>
     <string name="file_name_empty">File name should contain at least one character.</string>
     <string name="file_already_exists">File with this name already exists</string>
     <string name="file_overwrite_warning">WARNING! This will overwrite this track file.</string>
@@ -97,8 +95,6 @@
 
     <!-- Stats fragment -->
     <string name="stats_filename">File</string>
-    <string name="stats_label_empty"> </string>
-    <string name="stats_parsing_error">Could not read file.</string>
     <string name="stats_start_time">Start time</string>
     <string name="stats_duration">Duration</string>
     <string name="stats_max_altitude">Max altitude</string>
