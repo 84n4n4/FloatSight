@@ -106,20 +106,26 @@ public class TrackActivity extends PermissionActivity {
         return true;
     }
 
+    public Uri getTrackFileUri() {
+        Bundle extras = getIntent().getExtras();
+        if(extras != null) {
+            String trackPath = extras.getString(TRACK_FILE_URI);
+            if (trackPath != null) {
+                return Uri.parse(extras.getString(TRACK_FILE_URI));
+            }
+        }
+        return null;
+    }
+
     public void loadFlySightTrackData() {
         new PermissionStrategy(TRACK_LOAD_PERMISSION_REQUEST_CODE) {
             public void task() {
-                Bundle extras = getIntent().getExtras();
-                if(extras != null) {
-                    String trackPath = extras.getString(TRACK_FILE_URI);
-                    if (trackPath != null) {
-                        Uri trackFileUri = Uri.parse(extras.getString(TRACK_FILE_URI));
-
-                        findViewById(R.id.toolbar_progress_bar).setVisibility(View.VISIBLE);
-                        DataRepository<FlySightTrackData> repository =
-                                new DataRepository<>(FlySightTrackData.class, getContentResolver(), new FlySightCsvParser());
-                        repository.load(trackFileUri, flySightTrackDataViewModel);
-                    }
+                Uri trackFileUri = getTrackFileUri();
+                if(trackFileUri != null) {
+                    findViewById(R.id.toolbar_progress_bar).setVisibility(View.VISIBLE);
+                    DataRepository<FlySightTrackData> repository =
+                            new DataRepository<>(FlySightTrackData.class, getContentResolver(), new FlySightCsvParser());
+                    repository.load(trackFileUri, flySightTrackDataViewModel);
                 }
             }
         }.execute(this);
@@ -177,16 +183,10 @@ public class TrackActivity extends PermissionActivity {
     }
 
     private File getImportFolder() throws FileNotFoundException {
-        Bundle extras = getIntent().getExtras();
-        if(extras != null) {
-            String trackPath = extras.getString(TRACK_FILE_URI);
-            if (trackPath != null) {
-                Uri trackFileUri = Uri.parse(extras.getString(TRACK_FILE_URI));
-                File trackFile = new File(trackFileUri.getPath());
-                return trackFile.getParentFile();
-            } else {
-                throw new FileNotFoundException();
-            }
+        Uri trackFileUri = getTrackFileUri();
+        if(trackFileUri != null) {
+            File trackFile = new File(trackFileUri.getPath());
+            return trackFile.getParentFile();
         } else {
             throw new FileNotFoundException();
         }

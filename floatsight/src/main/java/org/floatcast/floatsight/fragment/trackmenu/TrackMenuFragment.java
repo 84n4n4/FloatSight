@@ -24,6 +24,8 @@ package org.floatcast.floatsight.fragment.trackmenu;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
@@ -31,6 +33,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -51,6 +54,7 @@ import org.floatcast.floatsight.fragment.trackfragment.stats.TrackStatsFragment;
 import org.floatcast.floatsight.recyclerview.DividerLineDecorator;
 import org.floatcast.floatsight.viewmodel.FlySightTrackDataViewModel;
 
+import java.io.File;
 import java.lang.annotation.Retention;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,11 +65,12 @@ import static org.floatcast.floatsight.TrackActivity.TAG_STATS_FRAGMENT;
 
 public class TrackMenuFragment extends Fragment implements ButtonAdapter.ButtonItemClickListener {
 	@Retention(SOURCE)
-	@IntDef({BUTTON_PLOT, BUTTON_STATS})
+	@IntDef({BUTTON_LABEL, BUTTON_PLOT, BUTTON_STATS, BUTTON_SHARE})
 	private @interface TrackButtonId {}
 	private static final int BUTTON_LABEL = 0;
 	private static final int BUTTON_PLOT = 1;
 	private static final int BUTTON_STATS = 2;
+	private static final int BUTTON_SHARE = 3;
 
 	private static final int SAVE_AS = 0;
 	private static final int DISCARD = 1;
@@ -104,6 +109,7 @@ public class TrackMenuFragment extends Fragment implements ButtonAdapter.ButtonI
 		ButtonItem labelButton = buttonAdapter.buttonItems.get(BUTTON_LABEL);
 		ButtonItem plotButton = buttonAdapter.buttonItems.get(BUTTON_PLOT);
 		ButtonItem statsButton = buttonAdapter.buttonItems.get(BUTTON_STATS);
+		ButtonItem shareButton = buttonAdapter.buttonItems.get(BUTTON_SHARE);
 		if (trackDataViewModel.containsValidData()) {
 			FlySightTrackData flySightTrackData = trackDataViewModel.getLiveData().getValue();
 			if(flySightTrackData.isDirty()) {
@@ -118,11 +124,13 @@ public class TrackMenuFragment extends Fragment implements ButtonAdapter.ButtonI
 			labelButton.overrideDescription = getString(R.string.button_label_start_time, formattedTime);
 			plotButton.setEnabled(true);
 			statsButton.setEnabled(true);
+			shareButton.setEnabled(true);
 		} else {
 			labelButton.overrideTitle = getString(R.string.button_label_empty);
 			labelButton.overrideDescription = getString(R.string.button_label_empty);
 			plotButton.setEnabled(false);
 			statsButton.setEnabled(false);
+			shareButton.setEnabled(false);
 		}
 		buttonAdapter.notifyDataSetChanged();
 	}
@@ -153,6 +161,7 @@ public class TrackMenuFragment extends Fragment implements ButtonAdapter.ButtonI
 		trackMenuButtonList.add(new ButtonItem(BUTTON_LABEL, R.string.button_label_empty, R.string.button_label_empty, R.drawable.disk));
 		trackMenuButtonList.add(new ButtonItem(BUTTON_PLOT, R.string.button_plot_title, R.string.button_plot_description, R.drawable.plot));
 		trackMenuButtonList.add(new ButtonItem(BUTTON_STATS, R.string.button_stats_title, R.string.button_stats_description, R.drawable.stats));
+		trackMenuButtonList.add(new ButtonItem(BUTTON_SHARE, R.string.button_share_title, R.string.button_share_description, R.drawable.share));
 		return trackMenuButtonList;
 	}
 
@@ -173,8 +182,26 @@ public class TrackMenuFragment extends Fragment implements ButtonAdapter.ButtonI
 				case BUTTON_STATS:
 					showStatsFragment();
 					break;
+				case BUTTON_SHARE:
+					shareTrackFile();
+					break;
 				default:
 					break;
+			}
+		}
+	}
+
+	private void shareTrackFile() {
+		TrackActivity activity = ((TrackActivity) getActivity());
+		if (activity != null) {
+			Uri trackFileUri = FileProvider.getUriForFile(getContext(), getContext().getApplicationContext().getPackageName() + ".fileprovider", new File(activity.getTrackFileUri().getPath()));
+			if (trackFileUri != null) {
+				Intent intent = new Intent();
+				intent.setAction(Intent.ACTION_SEND)
+						.setType("text/csv")
+						.putExtra(Intent.EXTRA_STREAM, trackFileUri)
+						.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+				startActivity(Intent.createChooser(intent, "Share track with"));
 			}
 		}
 	}

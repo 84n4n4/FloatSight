@@ -89,6 +89,8 @@
     <string name="button_plot_description">Show track plot</string>
     <string name="button_stats_title">Stats</string>
     <string name="button_stats_description">Show track stats</string>
+    <string name="button_share_title">Send track</string>
+    <string name="button_share_description">Send this track file</string>
     <string name="discard_changes">Discard changes</string>
     <string name="save_as">Save as</string>
     <string name="save">Save</string>

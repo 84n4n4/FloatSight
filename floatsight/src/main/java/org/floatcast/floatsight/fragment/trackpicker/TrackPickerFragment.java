@@ -66,7 +66,6 @@ public class TrackPickerFragment extends Fragment implements FileAdapter.FileAda
         fileAdapter = new FileAdapter();
         fileAdapter.setItemClickListener(this);
         recyclerView.setAdapter(fileAdapter);
-        //recyclerView.addItemDecoration(new DividerLineDecorator(view.getContext()));
         try {
             String fullPath = getCurrentFolder().getPath();
             String currentFolder = fullPath.substring(fullPath.indexOf(PathBuilder.TRACKS_FOLDER_NAME) + PathBuilder.TRACKS_FOLDER_NAME.length()) + "/";

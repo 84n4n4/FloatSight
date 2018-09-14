@@ -178,21 +178,6 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
         PlotRangeMarkerView rangeMarkerView = new PlotRangeMarkerView(getContext());
         rangeMarkerView.setChartView(this);
         setRangeMarkerView(rangeMarkerView);
-        //zoomInOnMinMaxAltitude();
-    }
-
-    private void zoomInOnMinMaxAltitude() {
-        resetZoom();
-        glideChart.resetZoom();
-        Pair<Entry, Entry> minMaxAltitude = chartDataSetHolder.getDataSetPropertiesList().get(ChartDataSetHolder.ALTITUDE).getMinMaxYEntries();
-        float minX = minMaxAltitude.second.getX();
-        float maxX = minMaxAltitude.first.getX();
-        float scaleY = 1;
-        float scaleX = getLineData().getXMax() / (maxX - minX);
-        float centerX = (maxX - minX) / 2 + minX;
-        float centerY = 1;
-        zoom(scaleX, scaleY, centerX, centerY, YAxis.AxisDependency.RIGHT);
-        glideChart.zoom(scaleX, scaleY, centerX, centerY, YAxis.AxisDependency.RIGHT);
     }
 
     public ChartDataSetHolder getDataSetHolder() {
@@ -200,10 +185,12 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
     }
 
     // To get highlights also when clicking on glideChart
+    @Override
     public void onValueSelected(Entry entry, Highlight h) {
         highlightValue(entry.getX(), 0);
     }
 
+    @Override
     public void onNothingSelected() {
     }
 
