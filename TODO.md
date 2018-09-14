@@ -20,7 +20,6 @@
 
 # minor:
 * prevent markerView from sliding with viewport
-* item decorator in files list slips over files when deleting
 
 # next release / longterm
 * upload to skyderby

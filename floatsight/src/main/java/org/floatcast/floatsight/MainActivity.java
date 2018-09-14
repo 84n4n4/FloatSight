@@ -106,6 +106,7 @@ public class MainActivity extends PermissionActivity {
             public void task() {
                 Intent intent = new Intent()
                         .setType("text/*")
+                        //.setType("text/comma-separated-values")
                         .addCategory(Intent.CATEGORY_OPENABLE)
                         .setAction(Intent.ACTION_OPEN_DOCUMENT)
                         .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
