@@ -22,14 +22,12 @@ import org.floatcast.floatsight.TrackActivity;
 import org.floatcast.floatsight.TrackPickerActivity;
 import org.floatcast.floatsight.filesystem.PathBuilder;
 import org.floatcast.floatsight.permissionactivity.PermissionStrategy;
-import org.floatcast.floatsight.recyclerview.DividerLineDecorator;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.floatcast.floatsight.TrackActivity.TRACK_FILE_URI;
 import static org.floatcast.floatsight.TrackPickerActivity.TAG_FILE_PICKER_FRAGMENT;
 
 public class TrackPickerFragment extends Fragment implements FileAdapter.FileAdapterItemClickListener {

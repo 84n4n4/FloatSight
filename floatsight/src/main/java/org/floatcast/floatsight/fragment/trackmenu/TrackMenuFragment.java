@@ -46,7 +46,6 @@ import org.apache.commons.lang3.time.FastDateFormat;
 import org.floatcast.floatsight.R;
 import org.floatcast.floatsight.TrackActivity;
 import org.floatcast.floatsight.data.FlySightTrackData;
-import org.floatcast.floatsight.data.ParsableData;
 import org.floatcast.floatsight.fragment.ButtonAdapter;
 import org.floatcast.floatsight.fragment.ButtonItem;
 import org.floatcast.floatsight.fragment.Dialogs;

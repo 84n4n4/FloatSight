@@ -41,10 +41,8 @@ import org.floatcast.floatsight.permissionactivity.PermissionActivity;
 import org.floatcast.floatsight.permissionactivity.PermissionStrategy;
 import org.floatcast.floatsight.viewmodel.FileImportDataViewModel;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.floatcast.floatsight.TrackPickerActivity.TRACK_PICKER_PATH;

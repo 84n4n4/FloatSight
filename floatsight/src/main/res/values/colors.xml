@@ -24,7 +24,6 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
     <color name="buttonHighlighted">#810009</color>
     <color name="buttonDefault">#000000</color>
 
@@ -41,7 +40,6 @@
     <color name="rangeColor">#325165ff</color>
     <color name="limitLineColor">#aa5165ff</color>
 
-    <color name="flysightLightGreen">#b5d92a</color>
     <color name="flysightDarkGreen">#9cb145</color>
     <color name="flysightLightGrey">#918f90</color>
     <color name="flysightDarkGrey">#4f4c4d</color>

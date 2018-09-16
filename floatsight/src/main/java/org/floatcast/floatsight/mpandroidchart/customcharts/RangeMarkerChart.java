@@ -22,6 +22,7 @@
 
 package org.floatcast.floatsight.mpandroidchart.customcharts;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -44,6 +45,10 @@ public class RangeMarkerChart extends RestorableChart {
     private int limitLineColor;
     private RangeMarkerView rangeMarkerView = null;
     private boolean rangeVisible = false;
+
+    // preallocation for draw
+    private float[] pointValues = new float[4];
+    private Entry entry = new Entry(0, 0);
 
     public RangeMarkerChart(Context context) {
         super(context);
@@ -126,11 +131,12 @@ public class RangeMarkerChart extends RestorableChart {
     }
 
     @Override
+    @SuppressLint("DrawAllocation")
     protected void onDraw(Canvas canvas) {
         List<LimitLine> limitLines = mXAxis.getLimitLines();
         if (limitLines != null && limitLines.size() == 2) {
             rangeVisible = true;
-            float[] pointValues = new float[4];
+
             float limitA = limitLines.get(0).getLimit();
             float limitB = limitLines.get(1).getLimit();
             pointValues[0] = limitA;
@@ -140,7 +146,8 @@ public class RangeMarkerChart extends RestorableChart {
             canvas.drawRect(pointValues[0], mViewPortHandler.contentBottom(), pointValues[2], mViewPortHandler.contentTop(), rangePaint);
 
             if (rangeMarkerView != null) {
-                rangeMarkerView.refreshContent(new Entry(limitA, 0), new Highlight(limitA, 0f,0));
+                entry.setX(limitA);
+                rangeMarkerView.refreshContent(entry, new Highlight(limitA, 0f,0));
                 rangeMarkerView.draw(canvas, pointValues[0], mViewPortHandler.contentBottom());
             }
         }

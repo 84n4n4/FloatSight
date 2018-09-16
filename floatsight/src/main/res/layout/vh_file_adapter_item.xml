@@ -34,7 +34,7 @@
                   android:layout_height="wrap_content"
                   android:orientation="horizontal"
                   android:padding="20dp"
->
+                  tools:ignore="UseCompoundDrawables">
 
         <ImageView android:id="@+id/file_icon"
                    android:layout_width="wrap_content"
@@ -48,6 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="Title"
+            tools:ignore="HardcodedText"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"/>
     </LinearLayout>
     <View

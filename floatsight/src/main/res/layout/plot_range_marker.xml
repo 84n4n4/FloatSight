@@ -19,36 +19,38 @@
   ~     You should have received a copy of the GNU General Public License
   ~     along with FloatSight.  If not, see <https://www.gnu.org/licenses/>.
   ~
-  --><LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/plot_range_marker"
-                android:orientation="vertical">
+  -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content" xmlns:tools="http://schemas.android.com/tools"
+              android:background="@drawable/plot_range_marker"
+              android:orientation="vertical"
+              tools:ignore="Overdraw">
 
     <TextView
             android:id="@+id/time_marker_text_view"
             style="@style/markerTextView"
-            android:drawableLeft="@drawable/ic_time"
+            android:drawableStart="@drawable/ic_time"
             android:layout_marginTop="25dp"/>
     <TextView
             android:id="@+id/altitude_marker_text_view"
-            android:drawableLeft="@drawable/ic_alt_diff"
+            android:drawableStart="@drawable/ic_alt_diff"
             style="@style/markerTextView"/>
     <TextView
             android:id="@+id/distance_marker_text_view"
-            android:drawableLeft="@drawable/ic_dist_diff"
+            android:drawableStart="@drawable/ic_dist_diff"
             style="@style/markerTextView"/>
     <TextView
             android:id="@+id/hor_velocity_marker_text_view"
-            android:drawableLeft="@drawable/ic_hor_vel_avg"
+            android:drawableStart="@drawable/ic_hor_vel_avg"
             style="@style/markerTextView"/>
     <TextView
             android:id="@+id/vert_velocity_marker_text_view"
-            android:drawableLeft="@drawable/ic_vert_vel_avg"
+            android:drawableStart="@drawable/ic_vert_vel_avg"
             style="@style/markerTextView"/>
     <TextView
             android:id="@+id/glide_marker_text_view"
-            android:drawableLeft="@drawable/ic_glide_avg"
+            android:drawableStart="@drawable/ic_glide_avg"
             style="@style/markerTextView"/>
 
 </LinearLayout>

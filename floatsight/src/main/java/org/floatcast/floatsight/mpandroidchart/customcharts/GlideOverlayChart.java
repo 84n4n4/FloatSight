@@ -24,16 +24,14 @@ package org.floatcast.floatsight.mpandroidchart.customcharts;
 
 import android.content.Context;
 import android.graphics.Rect;
-import android.util.Pair;
 import android.view.MotionEvent;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import org.floatcast.floatsight.R;
 import org.floatcast.floatsight.mpandroidchart.customcharts.markerviews.PlotMarkerView;
-import org.floatcast.floatsight.mpandroidchart.customcharts.markerviews.PlotRangeMarkerView;
+import org.floatcast.floatsight.mpandroidchart.customcharts.markerviews.RangeMarkerView;
 import org.floatcast.floatsight.mpandroidchart.customcharts.markerviews.TouchAbleMarkerView;
 import org.floatcast.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetHolder;
 import org.floatcast.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties;
@@ -175,7 +173,7 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
         markerViewOutsideGraph.setChartView(this);
         setMarker(markerViewOutsideGraph);
 
-        PlotRangeMarkerView rangeMarkerView = new PlotRangeMarkerView(getContext());
+        RangeMarkerView rangeMarkerView = new RangeMarkerView(getContext());
         rangeMarkerView.setChartView(this);
         setRangeMarkerView(rangeMarkerView);
     }

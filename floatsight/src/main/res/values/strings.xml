@@ -114,10 +114,6 @@
     <string name="stats_avg_glide">Average glide</string>
 
     <!-- Config menu -->
-    <string name="button_config_import_title">Import</string>
-    <string name="button_config_import_description">Import FlySight config file</string>
-    <string name="button_config_save_title">Save</string>
-    <string name="button_config_save_description">Save FlySight config to file</string>
 
     <!-- File picker fragment -->
     <string name="error_opening_local_storage">Couldn\'t read from local storage.</string>

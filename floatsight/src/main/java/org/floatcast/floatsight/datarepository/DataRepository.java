@@ -37,7 +37,8 @@ import java.io.IOException;
 
 import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
 import static android.os.Process.THREAD_PRIORITY_MORE_FAVORABLE;
-import static org.floatcast.floatsight.data.ParsableData.*;
+import static org.floatcast.floatsight.data.ParsableData.PARSING_FAIL;
+import static org.floatcast.floatsight.data.ParsableData.PARSING_SUCCESS;
 
 public class DataRepository<T extends ParsableData> {
 

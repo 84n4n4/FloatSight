@@ -19,7 +19,9 @@
   ~     You should have received a copy of the GNU General Public License
   ~     along with FloatSight.  If not, see <https://www.gnu.org/licenses/>.
   ~
-  --><LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:id="@+id/button_linear_layout"
               android:layout_width="match_parent"
               android:layout_height="wrap_content" xmlns:tools="http://schemas.android.com/tools"
@@ -27,7 +29,8 @@
               android:padding="15dp"
               android:clickable="true"
               android:focusable="true"
-              android:background="?android:attr/selectableItemBackground">
+              android:background="?android:attr/selectableItemBackground"
+              tools:ignore="Overdraw">
 
     <ImageView android:id="@+id/button_icon"
                android:layout_width="wrap_content"
@@ -35,16 +38,16 @@
                tools:ignore="ContentDescription"
                android:layout_gravity="center"/>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:layout_width="match_parent"
+    <LinearLayout android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:orientation="vertical"
-                  android:layout_marginLeft="10dp">
+                  android:layout_marginStart="10dp">
     <TextView
         android:id="@+id/button_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Title"
+        tools:ignore="HardcodedText"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
 
     <TextView
@@ -52,6 +55,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Description"
+        tools:ignore="HardcodedText"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"/>
     </LinearLayout>
 </LinearLayout>

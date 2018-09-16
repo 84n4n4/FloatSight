@@ -7,11 +7,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Process;
 import android.provider.OpenableColumns;
-import android.support.annotation.Nullable;
 import org.apache.commons.lang3.time.DatePrinter;
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.floatcast.floatsight.data.FileImportData;
-import org.floatcast.floatsight.viewmodel.DataViewModel;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -34,16 +32,18 @@ public class FileImporter {
     public void importTracks(List<Uri> urisList, MutableLiveData<FileImportData> importData) {
         Uri[] urisArray = new Uri[urisList.size()];
         urisList.toArray(urisArray);
-        new ImportFilesTask(importData).execute(urisArray);
+        new ImportFilesTask(contentResolver, importData).execute(urisArray);
     }
 
-    private class ImportFilesTask extends AsyncTask<Uri, Integer, Long> {
+    private static class ImportFilesTask extends AsyncTask<Uri, Integer, Long> {
 
         private FileImportData data = new FileImportData();
         private MutableLiveData<FileImportData> liveData;
+        private ContentResolver contentResolver;
 
-        ImportFilesTask(MutableLiveData<FileImportData> liveData) {
+        ImportFilesTask(ContentResolver contentResolver, MutableLiveData<FileImportData> liveData) {
             this.liveData = liveData;
+            this.contentResolver = contentResolver;
         }
 
         @Override
@@ -57,7 +57,7 @@ public class FileImporter {
                 data.setImportFolder(directory);
                 List<File> files = new ArrayList<>();
                 for (Uri uri : uris) {
-                    String fileName = resolveFileName(uri);
+                    String fileName = resolveFileName(contentResolver, uri);
                     try {
                         files.add(importTrack(contentResolver, fileName, directory, uri));
                     } catch (IOException e) {
@@ -109,7 +109,7 @@ public class FileImporter {
         return outFile;
     }
 
-    private String resolveFileName(Uri uri) {
+    private static String resolveFileName(ContentResolver contentResolver, Uri uri) {
         String result = null;
 
         if (uri.getScheme().equals("content")) {

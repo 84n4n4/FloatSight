@@ -21,11 +21,11 @@
   ~
   -->
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    style="@style/settingsViewHolder">
+        xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/settingsViewHolder">
 
     <TextView
         android:id="@+id/description"
@@ -36,7 +36,8 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:baselineAligned="false">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -48,15 +49,16 @@
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingEnd="8dp" />
+                android:paddingEnd="8dp"
+                android:paddingStart="0dp" />
 
             <EditText
                 android:id="@+id/value"
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:textSize="14sp"
-                style="@style/settingsViewHolderEditText"/>
-
+                style="@style/settingsViewHolderEditText"
+                tools:ignore="LabelFor"/>
         </LinearLayout>
 
         <LinearLayout
