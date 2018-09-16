@@ -8,7 +8,7 @@ import static org.floatcast.floatsight.data.ParsableData.PARSING_FAIL;
 
 public class ConfigDataViewModel extends DataViewModel<ConfigData> {
 
-    private MutableLiveData<ConfigData> configData;
+    private final MutableLiveData<ConfigData> configData;
 
     public ConfigDataViewModel() {
         configData = new MutableLiveData<>();

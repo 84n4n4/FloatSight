@@ -23,7 +23,7 @@ public class RangeMarkerView extends TouchAbleMarkerView {
 
     @Override
     public void refreshContent(Entry entry, Highlight highlight) {
-        GlideOverlayChart chart = (GlideOverlayChart) RangeMarkerView.this.getChartView();
+        GlideOverlayChart chart = (GlideOverlayChart) getChartView();
         List<LimitLine> limitLines = chart.getXAxis().getLimitLines();
         float limitStart = limitLines.get(0).getLimit();
         float limitEnd = limitLines.get(1).getLimit();
@@ -53,7 +53,7 @@ public class RangeMarkerView extends TouchAbleMarkerView {
     @Override
     public void draw(Canvas canvas, float posX, float posY)
     {
-        float chartBottom = RangeMarkerView.this.getChartView().getViewPortHandler().contentBottom();
+        float chartBottom = getChartView().getViewPortHandler().contentBottom();
 
         int saveId = canvas.save();
 

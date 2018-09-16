@@ -42,9 +42,9 @@ import static org.floatcast.floatsight.data.ParsableData.PARSING_SUCCESS;
 
 public class DataRepository<T extends ParsableData> {
 
-    private Class<T> parsableDataClass;
-    private ContentResolver contentResolver;
-    private Parser<T> parser;
+    private final Class<T> parsableDataClass;
+    private final ContentResolver contentResolver;
+    private final Parser<T> parser;
 
     public DataRepository(Class<T> parsableDataClass, ContentResolver contentResolver, Parser<T> parser) {
         this.parsableDataClass = parsableDataClass;
@@ -63,9 +63,9 @@ public class DataRepository<T extends ParsableData> {
     private static class ParseFileTask<T extends ParsableData> extends AsyncTask<Uri, Integer, Long> {
 
         private T data;
-        private ContentResolver contentResolver;
-        private Parser<T> parser;
-        private MutableLiveData<T> liveData;
+        private final ContentResolver contentResolver;
+        private final Parser<T> parser;
+        private final MutableLiveData<T> liveData;
 
         ParseFileTask(Class<T> parsableDataClass, ContentResolver contentResolver, Parser<T> parser,
                       MutableLiveData<T> liveData) throws IllegalAccessException, InstantiationException {

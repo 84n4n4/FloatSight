@@ -88,7 +88,7 @@ public class MainActivity extends PermissionActivity {
             message = R.string.file_import_some_errors;
         }
 
-        if (!(fileImportData.getImportingStatus() == FileImportData.IMPORTING_ERRORS)) {
+        if (fileImportData.getImportingStatus() != FileImportData.IMPORTING_ERRORS) {
             Intent showTrackIntent = new Intent(this, TrackPickerActivity.class);
             showTrackIntent.putExtra(TRACK_PICKER_PATH, fileImportData.getImportFolder().getAbsolutePath());
             startActivity(showTrackIntent);
@@ -163,12 +163,12 @@ public class MainActivity extends PermissionActivity {
 
         List<Uri> uris = new ArrayList<>();
         ClipData clipData = data.getClipData();
-        if (clipData != null) {
+        if (clipData == null) {
+            uris.add(data.getData());
+        } else {
             for (int index = 0; index < clipData.getItemCount(); index++) {
                 uris.add(clipData.getItemAt(index).getUri());
             }
-        } else {
-            uris.add(data.getData());
         }
         findViewById(R.id.toolbar_progress_bar).setVisibility(View.VISIBLE);
         FileImporter importer = new FileImporter(getContentResolver());

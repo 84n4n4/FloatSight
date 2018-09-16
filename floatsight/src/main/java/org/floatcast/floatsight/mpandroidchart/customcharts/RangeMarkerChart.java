@@ -41,14 +41,14 @@ import java.util.List;
 
 public class RangeMarkerChart extends RestorableChart {
 
-    private Paint rangePaint;
-    private int limitLineColor;
+    private final Paint rangePaint;
+    private final int limitLineColor;
     private RangeMarkerView rangeMarkerView = null;
     private boolean rangeVisible = false;
 
     // preallocation for draw
     private float[] pointValues = new float[4];
-    private Entry entry = new Entry(0, 0);
+    private final Entry entry = new Entry(0, 0);
 
     public RangeMarkerChart(Context context) {
         super(context);

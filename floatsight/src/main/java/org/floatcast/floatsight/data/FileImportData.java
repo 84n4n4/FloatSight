@@ -9,6 +9,7 @@ import java.util.List;
 
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
+@SuppressWarnings("PMD.FieldDeclarationsShouldBeAtStartOfClass")
 public class FileImportData {
 
     @Retention(SOURCE)

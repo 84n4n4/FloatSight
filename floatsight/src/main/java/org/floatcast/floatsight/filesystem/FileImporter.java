@@ -23,7 +23,7 @@ import static org.floatcast.floatsight.data.FileImportData.*;
 public class FileImporter {
 
     private static final DatePrinter DATE_PRINTER = FastDateFormat.getInstance("yyyy-MM-dd'T'HH_mm_ss");
-    private ContentResolver contentResolver;
+    private final ContentResolver contentResolver;
 
     public FileImporter(ContentResolver contentResolver) {
         this.contentResolver = contentResolver;
@@ -37,9 +37,9 @@ public class FileImporter {
 
     private static class ImportFilesTask extends AsyncTask<Uri, Integer, Long> {
 
-        private FileImportData data = new FileImportData();
-        private MutableLiveData<FileImportData> liveData;
-        private ContentResolver contentResolver;
+        private final FileImportData data = new FileImportData();
+        private final MutableLiveData<FileImportData> liveData;
+        private final ContentResolver contentResolver;
 
         ImportFilesTask(ContentResolver contentResolver, MutableLiveData<FileImportData> liveData) {
             this.liveData = liveData;
@@ -66,7 +66,7 @@ public class FileImporter {
                 }
                 if (uris.length == files.size()) {
                     data.setImportingStatus(IMPORTING_SUCCESS);
-                } else if (uris.length > 0 && files.size() > 0) {
+                } else if (uris.length > 0 && !files.isEmpty()) {
                     data.setImportingStatus(IMPORTING_ERRORS);
                 } else {
                     data.setImportingStatus(IMPORTING_FAIL);
@@ -109,7 +109,7 @@ public class FileImporter {
         return outFile;
     }
 
-    private static String resolveFileName(ContentResolver contentResolver, Uri uri) {
+    static String resolveFileName(ContentResolver contentResolver, Uri uri) {
         String result = null;
 
         if (uri.getScheme().equals("content")) {

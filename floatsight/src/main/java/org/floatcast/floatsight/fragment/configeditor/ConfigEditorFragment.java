@@ -43,7 +43,9 @@ public class ConfigEditorFragment extends Fragment {
 
     private ConfigAdapter adapter;
 
+
     public ConfigEditorFragment() {
+        // intentional empty constructor for fragments
     }
 
     @Override

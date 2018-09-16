@@ -7,6 +7,7 @@ import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 import static org.floatcast.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties.METRIC;
 
+@SuppressWarnings("PMD.FieldDeclarationsShouldBeAtStartOfClass")
 public class XAxisValueProviderWrapper {
     public static final String BUNDLE_KEY = "XAxisValueProviderWrapper";
     @Retention(SOURCE)

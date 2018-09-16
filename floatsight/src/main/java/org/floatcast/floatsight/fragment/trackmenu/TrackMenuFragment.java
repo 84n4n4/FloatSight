@@ -63,7 +63,9 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
 import static org.floatcast.floatsight.TrackActivity.TAG_PLOT_FRAGMENT;
 import static org.floatcast.floatsight.TrackActivity.TAG_STATS_FRAGMENT;
 
+@SuppressWarnings("PMD.FieldDeclarationsShouldBeAtStartOfClass")
 public class TrackMenuFragment extends Fragment implements ButtonAdapter.ButtonItemClickListener {
+
 	@Retention(SOURCE)
 	@IntDef({BUTTON_LABEL, BUTTON_PLOT, BUTTON_STATS, BUTTON_SHARE})
 	private @interface TrackButtonId {}
@@ -72,8 +74,8 @@ public class TrackMenuFragment extends Fragment implements ButtonAdapter.ButtonI
 	private static final int BUTTON_STATS = 2;
 	private static final int BUTTON_SHARE = 3;
 
-	private static final int SAVE_AS = 0;
-	private static final int DISCARD = 1;
+	static final int SAVE_AS = 0;
+	static final int DISCARD = 1;
 
 	private FlySightTrackDataViewModel trackDataViewModel;
 	private ButtonAdapter buttonAdapter;
@@ -81,6 +83,7 @@ public class TrackMenuFragment extends Fragment implements ButtonAdapter.ButtonI
 	private static final DatePrinter PRETTY_DATE_PRINTER = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
 
 	public TrackMenuFragment() {
+		// intentional empty constructor for fragments
 	}
 
 	@Override
@@ -249,6 +252,8 @@ public class TrackMenuFragment extends Fragment implements ButtonAdapter.ButtonI
 					break;
 				case DISCARD:
 					((TrackActivity) getActivity()).loadFlySightTrackData();
+					break;
+				default:
 					break;
 			}
 		}

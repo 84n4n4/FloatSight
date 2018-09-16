@@ -35,13 +35,14 @@ public class TrackPickerFragment extends Fragment implements FileAdapter.FileAda
     public static final String PATH_BUNDLE_TAG = "PATH_BUNDLE_TAG";
     public static final int TRACK_PICKER_PERMISSION_REQUEST_CODE = 400;
 
-    private static final int OPEN = 0;
-    private static final int RENAME = 1;
-    private static final int DELETE = 2;
+    static final int OPEN = 0;
+    static final int RENAME = 1;
+    static final int DELETE = 2;
 
     FileAdapter fileAdapter;
 
     public TrackPickerFragment() {
+        // intentional empty constructor for fragments
     }
 
     @Override
@@ -102,7 +103,7 @@ public class TrackPickerFragment extends Fragment implements FileAdapter.FileAda
                 .show();
     }
 
-    private File getCurrentFolder() throws FileNotFoundException {
+    File getCurrentFolder() throws FileNotFoundException {
         File folder;
         if (getArguments() == null || getArguments().getString(PATH_BUNDLE_TAG) == null) {
             folder = PathBuilder.getTracksFolder();
@@ -195,6 +196,8 @@ public class TrackPickerFragment extends Fragment implements FileAdapter.FileAda
                 case DELETE:
                     deleteItem(fileAdapterItem);
                     break;
+                default:
+                     break;
             }
         }
     }

@@ -9,7 +9,7 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public abstract class PermissionStrategy {
 
-    private int permissionRequestId;
+    private final int permissionRequestId;
 
     abstract public void task();
 
@@ -22,11 +22,11 @@ public abstract class PermissionStrategy {
     }
 
     public void execute(PermissionActivity activity) {
-        if (!checkPermission(activity)) {
+        if (checkPermission(activity)) {
+            task();
+        } else {
             activity.addToPermissionStrategyList(this);
             ActivityCompat.requestPermissions(activity, new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, permissionRequestId);
-        } else {
-            task();
         }
     }
 

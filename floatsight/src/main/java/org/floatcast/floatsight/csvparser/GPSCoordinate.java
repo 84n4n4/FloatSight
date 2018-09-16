@@ -7,6 +7,7 @@ import java.lang.annotation.Retention;
 
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
+@SuppressWarnings("PMD.FieldDeclarationsShouldBeAtStartOfClass")
 public class GPSCoordinate {
 
 	@Retention(SOURCE)
@@ -18,6 +19,7 @@ public class GPSCoordinate {
 	final double lat;
 	final double lon;
 	final int valid;
+
 	GPSCoordinate(double lat, double lon, @ValidGPSLocation int valid ) {
 		this.lat = lat;
 		this.lon = lon;

@@ -62,10 +62,15 @@ public class GlideOverlayChart extends RangeMarkerChart implements OnChartValueS
         setAxisLabelColors(context);
         setLegendPosition();
         setZoomHandling();
-        invalidate();
 
         this.setClipChildren(true);
         this.setClipToPadding(true);
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        invalidate();
     }
 
     private void setZoomHandling() {

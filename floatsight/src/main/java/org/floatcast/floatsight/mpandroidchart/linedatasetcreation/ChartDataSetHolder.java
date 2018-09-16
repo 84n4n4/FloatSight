@@ -20,8 +20,8 @@ public class ChartDataSetHolder {
     private static final List<Integer> OUTER_GRAPH_METRICS = Arrays.asList(ALTITUDE, VERT_VELOCITY, HOR_VELOCITY);
     private static final List<Integer> INNER_GRAPH_METRICS = Arrays.asList(GLIDE);
 
-    private List<ChartDataSetProperties> dataSetPropertiesList;
-    private FlySightTrackData flySightTrackData;
+    private final List<ChartDataSetProperties> dataSetPropertiesList;
+    private final FlySightTrackData flySightTrackData;
 
     public ChartDataSetHolder(Context context,
                               FlySightTrackData flySightTrackData,

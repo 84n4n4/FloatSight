@@ -64,7 +64,7 @@ public class TrackActivity extends PermissionActivity {
     private static final int TRACK_LOAD_PERMISSION_REQUEST_CODE = 300;
     private static final int TRACK_SAVE_PERMISSION_REQUEST_CODE = 301;
 
-    private FlySightTrackDataViewModel flySightTrackDataViewModel;
+    FlySightTrackDataViewModel flySightTrackDataViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +90,7 @@ public class TrackActivity extends PermissionActivity {
         }
     }
 
+    @SuppressWarnings("PMD.UnusedFormalParameter")
     private void actOnDataChanged(FlySightTrackData flySightTrackData) {
         findViewById(R.id.toolbar_progress_bar).setVisibility(View.GONE);
     }
@@ -121,7 +122,7 @@ public class TrackActivity extends PermissionActivity {
         }.execute(this);
     }
 
-    private void reopenActivityWithUri(Uri uri) {
+    void reopenActivityWithUri(Uri uri) {
         Intent showTrackIntent = new Intent(this, TrackActivity.class);
         showTrackIntent.setDataAndType(uri, "text/csv");
         startActivity(showTrackIntent);
@@ -158,7 +159,7 @@ public class TrackActivity extends PermissionActivity {
                     String fileName = flySightTrackDataViewModel.getLiveData().getValue().getSourceFileName();
                     inputLayout.getEditText().setText(fileName);
                     inputLayout.getEditText().setSelection(0,
-                            fileName.contains(".") ? fileName.lastIndexOf(".") : fileName.length());
+                            fileName.contains(".") ? fileName.lastIndexOf('.') : fileName.length());
 
                     SaveFileDialogTextWatcher textWatcher =
                             new SaveFileDialogTextWatcher(fileName, getFilesInCurrentImportFolder(), inputLayout, alertDialog);
@@ -172,21 +173,21 @@ public class TrackActivity extends PermissionActivity {
         }.execute(this);
     }
 
-    private File getImportFolder() throws FileNotFoundException {
+    File getImportFolder() throws FileNotFoundException {
         Uri trackFileUri = getTrackFileUri();
-        if(trackFileUri != null) {
+        if(trackFileUri == null) {
+            throw new FileNotFoundException();
+        } else {
             if(isOpenedFromOtherApp()) {
                 return FileImporter.createImportFolder();
             } else {
                 File trackFile = new File(trackFileUri.getPath());
                 return trackFile.getParentFile();
             }
-        } else {
-            throw new FileNotFoundException();
         }
     }
 
-    private List<String> getFilesInCurrentImportFolder() throws FileNotFoundException {
+    List<String> getFilesInCurrentImportFolder() throws FileNotFoundException {
         List<String> files = new ArrayList<>();
         File importFolder = getImportFolder();
         if(importFolder.exists() && importFolder.isDirectory()) {

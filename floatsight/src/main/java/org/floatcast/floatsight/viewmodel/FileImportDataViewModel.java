@@ -8,7 +8,7 @@ import static org.floatcast.floatsight.data.FileImportData.IMPORTING_ERRORS;
 
 public class FileImportDataViewModel extends DataViewModel<FileImportData> {
 
-    private MutableLiveData<FileImportData> fileData;
+    private final MutableLiveData<FileImportData> fileData;
 
     public FileImportDataViewModel() {
         fileData = new MutableLiveData<>();

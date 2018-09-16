@@ -16,7 +16,7 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class PermissionActivity extends AppCompatActivity {
 
-    private List<PermissionStrategy> permissionStrategyList;
+    private final List<PermissionStrategy> permissionStrategyList;
 
     public PermissionActivity() {
         permissionStrategyList = new ArrayList<>();
@@ -46,12 +46,11 @@ public class PermissionActivity extends AppCompatActivity {
     }
 
     private void showPermissionRationale(int permissionRequestId) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE)) {
-                showAlertOKCancel(getResources().getString(R.string.permissions_rationale), (dialog, which) ->
-                        requestPermissions(new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, permissionRequestId)
-                );
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE)) {
+            showAlertOKCancel(getResources().getString(R.string.permissions_rationale), (dialog, which) ->
+                    requestPermissions(new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, permissionRequestId)
+            );
         }
     }
 

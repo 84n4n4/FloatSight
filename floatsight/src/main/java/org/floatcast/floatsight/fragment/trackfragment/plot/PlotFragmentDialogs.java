@@ -12,12 +12,12 @@ import org.floatcast.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetP
 
 public final class PlotFragmentDialogs {
 
+    static final int GLIDE_CAP_MAX = 16;
+    static final int GLIDE_CAP_MIN = 2;
+
     private PlotFragmentDialogs() {
         throw new AssertionError("No.");
     }
-
-    private static final int GLIDE_CAP_MAX = 16;
-    private static final int GLIDE_CAP_MIN = 2;
 
     public static void showGlideCapDialog(PlotFragment plotFragment, CappedTrackPointValueProvider cappedTrackPointValueProvider) {
         if(plotFragment.getContext() == null) {
@@ -49,8 +49,8 @@ public final class PlotFragmentDialogs {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if(progress < 2) {
-                    glideCapSeekBar.setProgress(2);
+                if(progress < GLIDE_CAP_MIN) {
+                    glideCapSeekBar.setProgress(GLIDE_CAP_MIN);
                 } else {
                     seekBarTextView.setText(ChartDataSetProperties.GLIDE_FORMAT.format(progress));
                 }

@@ -5,9 +5,9 @@ import android.os.Parcelable;
 import com.github.mikephil.charting.highlight.Highlight;
 
 public class ParcelableHighlight implements Parcelable {
-    private float xValue;
-    private float yValue;
-    private int dataSetIndex;
+    private final float xValue;
+    private final float yValue;
+    private final int dataSetIndex;
 
     public ParcelableHighlight(Highlight highlight) {
         this.xValue = highlight.getX();
@@ -15,7 +15,7 @@ public class ParcelableHighlight implements Parcelable {
         this.dataSetIndex = highlight.getDataSetIndex();
     }
 
-    private ParcelableHighlight(Parcel parcel) {
+    ParcelableHighlight(Parcel parcel) {
         xValue = parcel.readFloat();
         yValue = parcel.readFloat();
         dataSetIndex = parcel.readInt();

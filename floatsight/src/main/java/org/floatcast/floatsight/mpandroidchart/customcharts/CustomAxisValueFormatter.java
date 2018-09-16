@@ -6,7 +6,7 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import java.text.DecimalFormat;
 
 class CustomAxisValueFormatter implements IAxisValueFormatter {
-    private DecimalFormat mFormat;
+    private final DecimalFormat mFormat;
 
     CustomAxisValueFormatter(DecimalFormat decimalFormat) {
         mFormat = decimalFormat;

@@ -31,7 +31,7 @@ import java.util.List;
 
 public class FlySightTrackData extends ParsableData {
 
-    private List<FlySightTrackPoint> flySightTrackPoints;
+    private final List<FlySightTrackPoint> flySightTrackPoints;
     private boolean preV20141005 = false;
     private String csvHeader = "";
     private String csvUnitsHeader = "";

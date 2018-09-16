@@ -20,6 +20,7 @@ import java.util.List;
 
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
+@SuppressWarnings("PMD.FieldDeclarationsShouldBeAtStartOfClass")
 public abstract class ChartDataSetProperties {
     public static final DecimalFormat VELOCITY_FORMAT = new DecimalFormat("#0");
     public static final DecimalFormat DISTANCE_FORMAT = new DecimalFormat("###0");

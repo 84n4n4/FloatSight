@@ -3,8 +3,8 @@ package org.floatcast.floatsight.mpandroidchart.linedatasetcreation;
 import org.floatcast.floatsight.csvparser.FlySightTrackPoint;
 
 public class CappedTrackPointValueProvider implements TrackPointValueProvider {
-    private float capYValueAt;
-    private TrackPointValueProvider valueProvider;
+    private final float capYValueAt;
+    private final TrackPointValueProvider valueProvider;
     public static final String BUNDLE_KEY = "CappedTrackPointValueProvider";
 
     public CappedTrackPointValueProvider(TrackPointValueProvider trackPointValueProvider, float capYValueAt) {

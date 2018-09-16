@@ -7,7 +7,7 @@ import com.github.mikephil.charting.listener.BarLineChartTouchListener;
 
 public class CustomBarLineChartTouchListener extends BarLineChartTouchListener {
 
-    private RangeMarkerChart rangeMarkerChart;
+    private final RangeMarkerChart rangeMarkerChart;
 
     public CustomBarLineChartTouchListener(RangeMarkerChart chart, Matrix touchMatrix, float dragTriggerDistance) {
         super(chart, touchMatrix, dragTriggerDistance);

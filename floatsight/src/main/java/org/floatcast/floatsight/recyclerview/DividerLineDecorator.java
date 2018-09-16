@@ -8,7 +8,8 @@ import android.view.View;
 import org.floatcast.floatsight.R;
 
 public class DividerLineDecorator extends RecyclerView.ItemDecoration {
-    private Drawable mDivider;
+
+    private final Drawable mDivider;
 
     public DividerLineDecorator(Context context) {
         mDivider = context.getResources().getDrawable(R.drawable.rv_divider_line);

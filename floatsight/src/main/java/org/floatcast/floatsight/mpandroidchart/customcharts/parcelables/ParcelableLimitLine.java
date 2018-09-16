@@ -7,9 +7,9 @@ import com.github.mikephil.charting.components.LimitLine;
 import static com.github.mikephil.charting.utils.Utils.convertPixelsToDp;
 
 public class ParcelableLimitLine implements Parcelable {
-    private float limit;
-    private float lineWidth;
-    private int lineColor;
+    private final float limit;
+    private final float lineWidth;
+    private final int lineColor;
 
     public ParcelableLimitLine(LimitLine limitLine) {
         this.lineColor = limitLine.getLineColor();
@@ -17,7 +17,7 @@ public class ParcelableLimitLine implements Parcelable {
         this.lineWidth = convertPixelsToDp(limitLine.getLineWidth());
     }
 
-    private ParcelableLimitLine(Parcel parcel) {
+    ParcelableLimitLine(Parcel parcel) {
         lineColor = parcel.readInt();
         limit = parcel.readFloat();
         lineWidth = parcel.readFloat();

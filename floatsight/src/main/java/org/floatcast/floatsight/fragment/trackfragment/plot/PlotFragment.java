@@ -50,11 +50,12 @@ import java.util.List;
 
 public class PlotFragment extends TrackFragment {
 
-    private GlideOverlayChart chart;
-    private XAxisValueProviderWrapper xAxisValueProviderWrapper;
-    private CappedTrackPointValueProvider cappedGlideValueProvider;
+    GlideOverlayChart chart;
+    XAxisValueProviderWrapper xAxisValueProviderWrapper;
+    CappedTrackPointValueProvider cappedGlideValueProvider;
 
     public PlotFragment() {
+        // intentional empty constructor for fragments
     }
 
     @Override
@@ -220,6 +221,8 @@ public class PlotFragment extends TrackFragment {
             case R.id.checkbox_vert_velocity:
                 chart.getDataSetHolder().getDataSetPropertiesList().get(ChartDataSetHolder.VERT_VELOCITY).iLineDataSet.setVisible(checked);
                 break;
+            default:
+                break;
         }
         chart.invalidate();
     }
@@ -257,6 +260,8 @@ public class PlotFragment extends TrackFragment {
                 } else {
                     xAxisValueProviderWrapper.setTime();
                 }
+                break;
+            default:
                 break;
         }
         chart.resetUserChanges();

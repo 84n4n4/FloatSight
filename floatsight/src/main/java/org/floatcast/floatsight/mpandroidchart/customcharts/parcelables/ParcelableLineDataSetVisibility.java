@@ -9,6 +9,7 @@ import java.lang.annotation.Retention;
 
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
+@SuppressWarnings("PMD.FieldDeclarationsShouldBeAtStartOfClass")
 public class ParcelableLineDataSetVisibility implements Parcelable {
     @Retention(SOURCE)
     @IntDef({VISIBLE, GONE})
@@ -27,7 +28,7 @@ public class ParcelableLineDataSetVisibility implements Parcelable {
         lineDataSet.setVisible(visibility == VISIBLE);
     }
 
-    private ParcelableLineDataSetVisibility(Parcel parcel) {
+    ParcelableLineDataSetVisibility(Parcel parcel) {
         visibility = parcel.readInt();
     }
 

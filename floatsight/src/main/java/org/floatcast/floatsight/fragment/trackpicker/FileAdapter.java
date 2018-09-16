@@ -40,10 +40,7 @@ import java.util.List;
 class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileAdapterItemViewHolder> {
 
     private List<FileAdapterItem> fileAdapterItems;
-    private FileAdapterItemClickListener itemClickListener;
-
-    FileAdapter() {
-    }
+    FileAdapterItemClickListener itemClickListener;
 
     public void setItemClickListener(FileAdapterItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;

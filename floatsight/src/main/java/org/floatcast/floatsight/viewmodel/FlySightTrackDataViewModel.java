@@ -35,7 +35,7 @@ import static org.floatcast.floatsight.data.ParsableData.PARSING_FAIL;
 
 public class FlySightTrackDataViewModel extends DataViewModel<FlySightTrackData> {
 
-    private MutableLiveData<FlySightTrackData> flySightTrackDataLiveData;
+    private final MutableLiveData<FlySightTrackData> flySightTrackDataLiveData;
 
     public FlySightTrackDataViewModel() {
         flySightTrackDataLiveData = new MutableLiveData<>();
@@ -58,6 +58,7 @@ public class FlySightTrackDataViewModel extends DataViewModel<FlySightTrackData>
                 && flySightTrackDataLiveData.getValue().getParsingStatus() != PARSING_FAIL;
     }
 
+    @SuppressWarnings("PMD.AvoidReassigningParameters")
     public void crop(float start, float end, TrackPointValueProvider valueProvider) {
         if(start > end) {
             float tmp = start;

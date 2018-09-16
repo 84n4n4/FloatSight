@@ -21,6 +21,9 @@
  */
 
 apply plugin: 'com.android.application'
+apply plugin: 'checkstyle'
+apply plugin: 'pmd'
+
 
 android {
     compileSdkVersion 28
@@ -65,3 +68,18 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
 }
+
+task pmd (type: Pmd) {
+
+    description 'Run pmd'
+    group 'verification'
+
+    ruleSetFiles = files('config/pmd.xml')
+    source = fileTree('src/main/java')
+    ignoreFailures = true
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+

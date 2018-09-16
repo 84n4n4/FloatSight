@@ -37,7 +37,7 @@ public abstract class TrackFragment extends Fragment {
 
     public boolean isValid(FlySightTrackData flySightTrackData) {
         return !flySightTrackData.getFlySightTrackPoints().isEmpty()
-                && !(flySightTrackData.getParsingStatus() == FlySightTrackData.PARSING_FAIL);
+                && flySightTrackData.getParsingStatus() != FlySightTrackData.PARSING_FAIL;
     }
 
     public void showUnitsDialog(String currentUnitSystem) {
@@ -75,6 +75,8 @@ public abstract class TrackFragment extends Fragment {
                 } else {
                     unitSystem = ChartDataSetProperties.METRIC;
                 }
+                break;
+            default:
                 break;
         }
         onUnitsDialogCheckboxClicked(unitSystem);

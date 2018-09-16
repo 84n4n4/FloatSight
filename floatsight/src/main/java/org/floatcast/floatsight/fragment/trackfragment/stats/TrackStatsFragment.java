@@ -65,6 +65,7 @@ public class TrackStatsFragment extends TrackFragment {
 	private StatsAdapter statsAdapter;
 
 	public TrackStatsFragment() {
+		// intentional empty constructor for fragments
 	}
 
 	@Override

@@ -10,10 +10,10 @@ import java.util.List;
 
 public class SaveFileDialogTextWatcher implements TextWatcher {
 
-    private List<String> filesInFolder;
-    private TextInputLayout textInputLayout;
-    private AlertDialog alertDialog;
-    private String oldFileName;
+    private final List<String> filesInFolder;
+    private final TextInputLayout textInputLayout;
+    private final AlertDialog alertDialog;
+    private final String oldFileName;
 
     public SaveFileDialogTextWatcher(String oldFileName, List<String> filesInFolder, TextInputLayout textInputLayout, AlertDialog alertDialog) {
         this.oldFileName = oldFileName;
@@ -32,6 +32,7 @@ public class SaveFileDialogTextWatcher implements TextWatcher {
     }
 
     @Override
+    @SuppressWarnings("PMD.ConfusingTernary")
     public void afterTextChanged(Editable s) {
 
         String input = s.toString().trim();

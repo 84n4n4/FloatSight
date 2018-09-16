@@ -19,7 +19,7 @@ public class PlotMarkerView extends TouchAbleMarkerView {
     }
 
     void customOnLongClick() {
-        ((GlideOverlayChart) PlotMarkerView.this.getChartView()).setRangeMarker();
+        ((GlideOverlayChart) getChartView()).setRangeMarker();
     }
 
     void customOnClick() {

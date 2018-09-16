@@ -51,6 +51,7 @@ public class MainMenuFragment extends Fragment implements ButtonAdapter.ButtonIt
     private static final int BUTTON_ABOUT = 3;
 
     public MainMenuFragment() {
+        // intentional empty constructor for fragments
     }
 
     @Override

@@ -39,7 +39,7 @@ import java.util.List;
 public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.ButtonViewHolder> {
 
     public List<ButtonItem> buttonItems;
-    private ButtonItemClickListener buttonItemClickListener;
+    ButtonItemClickListener buttonItemClickListener;
     @ColorInt int highlightColor;
     @ColorInt int defaultColor;
 

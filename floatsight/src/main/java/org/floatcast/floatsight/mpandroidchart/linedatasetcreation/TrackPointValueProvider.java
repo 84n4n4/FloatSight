@@ -2,7 +2,9 @@ package org.floatcast.floatsight.mpandroidchart.linedatasetcreation;
 
 import org.floatcast.floatsight.csvparser.FlySightTrackPoint;
 
+@SuppressWarnings("PMD.FieldDeclarationsShouldBeAtStartOfClass")
 public interface TrackPointValueProvider {
+
     float getValue(FlySightTrackPoint trackPoint);
 
     TrackPointValueProvider TIME_VALUE_PROVIDER =

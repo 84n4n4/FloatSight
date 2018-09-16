@@ -8,10 +8,10 @@ import org.floatcast.floatsight.R;
 
 public class RenameFileAdapterItemDialogTextWatcher implements TextWatcher {
 
-    private String fileName;
-    private TextInputLayout textInputLayout;
-    private AlertDialog alertDialog;
-    private FileAdapter fileAdapter;
+    private final String fileName;
+    private final TextInputLayout textInputLayout;
+    private final AlertDialog alertDialog;
+    private final FileAdapter fileAdapter;
 
     public RenameFileAdapterItemDialogTextWatcher(FileAdapter fileAdapter, String fileName, TextInputLayout textInputLayout, AlertDialog alertDialog) {
         this.fileName = fileName;
@@ -29,6 +29,7 @@ public class RenameFileAdapterItemDialogTextWatcher implements TextWatcher {
     }
 
     @Override
+    @SuppressWarnings("PMD.ConfusingTernary")
     public void afterTextChanged(Editable s) {
 
         String input = s.toString().trim();

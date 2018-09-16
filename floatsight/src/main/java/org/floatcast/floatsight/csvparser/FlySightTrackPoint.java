@@ -44,7 +44,4 @@ public class FlySightTrackPoint {
     public float cAcc;
     public int gpsFix;
     public int numSV;
-
-    public FlySightTrackPoint() {
-    }
 }

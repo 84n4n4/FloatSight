@@ -39,7 +39,7 @@ public class ConfigParser implements Parser<ConfigData> {
 		StringBuilder builder = new StringBuilder();
 
 		for (String line; (line = reader.readLine()) != null; ) {
-			builder.append(line).append("\n");
+			builder.append(line).append('\n');
 		}
 
 		reader.close();
