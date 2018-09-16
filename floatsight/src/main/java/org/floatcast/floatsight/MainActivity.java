@@ -35,12 +35,16 @@ import android.view.View;
 import android.view.WindowManager;
 import org.floatcast.floatsight.data.FileImportData;
 import org.floatcast.floatsight.filesystem.FileImporter;
+import org.floatcast.floatsight.filesystem.PathBuilder;
 import org.floatcast.floatsight.fragment.mainmenu.MainMenuFragment;
 import org.floatcast.floatsight.permissionactivity.PermissionActivity;
 import org.floatcast.floatsight.permissionactivity.PermissionStrategy;
 import org.floatcast.floatsight.viewmodel.FileImportDataViewModel;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.floatcast.floatsight.TrackPickerActivity.TRACK_PICKER_PATH;
@@ -51,6 +55,7 @@ public class MainActivity extends PermissionActivity {
 
     public static final int REQUEST_FILE = 666;
     private static final int IMPORT_PERMISSION_REQUEST_CODE = 200;
+    private static final int IMPORT_EXAMPLE_PERMISSION_REQUEST_CODE = 220;
 
     private FileImportDataViewModel fileImportDataViewModel;
 
@@ -72,6 +77,8 @@ public class MainActivity extends PermissionActivity {
 
         fileImportDataViewModel = ViewModelProviders.of(this).get(FileImportDataViewModel.class);
         fileImportDataViewModel.getLiveData().observe(this, this::actOnDataChanged);
+
+        setUpExampleFile();
     }
 
     private void actOnDataChanged(FileImportData fileImportData) {
@@ -98,6 +105,23 @@ public class MainActivity extends PermissionActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, mainMenuFragment, TAG_MAIN_MENU_FRAGMENT)
                 .commit();
+    }
+
+    private void setUpExampleFile() {
+        if (PathBuilder.TRACKS_DIR.exists() && PathBuilder.TRACKS_DIR.isDirectory()) {
+            return;
+        }
+        new PermissionStrategy(IMPORT_EXAMPLE_PERMISSION_REQUEST_CODE) {
+            @Override
+            public void task() {
+                try {
+                    Uri exampleTrackUri = Uri.parse("android.resource://org.floatcast.floatsight/" + R.raw.sample_track);
+                    FileImporter.importTrack(getContentResolver(), "exampleTrack.CSV", PathBuilder.getExampleTracksFolder(), exampleTrackUri);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+          }
+        }.execute(this);
     }
 
     public void startImportFile() {
@@ -148,9 +172,9 @@ public class MainActivity extends PermissionActivity {
         } else {
             uris.add(data.getData());
         }
-
+        findViewById(R.id.toolbar_progress_bar).setVisibility(View.VISIBLE);
         FileImporter importer = new FileImporter(getContentResolver());
-        importer.importTracks(uris, fileImportDataViewModel);
+        importer.importTracks(uris, fileImportDataViewModel.getMutableLiveData());
     }
 
     @Override

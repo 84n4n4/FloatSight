@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Process;
 import android.provider.OpenableColumns;
+import android.support.annotation.Nullable;
 import org.apache.commons.lang3.time.DatePrinter;
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.floatcast.floatsight.data.FileImportData;
@@ -30,10 +31,10 @@ public class FileImporter {
         this.contentResolver = contentResolver;
     }
 
-    public void importTracks(List<Uri> urisList, DataViewModel<FileImportData> viewModel) {
+    public void importTracks(List<Uri> urisList, MutableLiveData<FileImportData> importData) {
         Uri[] urisArray = new Uri[urisList.size()];
         urisList.toArray(urisArray);
-        new ImportFilesTask(viewModel.getMutableLiveData()).execute(urisArray);
+        new ImportFilesTask(importData).execute(urisArray);
     }
 
     private class ImportFilesTask extends AsyncTask<Uri, Integer, Long> {
@@ -56,8 +57,9 @@ public class FileImporter {
                 data.setImportFolder(directory);
                 List<File> files = new ArrayList<>();
                 for (Uri uri : uris) {
+                    String fileName = resolveFileName(uri);
                     try {
-                        files.add(importTrack(directory, uri));
+                        files.add(importTrack(contentResolver, fileName, directory, uri));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -94,8 +96,7 @@ public class FileImporter {
         return directory;
     }
 
-    private File importTrack(File directory, Uri uri) throws IOException {
-        String fileName = resolveFileName(uri);
+    public static File importTrack(ContentResolver contentResolver, String fileName, File directory, Uri uri) throws IOException {
         File outFile = new File(directory, fileName);
 
         byte[] buffer = new byte[8 * 1024];
@@ -105,7 +106,6 @@ public class FileImporter {
                 outputStream.write(buffer, 0, length);
             }
         }
-
         return outFile;
     }
 
