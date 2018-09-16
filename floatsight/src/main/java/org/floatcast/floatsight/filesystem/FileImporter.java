@@ -81,7 +81,7 @@ public class FileImporter {
         }
     }
 
-    private File createImportFolder() throws FileNotFoundException {
+    public static File createImportFolder() throws FileNotFoundException {
         File directory = new File(PathBuilder.getTracksFolder(), DATE_PRINTER.format(Calendar.getInstance().getTime()));
 
         if (!directory.exists()) {

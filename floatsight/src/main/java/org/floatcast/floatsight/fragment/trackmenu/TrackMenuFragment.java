@@ -46,6 +46,7 @@ import org.apache.commons.lang3.time.FastDateFormat;
 import org.floatcast.floatsight.R;
 import org.floatcast.floatsight.TrackActivity;
 import org.floatcast.floatsight.data.FlySightTrackData;
+import org.floatcast.floatsight.data.ParsableData;
 import org.floatcast.floatsight.fragment.ButtonAdapter;
 import org.floatcast.floatsight.fragment.ButtonItem;
 import org.floatcast.floatsight.fragment.Dialogs;
@@ -170,11 +171,7 @@ public class TrackMenuFragment extends Fragment implements ButtonAdapter.ButtonI
 			int id = buttonItem.id;
 			switch (id) {
 				case BUTTON_LABEL:
-					if (trackDataViewModel.getLiveData().getValue().isDirty()) {
-						new AlertDialog.Builder(getContext())
-								.setItems(R.array.context_track_activity_file, new OnDialogItemClickListener())
-								.show();
-					}
+					showFileContextMenu();
 					break;
 				case BUTTON_PLOT:
 					showPlotFragment();
@@ -188,6 +185,18 @@ public class TrackMenuFragment extends Fragment implements ButtonAdapter.ButtonI
 				default:
 					break;
 			}
+		}
+	}
+
+	private void showFileContextMenu() {
+		if (trackDataViewModel.getLiveData().getValue().isDirty()) {
+			new AlertDialog.Builder(getContext())
+					.setItems(R.array.context_track_activity_dirty_file, new OnFileContextMenuClickListener())
+					.show();
+		} else if (((TrackActivity) getActivity()).isOpenedFromOtherApp()) {
+			new AlertDialog.Builder(getContext())
+					.setItems(R.array.context_track_activity_extern_file , new OnFileContextMenuClickListener())
+					.show();
 		}
 	}
 
@@ -232,7 +241,7 @@ public class TrackMenuFragment extends Fragment implements ButtonAdapter.ButtonI
 		}
 	}
 
-	private class OnDialogItemClickListener implements DialogInterface.OnClickListener {
+	private class OnFileContextMenuClickListener implements DialogInterface.OnClickListener {
 		@Override
 		public void onClick(DialogInterface dialog, int which) {
 			switch (which) {

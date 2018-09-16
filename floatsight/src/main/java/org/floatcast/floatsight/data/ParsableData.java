@@ -22,6 +22,7 @@
 
 package org.floatcast.floatsight.data;
 
+import android.support.annotation.IntDef;
 import android.support.annotation.LongDef;
 
 import java.lang.annotation.Retention;

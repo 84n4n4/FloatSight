@@ -27,8 +27,11 @@
         <item>@string/delete</item>
     </array>
 
-    <array name="context_track_activity_file">
+    <array name="context_track_activity_dirty_file">
         <item>@string/save_as</item>
         <item>@string/discard_changes</item>
+    </array>
+    <array name="context_track_activity_extern_file">
+        <item>@string/save_as</item>
     </array>
 </resources>

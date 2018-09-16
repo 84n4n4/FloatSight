@@ -37,6 +37,7 @@ import android.view.WindowManager;
 import org.floatcast.floatsight.csvparser.FlySightCsvParser;
 import org.floatcast.floatsight.data.FlySightTrackData;
 import org.floatcast.floatsight.datarepository.DataRepository;
+import org.floatcast.floatsight.filesystem.FileImporter;
 import org.floatcast.floatsight.fragment.trackfragment.TrackFragment;
 import org.floatcast.floatsight.fragment.trackfragment.plot.PlotFragment;
 import org.floatcast.floatsight.fragment.trackfragment.stats.TrackStatsFragment;
@@ -104,16 +105,6 @@ public class TrackActivity extends PermissionActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_track_activity, menu);
         return true;
-    }
-
-    public Uri getTrackFileUri() {
-        Intent intent = getIntent();
-        if (intent.getType() != null
-                && (intent.getType().contains("text/comma-separated-values")
-                || intent.getType().contains("text/csv"))) {
-            return intent.getData();
-        }
-        return null;
     }
 
     public void loadFlySightTrackData() {
@@ -184,8 +175,12 @@ public class TrackActivity extends PermissionActivity {
     private File getImportFolder() throws FileNotFoundException {
         Uri trackFileUri = getTrackFileUri();
         if(trackFileUri != null) {
-            File trackFile = new File(trackFileUri.getPath());
-            return trackFile.getParentFile();
+            if(isOpenedFromOtherApp()) {
+                return FileImporter.createImportFolder();
+            } else {
+                File trackFile = new File(trackFileUri.getPath());
+                return trackFile.getParentFile();
+            }
         } else {
             throw new FileNotFoundException();
         }
@@ -202,6 +197,20 @@ public class TrackActivity extends PermissionActivity {
             throw new FileNotFoundException();
         }
         return files;
+    }
+
+    public Uri getTrackFileUri() {
+        Intent intent = getIntent();
+        if (intent.getType() != null
+                && (intent.getType().contains("text/comma-separated-values")
+                || intent.getType().contains("text/csv"))) {
+            return intent.getData();
+        }
+        return null;
+    }
+
+    public boolean isOpenedFromOtherApp() {
+        return getIntent().getAction() != null;
     }
 
     @Override
