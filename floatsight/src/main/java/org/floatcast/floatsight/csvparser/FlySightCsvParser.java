@@ -62,8 +62,8 @@ public class FlySightCsvParser implements Parser<FlySightTrackData> {
     @Override
     public void write(OutputStream outputStream, FlySightTrackData data) throws IOException {
         OutputStreamWriter writer = new OutputStreamWriter(outputStream);
-        writer.write(FLYSIGHT_CSV_HEADER_POST_V20141005 + "\n");
-        writer.write(FLYSIGHT_CSV_HEADER_UNITS_POST_V20141005 + "\n");
+        writer.write(data.getCsvHeader() + "\n");
+        writer.write(data.getCsvUnitsHeader() + "\n");
         for (FlySightTrackPoint trackPoint : data.getFlySightTrackPoints()) {
             writer.write(trackPoint.csvRow + "\n");
         }

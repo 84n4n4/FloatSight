@@ -93,7 +93,7 @@ public class FlySightTrackData extends ParsableData {
     public float distanceSurpassesAltitude() {
         for(FlySightTrackPoint point : flySightTrackPoints) {
             float altitudeDiff = flySightTrackPoints.get(0).altitude - point.altitude;
-            if(point.distance > altitudeDiff) {
+            if(point.distance > altitudeDiff && point.vertVelocity > 10f) {
                 return point.distance;
             }
         }
