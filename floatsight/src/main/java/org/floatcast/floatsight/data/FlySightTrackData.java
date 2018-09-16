@@ -40,9 +40,11 @@ public class FlySightTrackData extends ParsableData {
         flySightTrackPoints = new ArrayList<>();
     }
 
-    public FlySightTrackData(List<FlySightTrackPoint> flySightTrackPoints, String sourceFileName) {
+    public FlySightTrackData(List<FlySightTrackPoint> flySightTrackPoints, FlySightTrackData flySightTrackData) {
         this.flySightTrackPoints = flySightTrackPoints;
-        setSourceFileName(sourceFileName);
+        setSourceFileName(flySightTrackData.getSourceFileName());
+        csvHeader = flySightTrackData.getCsvHeader();
+        csvUnitsHeader = flySightTrackData.getCsvHeader();
         setParsingStatus(PARSING_SUCCESS);
         setDirty(true);
     }

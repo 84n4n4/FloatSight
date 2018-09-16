@@ -81,7 +81,7 @@ public class FlySightTrackDataViewModel extends DataViewModel<FlySightTrackData>
         }
 
         List<FlySightTrackPoint> subListCopy = new ArrayList<>(flySightTrackPoints.subList(startIndex, endIndex));
-        FlySightTrackData cropped = new FlySightTrackData(subListCopy, flySightTrackDataLiveData.getValue().getSourceFileName());
+        FlySightTrackData cropped = new FlySightTrackData(subListCopy, flySightTrackDataLiveData.getValue());
         float timeOffset = cropped.getFlySightTrackPoints().get(0).trackTimeInSeconds;
         float distanceOffset = cropped.getFlySightTrackPoints().get(0).distance;
         cropped.offsetDistanceAndTime(distanceOffset, timeOffset);
