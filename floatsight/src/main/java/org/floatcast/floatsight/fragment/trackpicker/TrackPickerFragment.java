@@ -90,7 +90,7 @@ public class TrackPickerFragment extends Fragment implements FileAdapter.FileAda
                         .commit();
             } else {
                 Intent showTrackIntent = new Intent(getActivity(), TrackActivity.class);
-                showTrackIntent.putExtra(TRACK_FILE_URI, Uri.fromFile(fileAdapterItem.file).toString());
+                showTrackIntent.setDataAndType(Uri.fromFile(fileAdapterItem.file), "text/csv");
                 startActivity(showTrackIntent);
             }
         }

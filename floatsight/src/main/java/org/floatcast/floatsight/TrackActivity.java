@@ -107,12 +107,11 @@ public class TrackActivity extends PermissionActivity {
     }
 
     public Uri getTrackFileUri() {
-        Bundle extras = getIntent().getExtras();
-        if(extras != null) {
-            String trackPath = extras.getString(TRACK_FILE_URI);
-            if (trackPath != null) {
-                return Uri.parse(extras.getString(TRACK_FILE_URI));
-            }
+        Intent intent = getIntent();
+        if (intent.getType() != null
+                && (intent.getType().contains("text/comma-separated-values")
+                || intent.getType().contains("text/csv"))) {
+            return intent.getData();
         }
         return null;
     }
@@ -133,7 +132,7 @@ public class TrackActivity extends PermissionActivity {
 
     private void reopenActivityWithUri(Uri uri) {
         Intent showTrackIntent = new Intent(this, TrackActivity.class);
-        showTrackIntent.putExtra(TRACK_FILE_URI, uri.toString());
+        showTrackIntent.setDataAndType(uri, "text/csv");
         startActivity(showTrackIntent);
         finish();
     }
