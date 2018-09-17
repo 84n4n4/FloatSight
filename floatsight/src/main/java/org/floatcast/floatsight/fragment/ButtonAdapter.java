@@ -23,7 +23,11 @@
 
 package org.floatcast.floatsight.fragment;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -42,6 +46,7 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.ButtonView
     ButtonItemClickListener buttonItemClickListener;
     @ColorInt int highlightColor;
     @ColorInt int defaultColor;
+    @ColorInt int disabledColor;
 
     public ButtonAdapter(List<ButtonItem> buttonItem) {
         this.buttonItems = buttonItem;
@@ -57,6 +62,7 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.ButtonView
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.vh_button, parent, false);
         highlightColor = ContextCompat.getColor(itemView.getContext(), R.color.buttonHighlighted);
+        disabledColor = ContextCompat.getColor(itemView.getContext(), R.color.flysightLightGrey);
         defaultColor = ContextCompat.getColor(itemView.getContext(), R.color.buttonDefault);
         return new ButtonViewHolder(itemView);
     }
@@ -86,6 +92,14 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.ButtonView
             holder.title.setTextColor(highlightColor);
         } else {
             holder.title.setTextColor(defaultColor);
+        }
+
+        if (item.isEnabled) {
+            holder.title.setTextColor(defaultColor);
+            holder.description.setTextColor(defaultColor);
+        } else {
+            holder.title.setTextColor(disabledColor);
+            holder.description.setTextColor(disabledColor);
         }
     }
 

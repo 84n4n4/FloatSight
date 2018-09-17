@@ -118,16 +118,17 @@ public class TrackMenuFragment extends Fragment implements ButtonAdapter.ButtonI
 			if(flySightTrackData.isDirty()) {
 				labelButton.overrideTitle = getString(R.string.button_label_file_modified, flySightTrackData.getSourceFileName());
 				labelButton.setHighlighted(true);
+				shareButton.setEnabled(false);
 			} else {
 				labelButton.overrideTitle = getString(R.string.button_label_filename, flySightTrackData.getSourceFileName());
 				labelButton.setHighlighted(false);
+				shareButton.setEnabled(true);
 			}
 			long unixStartTime = flySightTrackData.getFlySightTrackPoints().get(0).unixTimeStamp;
 			String formattedTime = PRETTY_DATE_PRINTER.format(unixStartTime);
 			labelButton.overrideDescription = getString(R.string.button_label_start_time, formattedTime);
 			plotButton.setEnabled(true);
 			statsButton.setEnabled(true);
-			shareButton.setEnabled(true);
 		} else {
 			labelButton.overrideTitle = getString(R.string.button_label_empty);
 			labelButton.overrideDescription = getString(R.string.button_label_empty);
