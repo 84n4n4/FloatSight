@@ -113,13 +113,13 @@ class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileAdapterItemViewHo
             for (File file : item.file.listFiles()) {
                 if (!file.delete()) {
                     Log.e("REMOVE", "Removing " + item.file.getAbsolutePath()
-                            + " failed, removing form adapter anyway.");
+                            + " failed, removing from adapter anyway.");
                 }
             }
         }
         if (!item.file.delete()) {
             Log.e("REMOVE", "Removing " + item.file.getAbsolutePath()
-                    + " failed, removing form adapter anyway.");
+                    + " failed, removing from adapter anyway.");
         }
 
         boolean removed = fileAdapterItems.remove(item);

@@ -136,6 +136,9 @@ public class TrackMenuFragment extends Fragment implements ButtonAdapter.ButtonI
 			statsButton.setEnabled(false);
 			shareButton.setEnabled(false);
 		}
+		if(((TrackActivity) getActivity()).isOpenedFromOtherApp()) {
+			shareButton.setEnabled(false);
+		}
 		buttonAdapter.notifyDataSetChanged();
 	}
 

@@ -47,8 +47,8 @@ public class MainMenuFragment extends Fragment implements ButtonAdapter.ButtonIt
 
     private static final int BUTTON_IMPORT = 0;
     private static final int BUTTON_LOAD = 1;
-    private static final int BUTTON_CONFIG = 2;
-    private static final int BUTTON_ABOUT = 3;
+    private static final int BUTTON_ABOUT = 2;
+    private static final int BUTTON_CONFIG = 3;
 
     public MainMenuFragment() {
         // intentional empty constructor for fragments
@@ -75,8 +75,8 @@ public class MainMenuFragment extends Fragment implements ButtonAdapter.ButtonIt
         List<ButtonItem> mainMenuButtonList = new ArrayList<>();
         mainMenuButtonList.add(new ButtonItem(BUTTON_IMPORT, R.string.button_import_title, R.string.button_import_description, R.drawable.import_grey));
         mainMenuButtonList.add(new ButtonItem(BUTTON_LOAD, R.string.button_load_title, R.string.button_load_description, R.drawable.folder));
-        mainMenuButtonList.add(new ButtonItem(BUTTON_CONFIG, R.string.button_config_title, R.string.button_config_description, R.drawable.config));
         mainMenuButtonList.add(new ButtonItem(BUTTON_ABOUT, R.string.button_about_title, R.string.button_about_description, R.drawable.info));
+        //mainMenuButtonList.add(new ButtonItem(BUTTON_CONFIG, R.string.button_config_title, R.string.button_config_description, R.drawable.config));
         return mainMenuButtonList;
     }
 
