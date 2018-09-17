@@ -50,4 +50,6 @@ This project utilizes git flow workflow.
 * Push your branch.
 * Create pull request.
 
-## 
+# Privacy policy
+
+This app doesn't collect, transfer, share any information. There's no analytics tools or trackers built in. All FlySight track processing happens offline on your mobile device.

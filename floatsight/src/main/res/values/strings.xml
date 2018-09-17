@@ -46,7 +46,9 @@
 
     <!-- About dialog -->
     <string name="about_dialog_version">Version %1$s</string>
+    <string name="about_dialog_licence_and_help">More info and licence:</string>
     <string name="about_dialog_link">https://github.com/84n4n4/FloatSight/blob/master/README.md</string>
+    <string name="about_dialog_contact_bugreports">Contact:</string>
     <string name="about_dialog_floatcast_link">http://www.floatcast.org</string>
 
     <!-- Save dialog -->
@@ -89,7 +91,7 @@
     <string name="button_plot_description">Show track plot</string>
     <string name="button_stats_title">Stats</string>
     <string name="button_stats_description">Show track stats</string>
-    <string name="button_share_title">Send track</string>
+    <string name="button_share_title">Send</string>
     <string name="button_share_description">Send this track file</string>
     <string name="discard_changes">Discard changes</string>
     <string name="save_as">Save as</string>
