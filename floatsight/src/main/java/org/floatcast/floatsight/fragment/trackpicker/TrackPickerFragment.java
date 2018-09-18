@@ -183,7 +183,7 @@ public class TrackPickerFragment extends Fragment implements FileAdapter.FileAda
                 item.fileName.contains(".") ? item.fileName.lastIndexOf(".") : item.fileName.length());
 
         RenameFileAdapterItemDialogTextWatcher textWatcher =
-                new RenameFileAdapterItemDialogTextWatcher(fileAdapter, item.fileName, inputLayout, alertDialog);
+                new RenameFileAdapterItemDialogTextWatcher(fileAdapter, item.fileName, inputLayout, alertDialog, item.file.isDirectory());
         inputLayout.getEditText().addTextChangedListener(textWatcher);
     }
 

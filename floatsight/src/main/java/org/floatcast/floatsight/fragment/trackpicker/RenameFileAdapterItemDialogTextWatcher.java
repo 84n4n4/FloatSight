@@ -34,12 +34,15 @@ public class RenameFileAdapterItemDialogTextWatcher implements TextWatcher {
     private final TextInputLayout textInputLayout;
     private final AlertDialog alertDialog;
     private final FileAdapter fileAdapter;
+    private final boolean isDirectory;
 
-    public RenameFileAdapterItemDialogTextWatcher(FileAdapter fileAdapter, String fileName, TextInputLayout textInputLayout, AlertDialog alertDialog) {
+    public RenameFileAdapterItemDialogTextWatcher(FileAdapter fileAdapter, String fileName, TextInputLayout textInputLayout,
+                                                  AlertDialog alertDialog, boolean isDirectory) {
         this.fileName = fileName;
         this.textInputLayout = textInputLayout;
         this.alertDialog = alertDialog;
         this.fileAdapter = fileAdapter;
+        this.isDirectory = isDirectory;
     }
 
     @Override
@@ -57,7 +60,7 @@ public class RenameFileAdapterItemDialogTextWatcher implements TextWatcher {
         String input = s.toString().trim();
         String error = null;
 
-        if (!input.endsWith(".csv") && !input.endsWith(".CSV")) {
+        if (!isDirectory && !input.endsWith(".csv") && !input.endsWith(".CSV")) {
             error = alertDialog.getContext().getString(R.string.file_has_to_be_csv);
         } else if (input.startsWith(".")) {
             error = alertDialog.getContext().getString(R.string.file_name_empty);
