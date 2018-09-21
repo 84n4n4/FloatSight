@@ -28,6 +28,7 @@ import android.os.Handler;
 import android.support.annotation.LayoutRes;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
+
 import com.github.mikephil.charting.components.MarkerView;
 
 public abstract class TouchAbleMarkerView extends MarkerView {

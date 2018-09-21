@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.WindowManager;
+
 import org.floatcast.floatsight.fragment.trackpicker.TrackPickerFragment;
 import org.floatcast.floatsight.permissionactivity.PermissionActivity;
 import org.floatcast.floatsight.permissionactivity.PermissionStrategy;

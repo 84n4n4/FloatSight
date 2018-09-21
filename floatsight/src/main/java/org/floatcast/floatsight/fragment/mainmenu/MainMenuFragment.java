@@ -31,6 +31,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import org.floatcast.floatsight.ConfigActivity;
 import org.floatcast.floatsight.MainActivity;
 import org.floatcast.floatsight.R;

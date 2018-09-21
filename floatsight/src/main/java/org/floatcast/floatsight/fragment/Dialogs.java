@@ -26,6 +26,7 @@ import android.content.Context;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.widget.TextView;
+
 import org.floatcast.floatsight.BuildConfig;
 import org.floatcast.floatsight.R;
 

@@ -28,6 +28,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
 import org.floatcast.floatsight.R;
 import org.floatcast.floatsight.mpandroidchart.linedatasetcreation.CappedTrackPointValueProvider;
 import org.floatcast.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties;

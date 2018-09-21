@@ -27,10 +27,12 @@ import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+
 import org.floatcast.floatsight.mpandroidchart.customcharts.parcelables.ParcelableHighlight;
 import org.floatcast.floatsight.mpandroidchart.customcharts.parcelables.ParcelableLimitLine;
 import org.floatcast.floatsight.mpandroidchart.customcharts.parcelables.ParcelableLineDataSetVisibility;

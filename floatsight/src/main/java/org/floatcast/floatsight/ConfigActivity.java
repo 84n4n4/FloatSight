@@ -29,6 +29,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.WindowManager;
+
 import org.floatcast.floatsight.configparser.ConfigParser;
 import org.floatcast.floatsight.data.ConfigData;
 import org.floatcast.floatsight.datarepository.DataRepository;

@@ -26,6 +26,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
+
 import org.floatcast.floatsight.R;
 
 import java.util.List;

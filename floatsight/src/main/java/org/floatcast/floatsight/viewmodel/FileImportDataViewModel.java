@@ -24,6 +24,7 @@ package org.floatcast.floatsight.viewmodel;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+
 import org.floatcast.floatsight.data.FileImportData;
 
 import static org.floatcast.floatsight.data.FileImportData.IMPORTING_ERRORS;

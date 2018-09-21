@@ -25,6 +25,7 @@ package org.floatcast.floatsight.mpandroidchart.customcharts.parcelables;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.IntDef;
+
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.lang.annotation.Retention;

@@ -24,33 +24,41 @@ package org.floatcast.floatsight.viewmodel;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.support.annotation.IntDef;
 
-import org.floatcast.floatsight.data.ConfigData;
+import org.floatcast.floatsight.data.SaveFileUriHolder;
 
-import static org.floatcast.floatsight.data.ParsableData.PARSING_FAIL;
+import java.lang.annotation.Retention;
 
-public class ConfigDataViewModel extends DataViewModel<ConfigData> {
+import static java.lang.annotation.RetentionPolicy.SOURCE;
 
-    private final MutableLiveData<ConfigData> configData;
+public class SaveFileDataViewModel extends DataViewModel<SaveFileUriHolder> {
+    @Retention(SOURCE)
+    @IntDef({STATUS_SAVE_SUCCESS, STATUS_SAVE_READ_ERROR, STATUS_SAVE_WRITE_ERROR})
+    public @interface SaveFileStatus {}
+    public static final int STATUS_SAVE_SUCCESS = 0;
+    public static final int STATUS_SAVE_READ_ERROR = 1;
+    public static final int STATUS_SAVE_WRITE_ERROR = 2;
 
-    public ConfigDataViewModel() {
-        configData = new MutableLiveData<>();
+    private final MutableLiveData<SaveFileUriHolder> savedFileUri;
+
+    public SaveFileDataViewModel() {
+        savedFileUri = new MutableLiveData<>();
     }
 
     @Override
-    public LiveData<ConfigData> getLiveData() {
-        return configData;
+    public LiveData<SaveFileUriHolder> getLiveData() {
+        return savedFileUri;
     }
 
     @Override
-    public MutableLiveData<ConfigData> getMutableLiveData() {
-        return configData;
+    public MutableLiveData<SaveFileUriHolder> getMutableLiveData() {
+        return savedFileUri;
     }
 
     @Override
     public boolean containsValidData() {
-        return configData.getValue() != null
-                && !configData.getValue().getSettings().isEmpty()
-                && configData.getValue().getParsingStatus() != PARSING_FAIL;
+        return savedFileUri.getValue() != null;
     }
+
 }

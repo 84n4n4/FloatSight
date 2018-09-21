@@ -28,7 +28,12 @@ import org.apache.commons.lang3.time.FastDateFormat;
 import org.floatcast.floatsight.Parser;
 import org.floatcast.floatsight.data.FlySightTrackData;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.Locale;

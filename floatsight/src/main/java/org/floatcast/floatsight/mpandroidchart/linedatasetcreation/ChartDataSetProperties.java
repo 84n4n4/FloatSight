@@ -29,9 +29,11 @@ import android.support.annotation.StringDef;
 import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.util.Pair;
+
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineDataSet;
+
 import org.floatcast.floatsight.R;
 import org.floatcast.floatsight.csvparser.FlySightTrackPoint;
 import org.floatcast.floatsight.data.FlySightTrackData;

@@ -24,6 +24,7 @@ package org.floatcast.floatsight.mpandroidchart.customcharts.parcelables;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import com.github.mikephil.charting.components.LimitLine;
 
 import static com.github.mikephil.charting.utils.Utils.convertPixelsToDp;

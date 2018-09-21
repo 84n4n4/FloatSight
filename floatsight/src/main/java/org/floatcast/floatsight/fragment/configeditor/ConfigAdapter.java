@@ -28,6 +28,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import org.floatcast.floatsight.R;
 import org.floatcast.floatsight.configparser.ConfigItem;
 

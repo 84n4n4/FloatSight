@@ -32,6 +32,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
+
 import org.floatcast.floatsight.R;
 import org.floatcast.floatsight.data.FlySightTrackData;
 import org.floatcast.floatsight.mpandroidchart.linedatasetcreation.ChartDataSetProperties;

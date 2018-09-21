@@ -25,10 +25,12 @@ package org.floatcast.floatsight.mpandroidchart.customcharts;
 import android.content.Context;
 import android.graphics.Rect;
 import android.view.MotionEvent;
+
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+
 import org.floatcast.floatsight.R;
 import org.floatcast.floatsight.mpandroidchart.customcharts.markerviews.PlotMarkerView;
 import org.floatcast.floatsight.mpandroidchart.customcharts.markerviews.RangeMarkerView;

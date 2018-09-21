@@ -34,9 +34,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
+
 import org.floatcast.floatsight.csvparser.FlySightCsvParser;
 import org.floatcast.floatsight.data.FlySightTrackData;
+import org.floatcast.floatsight.data.SaveFileUriHolder;
 import org.floatcast.floatsight.datarepository.DataRepository;
+import org.floatcast.floatsight.datarepository.SaveTrackAsyncTask;
 import org.floatcast.floatsight.filesystem.FileImporter;
 import org.floatcast.floatsight.fragment.trackfragment.TrackFragment;
 import org.floatcast.floatsight.fragment.trackfragment.plot.PlotFragment;
@@ -46,13 +49,16 @@ import org.floatcast.floatsight.fragment.trackmenu.TrackMenuFragment;
 import org.floatcast.floatsight.permissionactivity.PermissionActivity;
 import org.floatcast.floatsight.permissionactivity.PermissionStrategy;
 import org.floatcast.floatsight.viewmodel.FlySightTrackDataViewModel;
+import org.floatcast.floatsight.viewmodel.SaveFileDataViewModel;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.floatcast.floatsight.viewmodel.SaveFileDataViewModel.STATUS_SAVE_READ_ERROR;
+import static org.floatcast.floatsight.viewmodel.SaveFileDataViewModel.STATUS_SAVE_SUCCESS;
+import static org.floatcast.floatsight.viewmodel.SaveFileDataViewModel.STATUS_SAVE_WRITE_ERROR;
 
 public class TrackActivity extends PermissionActivity {
 
@@ -65,6 +71,7 @@ public class TrackActivity extends PermissionActivity {
     private static final int TRACK_SAVE_PERMISSION_REQUEST_CODE = 301;
 
     FlySightTrackDataViewModel flySightTrackDataViewModel;
+    SaveFileDataViewModel saveFileDataViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +95,25 @@ public class TrackActivity extends PermissionActivity {
         if (flySightTrackDataViewModel.getLiveData().getValue() == null) {
             loadFlySightTrackData();
         }
+
+        saveFileDataViewModel = ViewModelProviders.of(this).get(SaveFileDataViewModel.class);
+        saveFileDataViewModel.getLiveData().observe(this, this::savedFile);
+
     }
+
+    private void savedFile(SaveFileUriHolder savedFileUri) {
+        findViewById(R.id.toolbar_progress_bar).setVisibility(View.GONE);
+        if(savedFileUri == null) {
+            return;
+        }
+        if (savedFileUri.status == STATUS_SAVE_WRITE_ERROR) {
+            showAlertOKCancel(getResources().getString(R.string.save_error), null);
+        } else if (savedFileUri.status == STATUS_SAVE_READ_ERROR) {
+            showAlertOKCancel(getResources().getString(R.string.error_opening_local_storage), null);
+        } else if (savedFileUri.status == STATUS_SAVE_SUCCESS) {
+            reopenActivityWithUri(savedFileUri.uri);
+        }
+   }
 
     @SuppressWarnings("PMD.UnusedFormalParameter")
     private void actOnDataChanged(FlySightTrackData flySightTrackData) {
@@ -137,18 +162,18 @@ public class TrackActivity extends PermissionActivity {
                             .setTitle(R.string.save_dialog_title)
                             .setView(R.layout.text_input_layout)
                             .setPositiveButton(getString(R.string.save), (dialog, which) -> {
+                                findViewById(R.id.toolbar_progress_bar).setVisibility(View.VISIBLE);
                                 TextInputLayout textInputLayout = ((Dialog) dialog).findViewById(R.id.text_input_layout);
                                 String newFileName = textInputLayout.getEditText().getText().toString().trim();
                                 try {
-                                    File newFile = new File(getImportFolder(), newFileName);
-                                    (new FlySightCsvParser()).write(new FileOutputStream(newFile), flySightTrackDataViewModel.getLiveData().getValue());
-                                    reopenActivityWithUri(Uri.fromFile(newFile));
+                                    new SaveTrackAsyncTask<>(new FlySightCsvParser(),
+                                            flySightTrackDataViewModel.getLiveData().getValue(),
+                                            saveFileDataViewModel.getMutableLiveData(),
+                                            getImportFolder()).execute(newFileName);
                                 } catch (FileNotFoundException e) {
                                     showAlertOKCancel(getResources().getString(R.string.save_error), null);
-                                } catch (IOException e) {
-                                    showAlertOKCancel(getResources().getString(R.string.error_opening_local_storage), null);
+                                    findViewById(R.id.toolbar_progress_bar).setVisibility(View.GONE);
                                 }
-
                             })
                             .create();
 

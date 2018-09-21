@@ -23,8 +23,10 @@
 package org.floatcast.floatsight.mpandroidchart.linedatasetcreation;
 
 import android.content.Context;
+
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+
 import org.floatcast.floatsight.data.FlySightTrackData;
 
 import java.util.ArrayList;

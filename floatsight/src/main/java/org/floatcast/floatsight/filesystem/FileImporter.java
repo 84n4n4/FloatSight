@@ -29,18 +29,26 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Process;
 import android.provider.OpenableColumns;
+
 import org.apache.commons.lang3.time.DatePrinter;
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.floatcast.floatsight.data.FileImportData;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
 import static android.os.Process.THREAD_PRIORITY_MORE_FAVORABLE;
-import static org.floatcast.floatsight.data.FileImportData.*;
+import static org.floatcast.floatsight.data.FileImportData.IMPORTING_ERRORS;
+import static org.floatcast.floatsight.data.FileImportData.IMPORTING_FAIL;
+import static org.floatcast.floatsight.data.FileImportData.IMPORTING_SUCCESS;
 
 public class FileImporter {
 
