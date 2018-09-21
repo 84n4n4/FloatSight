@@ -32,6 +32,7 @@ import java.lang.annotation.Retention;
 
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
+@SuppressWarnings("PMD.FieldDeclarationsShouldBeAtStartOfClass")
 public class SaveFileDataViewModel extends DataViewModel<SaveFileUriHolder> {
     @Retention(SOURCE)
     @IntDef({STATUS_SAVE_SUCCESS, STATUS_SAVE_READ_ERROR, STATUS_SAVE_WRITE_ERROR})

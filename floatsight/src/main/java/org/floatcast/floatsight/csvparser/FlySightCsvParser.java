@@ -176,23 +176,24 @@ public class FlySightCsvParser implements Parser<FlySightTrackData> {
     // 1          ,2          ,3        ,4     ,5      ,6     ,7     ,8     ,9    ,10        ,11      ,12     ,13
     // lat        ,lon        ,hMSL     ,velN  ,velE   ,velD  ,hAcc  ,vAcc  ,sAcc ,heading   ,cAcc    ,gpsFix ,numSV
     // 47.1119989 ,15.4605011 ,3541.855 ,24.18 ,-46.99 ,-2.43 ,5.044 ,5.756 ,0.57 ,297.23267 ,0.67036 ,3      ,10
+    @SuppressWarnings("PMD.AvoidDuplicateLiterals")
     String trackPointToCsvRow(FlySightTrackPoint flySightTrackPoint) {
         StringBuilder rowBuilder = new StringBuilder();
-        rowBuilder.append(getTimeStringForUnixTime(flySightTrackPoint.unixTimeStamp)).append(",");
-        rowBuilder.append(String.format(Locale.US, "%.7f", flySightTrackPoint.position.lat)).append(",");
-        rowBuilder.append(String.format(Locale.US, "%.7f", flySightTrackPoint.position.lon)).append(",");
-        rowBuilder.append(String.format(Locale.US, "%.3f", flySightTrackPoint.altitude)).append(",");
-        rowBuilder.append(String.format(Locale.US, "%.2f", flySightTrackPoint.velN / 3.6f)).append(",");
-        rowBuilder.append(String.format(Locale.US, "%.2f", flySightTrackPoint.velE / 3.6f)).append(",");
-        rowBuilder.append(String.format(Locale.US, "%.2f", flySightTrackPoint.vertVelocity / 3.6f)).append(",");
-        rowBuilder.append(String.format(Locale.US, "%.3f", flySightTrackPoint.hAcc)).append(",");
-        rowBuilder.append(String.format(Locale.US, "%.3f", flySightTrackPoint.vAcc)).append(",");
-        rowBuilder.append(String.format(Locale.US, "%.2f", flySightTrackPoint.sAcc)).append(",");
-        rowBuilder.append(String.format(Locale.US, "%.5f", flySightTrackPoint.heading)).append(",");
-        rowBuilder.append(String.format(Locale.US, "%.5f", flySightTrackPoint.cAcc)).append(",");
-        rowBuilder.append(String.format(Locale.US, "%d", flySightTrackPoint.gpsFix)).append(",");
-        rowBuilder.append(String.format(Locale.US, "%d", flySightTrackPoint.numSV));
-        rowBuilder.append("\n");
+        rowBuilder.append(getTimeStringForUnixTime(flySightTrackPoint.unixTimeStamp)).append(',')
+            .append(String.format(Locale.US, "%.7f", flySightTrackPoint.position.lat)).append(',')
+            .append(String.format(Locale.US, "%.7f", flySightTrackPoint.position.lon)).append(',')
+            .append(String.format(Locale.US, "%.3f", flySightTrackPoint.altitude)).append(',')
+            .append(String.format(Locale.US, "%.2f", flySightTrackPoint.velN / 3.6f)).append(',')
+            .append(String.format(Locale.US, "%.2f", flySightTrackPoint.velE / 3.6f)).append(',')
+            .append(String.format(Locale.US, "%.2f", flySightTrackPoint.vertVelocity / 3.6f)).append(',')
+            .append(String.format(Locale.US, "%.3f", flySightTrackPoint.hAcc)).append(',')
+            .append(String.format(Locale.US, "%.3f", flySightTrackPoint.vAcc)).append(',')
+            .append(String.format(Locale.US, "%.2f", flySightTrackPoint.sAcc)).append(',')
+            .append(String.format(Locale.US, "%.5f", flySightTrackPoint.heading)).append(',')
+            .append(String.format(Locale.US, "%.5f", flySightTrackPoint.cAcc)).append(',')
+            .append(String.format(Locale.US, "%d", flySightTrackPoint.gpsFix)).append(',')
+            .append(String.format(Locale.US, "%d", flySightTrackPoint.numSV))
+            .append('\n');
         return rowBuilder.toString();
     }
 

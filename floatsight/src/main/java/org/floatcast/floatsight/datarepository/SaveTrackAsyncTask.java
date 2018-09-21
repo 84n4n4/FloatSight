@@ -44,7 +44,7 @@ import static org.floatcast.floatsight.viewmodel.SaveFileDataViewModel.STATUS_SA
 
 public class SaveTrackAsyncTask<T extends ParsableData> extends AsyncTask<String, Integer, Long> {
 
-    private T data;
+    private final T data;
     private final Parser<T> parser;
     private final File importFolder;
     private final MutableLiveData<SaveFileUriHolder> mutableLiveData;
