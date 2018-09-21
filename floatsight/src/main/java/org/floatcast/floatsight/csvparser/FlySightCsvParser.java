@@ -23,6 +23,7 @@
 package org.floatcast.floatsight.csvparser;
 
 import org.apache.commons.lang3.time.DateParser;
+import org.apache.commons.lang3.time.DatePrinter;
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.floatcast.floatsight.Parser;
 import org.floatcast.floatsight.data.FlySightTrackData;
@@ -30,6 +31,7 @@ import org.floatcast.floatsight.data.FlySightTrackData;
 import java.io.*;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.Locale;
 
 import static org.floatcast.floatsight.data.FlySightTrackData.PARSING_ERRORS;
 
@@ -42,6 +44,7 @@ public class FlySightCsvParser implements Parser<FlySightTrackData> {
     public static final String FLYSIGHT_CSV_HEADER_UNITS_PRE_V20141005 = ",(deg),(deg),(m),(m/s),(m/s),(m/s),(m),(m),(m/s),,,";
 
     private static final DateParser DATE_PARSER = FastDateFormat.getInstance("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+    private static final DatePrinter DATE_PRINTER = FastDateFormat.getInstance("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
     @Override
     public FlySightTrackData read(InputStream inputStream) throws IOException {
@@ -49,9 +52,8 @@ public class FlySightCsvParser implements Parser<FlySightTrackData> {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         try {
             String csvLine;
-
             while ((csvLine = reader.readLine()) != null) {
-                addCsvRow(flySightTrackData, csvLine);
+                readCsvRow(flySightTrackData, csvLine);
             }
         } finally {
             inputStream.close();
@@ -59,28 +61,15 @@ public class FlySightCsvParser implements Parser<FlySightTrackData> {
         return flySightTrackData;
     }
 
-    @Override
-    public void write(OutputStream outputStream, FlySightTrackData data) throws IOException {
-        OutputStreamWriter writer = new OutputStreamWriter(outputStream);
-        writer.write(data.getCsvHeader() + "\n");
-        writer.write(data.getCsvUnitsHeader() + "\n");
-        for (FlySightTrackPoint trackPoint : data.getFlySightTrackPoints()) {
-            writer.write(trackPoint.csvRow + "\n");
-        }
-        writer.close();
-    }
-
-    void addCsvRow(FlySightTrackData flySightTrackData, String csvRow) {
+    void readCsvRow(FlySightTrackData flySightTrackData, String csvRow) {
         if (csvRow.equals(FLYSIGHT_CSV_HEADER_POST_V20141005)
                 || csvRow.equals(FLYSIGHT_CSV_HEADER_PRE_V20141005)) {
-            flySightTrackData.setCsvHeader(csvRow);
             flySightTrackData.setPreV20141005(csvRow.equals(FLYSIGHT_CSV_HEADER_PRE_V20141005));
             return;
         }
 
         if (csvRow.equals(FLYSIGHT_CSV_HEADER_UNITS_POST_V20141005)
             || csvRow.equals(FLYSIGHT_CSV_HEADER_UNITS_PRE_V20141005)) {
-            flySightTrackData.setCsvUnitsHeader(csvRow);
             return;
         }
 
@@ -122,7 +111,6 @@ public class FlySightCsvParser implements Parser<FlySightTrackData> {
         }
 
         FlySightTrackPoint flySightTrackPoint = new FlySightTrackPoint();
-        flySightTrackPoint.csvRow = csvRow;
         flySightTrackPoint.unixTimeStamp = getUnixTimeForTimeString(row[0]);
         flySightTrackPoint.position = new GPSCoordinate(Double.parseDouble(row[1]), Double.parseDouble(row[2]), GPSCoordinate.VALID);
         flySightTrackPoint.altitude = Float.parseFloat(row[3]);
@@ -164,5 +152,48 @@ public class FlySightCsvParser implements Parser<FlySightTrackData> {
     private long getUnixTimeForTimeString(String timeStamp) throws ParseException {
         Date dateTime = DATE_PARSER.parse(timeStamp.replace("Z", "0Z"));
         return dateTime.getTime();
+    }
+
+    @Override
+    public void write(OutputStream outputStream, FlySightTrackData data) throws IOException {
+        OutputStreamWriter writer = new OutputStreamWriter(outputStream);
+        writer.write(FLYSIGHT_CSV_HEADER_POST_V20141005 + "\n");
+        writer.write(FLYSIGHT_CSV_HEADER_UNITS_POST_V20141005 + "\n");
+        for (FlySightTrackPoint trackPoint : data.getFlySightTrackPoints()) {
+            writer.write(trackPointToCsvRow(trackPoint));
+        }
+        writer.close();
+    }
+
+    // 0   ,
+    // time,
+    // 2015-09-27T17:09:22.00Z,
+    // 1          ,2          ,3        ,4     ,5      ,6     ,7     ,8     ,9    ,10        ,11      ,12     ,13
+    // lat        ,lon        ,hMSL     ,velN  ,velE   ,velD  ,hAcc  ,vAcc  ,sAcc ,heading   ,cAcc    ,gpsFix ,numSV
+    // 47.1119989 ,15.4605011 ,3541.855 ,24.18 ,-46.99 ,-2.43 ,5.044 ,5.756 ,0.57 ,297.23267 ,0.67036 ,3      ,10
+    String trackPointToCsvRow(FlySightTrackPoint flySightTrackPoint) {
+        StringBuilder rowBuilder = new StringBuilder();
+        rowBuilder.append(getTimeStringForUnixTime(flySightTrackPoint.unixTimeStamp)).append(",");
+        rowBuilder.append(String.format(Locale.US, "%.7f", flySightTrackPoint.position.lat)).append(",");
+        rowBuilder.append(String.format(Locale.US, "%.7f", flySightTrackPoint.position.lon)).append(",");
+        rowBuilder.append(String.format(Locale.US, "%.3f", flySightTrackPoint.altitude)).append(",");
+        rowBuilder.append(String.format(Locale.US, "%.2f", flySightTrackPoint.velN / 3.6f)).append(",");
+        rowBuilder.append(String.format(Locale.US, "%.2f", flySightTrackPoint.velE / 3.6f)).append(",");
+        rowBuilder.append(String.format(Locale.US, "%.2f", flySightTrackPoint.vertVelocity / 3.6f)).append(",");
+        rowBuilder.append(String.format(Locale.US, "%.3f", flySightTrackPoint.hAcc)).append(",");
+        rowBuilder.append(String.format(Locale.US, "%.3f", flySightTrackPoint.vAcc)).append(",");
+        rowBuilder.append(String.format(Locale.US, "%.2f", flySightTrackPoint.sAcc)).append(",");
+        rowBuilder.append(String.format(Locale.US, "%.5f", flySightTrackPoint.heading)).append(",");
+        rowBuilder.append(String.format(Locale.US, "%.5f", flySightTrackPoint.cAcc)).append(",");
+        rowBuilder.append(String.format(Locale.US, "%d", flySightTrackPoint.gpsFix)).append(",");
+        rowBuilder.append(String.format(Locale.US, "%d", flySightTrackPoint.numSV));
+        rowBuilder.append("\n");
+        return rowBuilder.toString();
+    }
+
+    // format 2018-08-12T14:25:43.07Z
+    private String getTimeStringForUnixTime(long unixTimeStamp) {
+        Date dateTime = new Date(unixTimeStamp);
+        return DATE_PRINTER.format(dateTime).substring(0, 22) + "Z";
     }
 }

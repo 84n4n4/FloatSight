@@ -23,8 +23,6 @@
 package org.floatcast.floatsight.csvparser;
 
 public class FlySightTrackPoint {
-    public String csvRow;
-
     public long unixTimeStamp;
     public float trackTimeInSeconds;
     public GPSCoordinate position;

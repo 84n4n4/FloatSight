@@ -50,7 +50,31 @@ public class FlySightTrackDataTest {
         FlySightCsvParser flySightCsvParser = new FlySightCsvParser();
         FlySightTrackData flySightTrackData = new FlySightTrackData();
 
-        flySightCsvParser.addCsvRow(flySightTrackData, validCsvRow);
+        flySightCsvParser.readCsvRow(flySightTrackData, validCsvRow);
+
+        assertEquals(FlySightTrackData.PARSING_SUCCESS, flySightTrackData.getParsingStatus());
+
+        assertFalse(flySightTrackData.getFlySightTrackPoints().isEmpty());
+        FlySightTrackPoint flySightTrackPoint = flySightTrackData.getFlySightTrackPoints().get(0);
+
+        assertEquals(0f, flySightTrackPoint.trackTimeInSeconds);
+        assertEquals(3522.051f, flySightTrackPoint.altitude);
+        assertEquals(0f, flySightTrackPoint.distance);
+        assertEquals(0f, flySightTrackPoint.glide);
+        assertEquals(horVelocity.floatValue(), flySightTrackPoint.horVelocity, 0.0001);
+        assertEquals(verVelocity.floatValue(), flySightTrackPoint.vertVelocity, 0.001);
+    }
+
+    @Test
+    public void testParseCsvRowPreV20141005() {
+        String validCsvRow = "2018-08-12T12:44:06.20Z,47.0573044,15.5849899,3522.051,17.80,-47.72,-2.22,28.084,8.157,1.32,3,6";
+        Double horVelocity = Math.sqrt(Math.pow(17.80,2) + Math.pow(-47.72,2)) * 3.6;
+        Double verVelocity = -2.22 * 3.6;
+        FlySightCsvParser flySightCsvParser = new FlySightCsvParser();
+        FlySightTrackData flySightTrackData = new FlySightTrackData();
+        flySightTrackData.setPreV20141005(true);
+
+        flySightCsvParser.readCsvRow(flySightTrackData, validCsvRow);
 
         assertEquals(FlySightTrackData.PARSING_SUCCESS, flySightTrackData.getParsingStatus());
 
@@ -71,7 +95,7 @@ public class FlySightTrackDataTest {
         FlySightCsvParser flySightCsvParser = new FlySightCsvParser();
         FlySightTrackData flySightTrackData = new FlySightTrackData();
 
-        flySightCsvParser.addCsvRow(flySightTrackData, validCsvRow);
+        flySightCsvParser.readCsvRow(flySightTrackData, validCsvRow);
 
         assertEquals(FlySightTrackData.PARSING_ERRORS, flySightTrackData.getParsingStatus());
     }
@@ -83,8 +107,8 @@ public class FlySightTrackDataTest {
         FlySightCsvParser flySightCsvParser = new FlySightCsvParser();
         FlySightTrackData flySightTrackData = new FlySightTrackData();
 
-        flySightCsvParser.addCsvRow(flySightTrackData, pointA);
-        flySightCsvParser.addCsvRow(flySightTrackData, pointB);
+        flySightCsvParser.readCsvRow(flySightTrackData, pointA);
+        flySightCsvParser.readCsvRow(flySightTrackData, pointB);
 
         assertEquals(2, flySightTrackData.getFlySightTrackPoints().size());
         FlySightTrackPoint flySightTrackPoint = flySightTrackData.getFlySightTrackPoints().get(1);
@@ -99,8 +123,8 @@ public class FlySightTrackDataTest {
         FlySightCsvParser flySightCsvParser = new FlySightCsvParser();
         FlySightTrackData flySightTrackData = new FlySightTrackData();
 
-        flySightCsvParser.addCsvRow(flySightTrackData, pointA);
-        flySightCsvParser.addCsvRow(flySightTrackData, pointB);
+        flySightCsvParser.readCsvRow(flySightTrackData, pointA);
+        flySightCsvParser.readCsvRow(flySightTrackData, pointB);
 
         assertEquals(2, flySightTrackData.getFlySightTrackPoints().size());
         FlySightTrackPoint flySightTrackPoint = flySightTrackData.getFlySightTrackPoints().get(1);
@@ -115,8 +139,8 @@ public class FlySightTrackDataTest {
         FlySightCsvParser flySightCsvParser = new FlySightCsvParser();
         FlySightTrackData flySightTrackData = new FlySightTrackData();
 
-        flySightCsvParser.addCsvRow(flySightTrackData, pointA);
-        flySightCsvParser.addCsvRow(flySightTrackData, pointB);
+        flySightCsvParser.readCsvRow(flySightTrackData, pointA);
+        flySightCsvParser.readCsvRow(flySightTrackData, pointB);
 
         assertEquals(2, flySightTrackData.getFlySightTrackPoints().size());
         FlySightTrackPoint flySightTrackPoint = flySightTrackData.getFlySightTrackPoints().get(1);
@@ -131,12 +155,38 @@ public class FlySightTrackDataTest {
         FlySightCsvParser flySightCsvParser = new FlySightCsvParser();
         FlySightTrackData flySightTrackData = new FlySightTrackData();
 
-        flySightCsvParser.addCsvRow(flySightTrackData, pointA);
-        flySightCsvParser.addCsvRow(flySightTrackData, pointB);
+        flySightCsvParser.readCsvRow(flySightTrackData, pointA);
+        flySightCsvParser.readCsvRow(flySightTrackData, pointB);
 
         assertEquals(2, flySightTrackData.getFlySightTrackPoints().size());
         FlySightTrackPoint flySightTrackPoint = flySightTrackData.getFlySightTrackPoints().get(1);
 
         assertEquals(3600.00f, flySightTrackPoint.trackTimeInSeconds);
+    }
+
+    @Test
+    public void testWriteCsvRow() {
+        String validCsvRow = "2018-08-12T12:44:06.20Z,47.0573044,15.5849899,3522.051,17.80,-47.72,-2.22,28.084,8.157,1.32,290.46082,0.39322,3,6";
+        FlySightCsvParser flySightCsvParser = new FlySightCsvParser();
+        FlySightTrackData flySightTrackData = new FlySightTrackData();
+
+        flySightCsvParser.readCsvRow(flySightTrackData, validCsvRow);
+        FlySightTrackPoint trackPoint = flySightTrackData.getFlySightTrackPoints().get(0);
+        String outputCsvRow = flySightCsvParser.trackPointToCsvRow(trackPoint);
+        assertEquals(validCsvRow + "\n", outputCsvRow);
+    }
+
+    @Test
+    public void testWriteCsvRowPreV20141005() {
+        String validCsvRowPreV20141005 = "2018-08-12T12:44:06.20Z,47.0573044,15.5849899,3522.051,17.80,-47.72,-2.22,28.084,8.157,1.32,3,6";
+        String validCsvRowPostV20141005 = "2018-08-12T12:44:06.20Z,47.0573044,15.5849899,3522.051,17.80,-47.72,-2.22,28.084,8.157,1.32,0.00000,0.00000,3,6";
+        FlySightCsvParser flySightCsvParser = new FlySightCsvParser();
+        FlySightTrackData flySightTrackData = new FlySightTrackData();
+        flySightTrackData.setPreV20141005(true);
+
+        flySightCsvParser.readCsvRow(flySightTrackData, validCsvRowPreV20141005);
+        FlySightTrackPoint trackPoint = flySightTrackData.getFlySightTrackPoints().get(0);
+        String outputCsvRow = flySightCsvParser.trackPointToCsvRow(trackPoint);
+        assertEquals(validCsvRowPostV20141005 + "\n", outputCsvRow);
     }
 }

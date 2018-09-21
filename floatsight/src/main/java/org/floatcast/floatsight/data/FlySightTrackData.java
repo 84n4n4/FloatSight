@@ -33,8 +33,6 @@ public class FlySightTrackData extends ParsableData {
 
     private final List<FlySightTrackPoint> flySightTrackPoints;
     private boolean preV20141005 = false;
-    private String csvHeader = "";
-    private String csvUnitsHeader = "";
 
     public FlySightTrackData() {
         flySightTrackPoints = new ArrayList<>();
@@ -43,8 +41,6 @@ public class FlySightTrackData extends ParsableData {
     public FlySightTrackData(List<FlySightTrackPoint> flySightTrackPoints, FlySightTrackData flySightTrackData) {
         this.flySightTrackPoints = flySightTrackPoints;
         setSourceFileName(flySightTrackData.getSourceFileName());
-        csvHeader = flySightTrackData.getCsvHeader();
-        csvUnitsHeader = flySightTrackData.getCsvHeader();
         setParsingStatus(PARSING_SUCCESS);
         setDirty(true);
     }
@@ -55,22 +51,6 @@ public class FlySightTrackData extends ParsableData {
 
     public boolean isPreV20141005() {
         return preV20141005;
-    }
-
-    public String getCsvHeader() {
-        return csvHeader;
-    }
-
-    public void setCsvHeader(String csvHeader) {
-        this.csvHeader = csvHeader;
-    }
-
-    public String getCsvUnitsHeader() {
-        return csvUnitsHeader;
-    }
-
-    public void setCsvUnitsHeader(String csvUnitsHeader) {
-        this.csvUnitsHeader = csvUnitsHeader;
     }
 
     public List<FlySightTrackPoint> getFlySightTrackPoints() {
